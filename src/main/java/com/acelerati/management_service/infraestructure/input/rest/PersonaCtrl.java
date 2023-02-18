@@ -1,7 +1,7 @@
 package com.acelerati.management_service.infraestructure.input.rest;
 
 
-import com.example.hexagonalarch.application.handler.IPersonaHandler;
+import com.acelerati.management_service.application.handler.InventorySpringService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/persona/")
 public class PersonaCtrl {
 
-    private final IPersonaHandler personaHndler;
+    private final InventorySpringService inventorySpringService;
 
-    public PersonaCtrl(IPersonaHandler personaHndler) {
-        this.personaHndler = personaHndler;
+    public PersonaCtrl(InventorySpringService inventorySpringService) {
+        this.inventorySpringService = inventorySpringService;
     }
 
 
