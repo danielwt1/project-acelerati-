@@ -19,7 +19,17 @@ public class InventoryJpaAdapter implements InventoryPersistencePort {
     }
 
     @Override
-    public void addInventory(List<InventoryModel> inventoryModel) {
-        inventaryRepository.persistData(this.inventoryEntityMapper.toListEntity(inventoryModel));
+    public void addInventory(InventoryModel inventoryModel) {
+        this.inventaryRepository.persistData(this.inventoryEntityMapper.toEntity(inventoryModel));
+    }
+
+    @Override
+    public InventoryModel getElementById(Long idProduct) {
+        return this.inventoryEntityMapper.toModel(this.inventaryRepository.getElementById(idProduct));
+    }
+
+    @Override
+    public void updateInventory(InventoryModel inventoryModel) {
+        this.inventaryRepository.updateInventory(this.inventoryEntityMapper.toEntity(inventoryModel));
     }
 }

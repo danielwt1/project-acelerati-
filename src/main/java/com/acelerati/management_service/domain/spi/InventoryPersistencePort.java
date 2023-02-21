@@ -5,5 +5,8 @@ import com.acelerati.management_service.domain.model.InventoryModel;
 import java.util.List;
 
 public interface InventoryPersistencePort {
-    void addInventory(List<InventoryModel> inventoryModel);
+    void addInventory(InventoryModel inventoryModel);
+    InventoryModel getElementById(Long idProduct);
+    void updateInventory(InventoryModel inventoryModel);
+
 }

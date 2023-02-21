@@ -6,11 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 
@@ -23,12 +23,28 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
 
 
     @Override
-    public void persistData(List<InventoryEntity> entitys) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<InventoryEntity> query = cb.createQuery(InventoryEntity.class);
-        Root<InventoryEntity> root = query.from(InventoryEntity.class);
-        entitys.forEach( producto -> entityManager.persist(producto));
+    public void persistData(InventoryEntity entity) {
+        entityManager.persist(entity);
+    }
 
+    @Override
+    public InventoryEntity getElementById(Long id) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<InventoryEntity> query = criteriaBuilder.createQuery(InventoryEntity.class);
+        Root<InventoryEntity> root = query.from(InventoryEntity.class);
+        //root.get() va el nombre del campo de la entidad
+        query.select(root).where(criteriaBuilder.equal(root.get("idProduct"), id));
+        TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(query);
+        List<InventoryEntity> resultList = typedQuery.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        } else {
+            return resultList.get(0);
+        }
+    }
+    @Override
+    public void updateInventory(InventoryEntity entity) {
+        entityManager.merge(entity);
     }
 
 
