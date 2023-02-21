@@ -1,5 +1,8 @@
 package com.acelerati.management_service.application.dto.response;
 
+import lombok.Builder;
+
+@Builder
 public class ResponseDataDTO<T> {
 
     private Integer code;

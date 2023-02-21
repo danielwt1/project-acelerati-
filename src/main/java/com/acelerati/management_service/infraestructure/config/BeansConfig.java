@@ -1,36 +1,37 @@
 package com.acelerati.management_service.infraestructure.config;
 
-import com.example.hexagonalarch.application.mapper.IPersonaMapper;
-import com.example.hexagonalarch.domain.api.IPersonServicePort;
-import com.example.hexagonalarch.domain.spi.IPersonaPersistencePort;
-import com.example.hexagonalarch.domain.usecase.PersonUseCase;
-import com.example.hexagonalarch.infraestructure.output.adapter.PersonaJPAAdapter;
-import com.example.hexagonalarch.infraestructure.output.mapper.IPersonaEntityMapper;
-import com.example.hexagonalarch.infraestructure.output.repository.PersonaRepository;
+
+import com.acelerati.management_service.domain.api.InventoryServicePort;
+import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
+import com.acelerati.management_service.domain.usecase.InventoryUseCase;
+import com.acelerati.management_service.infraestructure.output.adapter.InventoryJpaAdapter;
+import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
+import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
+import com.acelerati.management_service.infraestructure.output.repository.impl.InventaryRepositoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeansConfig {
-    private final PersonaRepository personaRepository;
-    private final IPersonaEntityMapper personaEntityMapper;
+    private final InventaryRepositoryImpl inventaryRepository;
+    private final InventoryEntityMapper inventoryEntityMapper;
 
-    public BeansConfig(PersonaRepository personaRepository, IPersonaEntityMapper personaEntityMapper) {
-        this.personaRepository = personaRepository;
-        this.personaEntityMapper = personaEntityMapper;
+    public BeansConfig(InventaryRepositoryImpl inventaryRepository, InventoryEntityMapper inventoryEntityMapper) {
+        this.inventaryRepository = inventaryRepository;
+        this.inventoryEntityMapper = inventoryEntityMapper;
     }
 
     // Toca crear un Bean para el Puerto de persistencia
     // Si tengo mas de una clase en mi proyecto pues tendria que hacerlo
     @Bean
-    public IPersonaPersistencePort personaPersistencePort() {
+    public InventoryPersistencePort inventoryPersistencePPort() {
         //Retorno donde implemento
         // se poasa lo que necesita el constructor
-        return new PersonaJPAAdapter(personaRepository, personaEntityMapper);
+        return new InventoryJpaAdapter(inventaryRepository, inventoryEntityMapper);
     }
     //Lo mismo para el servicio
     @Bean
-    public IPersonServicePort personServicePort(){
-        return new PersonUseCase(personaPersistencePort());
+    public InventoryServicePort personServicePort(){
+        return new InventoryUseCase(inventoryPersistencePPort());
     }
 }
