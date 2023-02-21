@@ -18,19 +18,19 @@ import java.math.BigInteger;
 @Validated
 public class InventoryDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private BigInteger id;
+    private Long id;
     @NotNull
     @NotEmpty
     private String name;
     @NotNull
-    private BigInteger stock;
+    private Long stock;
     @NotNull
     private BigDecimal unit_price;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal sale_price;
     @NotNull
-    private BigInteger id_product;
+    private Long id_product;
     @NotNull
-    private BigInteger id_supplier;
+    private Long id_supplier;
 
 }

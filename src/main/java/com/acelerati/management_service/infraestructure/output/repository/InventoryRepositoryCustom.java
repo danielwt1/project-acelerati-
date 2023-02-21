@@ -1,11 +1,14 @@
 package com.acelerati.management_service.infraestructure.output.repository;
 
+import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 public interface InventoryRepositoryCustom <T>{
-    String saveAllData(List<T> entitys);
+    void persistData(List<T> entitys);
+
 
 }

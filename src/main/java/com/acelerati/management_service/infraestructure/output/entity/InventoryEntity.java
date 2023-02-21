@@ -1,6 +1,12 @@
 package com.acelerati.management_service.infraestructure.output.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -9,7 +15,7 @@ import java.math.BigInteger;
 public class InventoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String name;
     private BigInteger stock;
     private BigDecimal unit_price;
@@ -20,7 +26,7 @@ public class InventoryEntity {
 
     public InventoryEntity() {
     }
-    public InventoryEntity(Integer id, String name, BigInteger stock, BigDecimal unit_price, BigDecimal sale_price, BigInteger id_product, BigInteger id_supplier) {
+    public InventoryEntity(Long id, String name, BigInteger stock, BigDecimal unit_price, BigDecimal sale_price, BigInteger id_product, BigInteger id_supplier) {
         this.id = id;
         this.name = name;
         this.stock = stock;
@@ -30,11 +36,11 @@ public class InventoryEntity {
         this.id_supplier = id_supplier;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
