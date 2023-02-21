@@ -9,5 +9,6 @@ import java.util.List;
 
 @NoRepositoryBean
 public abstract class AbstractInventoryRepository <T,ID extends Serializable>implements Repository<T,ID> {
+    // Que es mas limpio?=
     public abstract void saveAllData(List<T> entitys);
 }

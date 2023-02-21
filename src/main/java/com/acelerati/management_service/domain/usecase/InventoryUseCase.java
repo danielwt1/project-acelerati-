@@ -4,6 +4,8 @@ import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 
+import java.util.List;
+
 public class InventoryUseCase implements InventoryServicePort {
 
     private final InventoryPersistencePort inventoryPersistencePPort;
@@ -13,7 +15,7 @@ public class InventoryUseCase implements InventoryServicePort {
     }
 
     @Override
-    public void addInventory(InventoryModel inventoryModel) {
+    public void addInventory(List<InventoryModel> inventoryModel) {
         //Validation if dont exist product -> sale price == 0
         this.inventoryPersistencePPort.addInventory(inventoryModel);
     }

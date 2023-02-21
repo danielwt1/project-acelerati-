@@ -1,42 +1,19 @@
 package com.acelerati.management_service.infraestructure.ExceptionHandler.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ErrorDetails {
-    private LocalDateTime fecha;
+    private LocalDateTime timestamp;
     private String message;
-    private String ruta;
+    private String path;
 
-    public ErrorDetails() {
-    }
 
-    public ErrorDetails(LocalDateTime fecha, String message, String ruta) {
-        this.fecha = fecha;
-        this.message = message;
-        this.ruta = ruta;
-    }
-
-    public LocalDateTime getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getRuta() {
-        return ruta;
-    }
-
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
-    }
 }

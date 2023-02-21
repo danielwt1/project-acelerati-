@@ -6,6 +6,8 @@ import com.acelerati.management_service.application.mapper.InventoryRequestMappe
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InventorySpringServiceImpl implements InventorySpringService {
      private final InventoryServicePort inventoryServicePort;
@@ -17,8 +19,8 @@ public class InventorySpringServiceImpl implements InventorySpringService {
      }
 
      @Override
-     public void addInventory(InventoryDTO inventoryDTO) {
-          this.inventoryServicePort.addInventory(this.inventoryRequestMapper.toModel(inventoryDTO));
+     public void addInventory(List<InventoryDTO> inventoryDTO) {
+          this.inventoryServicePort.addInventory(this.inventoryRequestMapper.toListModel(inventoryDTO));
 
      }
 }
