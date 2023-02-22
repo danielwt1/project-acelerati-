@@ -26,10 +26,8 @@ public class InventoryEntity {
     private BigInteger idProduct;
     @Column(name = "id_supplier")
     private BigInteger idSupplier;
-
     public InventoryEntity() {
     }
-
     public InventoryEntity(Long id, String name, BigInteger stock, BigDecimal unitPrice, BigDecimal salePrice, BigInteger idProduct, BigInteger idSupplier) {
         this.id = id;
         this.name = name;

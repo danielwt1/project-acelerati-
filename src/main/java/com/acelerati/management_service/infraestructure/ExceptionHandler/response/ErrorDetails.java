@@ -2,18 +2,13 @@ package com.acelerati.management_service.infraestructure.ExceptionHandler.respon
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class ErrorDetails {
-    private LocalDateTime timestamp;
-    private String message;
-    private String path;
+    private final LocalDateTime timestamp;
+    private final String message;
+    private final String path;
 
 
 }

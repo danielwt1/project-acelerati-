@@ -1,22 +1,21 @@
 package com.acelerati.management_service.infraestructure.config;
-
-
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.domain.usecase.InventoryUseCase;
 import com.acelerati.management_service.infraestructure.output.adapter.InventoryJpaAdapter;
 import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
+import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepositoryCustom;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BeansConfig {
-    private final InventoryRepositoryCustom<InventoryEntity> inventoryRepository;
+public class BeansConfiguration {
+    private final InventoryRepository inventoryRepository;
     private final InventoryEntityMapper inventoryEntityMapper;
 
-    public BeansConfig(InventoryRepositoryCustom<InventoryEntity>  inventoryRepository, InventoryEntityMapper inventoryEntityMapper) {
+    public BeansConfiguration(InventoryRepository  inventoryRepository, InventoryEntityMapper inventoryEntityMapper) {
         this.inventoryRepository = inventoryRepository;
         this.inventoryEntityMapper = inventoryEntityMapper;
     }

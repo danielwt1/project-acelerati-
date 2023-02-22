@@ -15,9 +15,9 @@ public class InventoryModel {
     public InventoryModel() {
     }
 
-    public InventoryModel(Long id, Long id1, String name, Long stock, BigDecimal unitPrice, BigDecimal salePrice, Long idProduct, Long idSupplier) {
+
+    public InventoryModel(Long id, String name, Long stock, BigDecimal unitPrice, BigDecimal salePrice, Long idProduct, Long idSupplier) {
         this.id = id;
-        this.id = id1;
         this.name = name;
         this.stock = stock;
         this.unitPrice = unitPrice;

@@ -1,9 +1,10 @@
 package com.acelerati.management_service.infraestructure.output.repository;
-import java.util.List;
+
+import java.util.Optional;
 
 public interface InventoryRepositoryCustom <T>{
     void persistData(T entity);
-     T getElementById(Long id);
+     Optional<T> getElementById(Long id);
      void updateInventory(T entity);
 
 
