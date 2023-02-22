@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -29,7 +28,7 @@ public class InventoryController {
     }
     @Operation(summary = "ADD items to inventory")
     @PostMapping("/")
-    public ResponseEntity<Void>addInventory(@RequestBody @NotEmpty(message = "La lista de productos no puede estar vacia") List<@Valid InventoryDTO> inventoryDTO) throws MethodArgumentNotValidException {
+    public ResponseEntity<Void>addInventory(@RequestBody @NotEmpty(message = "List must not empty") List<@Valid InventoryDTO> inventoryDTO) throws MethodArgumentNotValidException {
         this.inventorySpringService.addInventory(inventoryDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

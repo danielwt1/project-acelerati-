@@ -1,8 +1,6 @@
 package com.acelerati.management_service.application.dto.request;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -19,7 +17,7 @@ public class InventoryDTO {
     @Min(1)
     private final Long stock;
     @NotNull
-    @Min(100)
+    @Min(value = 100)
     private final BigDecimal unitPrice;
     @NotNull
     @Min(0)
