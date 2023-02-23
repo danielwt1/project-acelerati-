@@ -18,7 +18,6 @@ public class InventoryUseCase implements InventoryServicePort {
     }
     @Override
     public void addInventory(List<InventoryModel> inventoryModel) {
-        //Validation if dont exist product -> sale price == 0
         inventoryModel.forEach(product -> {
             Optional<InventoryModel> foundProduct = this.inventoryPersistencePort.getElementById(product.getIdProduct());
             if (foundProduct.isEmpty()) {

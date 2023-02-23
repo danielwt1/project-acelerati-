@@ -17,18 +17,19 @@ public class InventoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private BigInteger stock;
+    private Long stock;
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
     @Column(name = "sale_price")
     private BigDecimal salePrice;
     @Column(name = "id_product")
-    private BigInteger idProduct;
+    private Long idProduct;
     @Column(name = "id_supplier")
-    private BigInteger idSupplier;
+    private Long idSupplier;
     public InventoryEntity() {
     }
-    public InventoryEntity(Long id, String name, BigInteger stock, BigDecimal unitPrice, BigDecimal salePrice, BigInteger idProduct, BigInteger idSupplier) {
+
+    public InventoryEntity(Long id, String name, Long stock, BigDecimal unitPrice, BigDecimal salePrice, Long idProduct, Long idSupplier) {
         this.id = id;
         this.name = name;
         this.stock = stock;
@@ -54,11 +55,11 @@ public class InventoryEntity {
         this.name = name;
     }
 
-    public BigInteger getStock() {
+    public Long getStock() {
         return stock;
     }
 
-    public void setStock(BigInteger stock) {
+    public void setStock(Long stock) {
         this.stock = stock;
     }
 
@@ -78,19 +79,19 @@ public class InventoryEntity {
         this.salePrice = salePrice;
     }
 
-    public BigInteger getIdProduct() {
+    public Long getIdProduct() {
         return idProduct;
     }
 
-    public void setIdProduct(BigInteger idProduct) {
+    public void setIdProduct(Long idProduct) {
         this.idProduct = idProduct;
     }
 
-    public BigInteger getIdSupplier() {
+    public Long getIdSupplier() {
         return idSupplier;
     }
 
-    public void setIdSupplier(BigInteger idSupplier) {
+    public void setIdSupplier(Long idSupplier) {
         this.idSupplier = idSupplier;
     }
 }

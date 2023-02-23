@@ -11,7 +11,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -33,12 +32,16 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<InventoryEntity> query = criteriaBuilder.createQuery(InventoryEntity.class);
         Root<InventoryEntity> root = query.from(InventoryEntity.class);
-        query.select(root).where(criteriaBuilder.equal(root.get("idProduct"), id));
+        query
+                .select(root)
+                .where(criteriaBuilder
+                        .equal(root.get("idProduct"), id));
         TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(query);
 
         return typedQuery.getResultList().stream().findFirst();
 
     }
+
     @Override
     public void updateInventory(InventoryEntity entity) {
         entityManager.merge(entity);
