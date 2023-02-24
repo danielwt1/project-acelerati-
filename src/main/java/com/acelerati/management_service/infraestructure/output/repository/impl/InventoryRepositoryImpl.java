@@ -32,8 +32,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<InventoryEntity> query = criteriaBuilder.createQuery(InventoryEntity.class);
         Root<InventoryEntity> root = query.from(InventoryEntity.class);
-        query
-                .select(root)
+        query.select(root)
                 .where(criteriaBuilder
                         .equal(root.get("idProduct"), id));
         TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(query);

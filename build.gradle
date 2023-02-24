@@ -49,6 +49,7 @@ jacocoTestReport {
 			fileTree(dir: it, exclude: [
 					"com/acelerati/management_service/application/mapper/*",
 					"**/infraestructure/output/mapper/*",
+					"**/infraestructure/output/repository/impl/*",
 					"**/ManagementServiceApplication.class"
 			])
 		}))
