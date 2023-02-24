@@ -24,7 +24,7 @@ public class InventoryController {
     public InventoryController(InventorySpringService inventorySpringService) {
         this.inventorySpringService = inventorySpringService;
     }
-    @Operation(summary = "ADD items to inventory")
+    @Operation(summary = "Add items to the inventory")
     @PostMapping("/")
     public ResponseEntity<Void>addInventory(@RequestBody @NotEmpty(message = "List must not empty") List<@Valid InventoryDTO> inventoryDTO) throws MethodArgumentNotValidException {
         this.inventorySpringService.addInventory(inventoryDTO);
