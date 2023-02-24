@@ -1,11 +1,9 @@
 package com.acelerati.management_service.infraestructure.output.adapter;
-
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
-
 import java.util.Optional;
 
 

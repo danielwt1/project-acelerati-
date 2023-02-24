@@ -1,5 +1,4 @@
 package com.acelerati.management_service.infraestructure.output.repository;
-
 import java.util.Optional;
 
 public interface InventoryRepositoryCustom <T>{

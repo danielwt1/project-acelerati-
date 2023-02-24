@@ -1,6 +1,4 @@
 package com.acelerati.management_service.infraestructure.input.rest;
-
-
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import io.swagger.v3.oas.annotations.Operation;

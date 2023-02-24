@@ -3,10 +3,8 @@ import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.domain.usecase.InventoryUseCase;
 import com.acelerati.management_service.infraestructure.output.adapter.InventoryJpaAdapter;
-import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
-import com.acelerati.management_service.infraestructure.output.repository.InventoryRepositoryCustom;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

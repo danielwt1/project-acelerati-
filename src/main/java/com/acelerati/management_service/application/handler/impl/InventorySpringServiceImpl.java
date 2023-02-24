@@ -4,7 +4,6 @@ import com.acelerati.management_service.application.handler.InventorySpringServi
 import com.acelerati.management_service.application.mapper.InventoryRequestMapper;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
