@@ -20,7 +20,7 @@ public class InventoryDTO {
     @Min(value = 100)
     private final BigDecimal unitPrice;
     @NotNull
-    @Min(0)
+    @Min(1)
     private final Long idProduct;
     @NotNull
     @Min(1)
