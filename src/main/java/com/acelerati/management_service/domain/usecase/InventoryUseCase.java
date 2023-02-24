@@ -25,7 +25,6 @@ public class InventoryUseCase implements InventoryServicePort {
                 this.inventoryPersistencePort.addInventory(product);
             } else {
                 foundProduct.get().setStock(product.getStock() + foundProduct.get().getStock());
-                foundProduct.get().setSalePrice(product.getSalePrice());
                 this.inventoryPersistencePort.updateInventory(foundProduct.get());
             }
         });
