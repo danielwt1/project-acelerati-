@@ -1,10 +1,8 @@
 package com.acelerati.management_service.infraestructure.output.mapper;
-
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
-
 import java.util.List;
 
 @Mapper(componentModel = "spring",
