@@ -1,11 +1,10 @@
 package com.acelerati.management_service.infraestructure.output.repository;
-
-import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import java.util.Optional;
 
 public interface InventoryRepositoryCustom <T>{
-    String saveAllData(List<T> entitys);
+    void persistData(T entity);
+     Optional<T> getElementById(Long id);
+     void updateInventory(T entity);
+
 
 }
