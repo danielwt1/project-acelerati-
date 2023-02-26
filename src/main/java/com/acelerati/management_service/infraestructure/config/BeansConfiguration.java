@@ -12,23 +12,20 @@ import org.springframework.context.annotation.Configuration;
 public class BeansConfiguration {
     private final InventoryRepository inventoryRepository;
     private final InventoryEntityMapper inventoryEntityMapper;
-
     public BeansConfiguration(InventoryRepository  inventoryRepository, InventoryEntityMapper inventoryEntityMapper) {
         this.inventoryRepository = inventoryRepository;
         this.inventoryEntityMapper = inventoryEntityMapper;
     }
-
-    // Toca crear un Bean para el Puerto de persistencia
-    // Si tengo mas de una clase en mi proyecto pues tendria que hacerlo
     @Bean
     public InventoryPersistencePort inventoryPersistencePPort() {
         //Retorno donde implemento
         // se poasa lo que necesita el constructor
         return new InventoryJpaAdapter(inventoryRepository, inventoryEntityMapper);
     }
-    //Lo mismo para el servicio
     @Bean
     public InventoryServicePort personServicePort(){
         return new InventoryUseCase(inventoryPersistencePPort());
     }
+
+
 }
