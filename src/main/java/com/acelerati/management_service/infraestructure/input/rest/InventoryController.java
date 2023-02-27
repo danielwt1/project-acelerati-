@@ -2,6 +2,7 @@ package com.acelerati.management_service.infraestructure.input.rest;
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
+import com.acelerati.management_service.application.dto.response.FilterInventoryResponseDTO;
 import com.acelerati.management_service.application.dto.response.InventoryResponseDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +35,8 @@ public class InventoryController {
     }
     @Operation(summary = "Search inventory items by several criteria and serves the result paginated.")
     @GetMapping(path = {"/"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<InventoryResponseDTO>> getInventoriesBy(InventorySearchCriteriaDTO searchCriteria, PaginationDTO paginationDTO) {
-        List<InventoryResponseDTO> inventories = inventorySpringService.getInventoriesBy(searchCriteria);
-        return new ResponseEntity<>(inventories, HttpStatus.OK);
+    public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(InventorySearchCriteriaDTO searchCriteria, PaginationDTO paginationDTO) {
+        FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
+        return new ResponseEntity<>(filterInventoryResponse, HttpStatus.OK);
     }
 }
