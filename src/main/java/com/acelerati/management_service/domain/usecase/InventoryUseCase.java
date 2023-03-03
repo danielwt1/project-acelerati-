@@ -1,6 +1,7 @@
 package com.acelerati.management_service.domain.usecase;
 
 import com.acelerati.management_service.domain.api.InventoryServicePort;
+import com.acelerati.management_service.domain.exception.InvalidFilterRangeException;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
 import com.acelerati.management_service.domain.model.PaginationModel;
@@ -36,14 +37,17 @@ public class InventoryUseCase implements InventoryServicePort {
     }
 
     @Override
-    public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaModel inventorySearchCriteriaModel, PaginationModel paginationModel) {
+    public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaModel inventorySearchCriteriaModel,
+                                                 PaginationModel paginationModel) throws InvalidFilterRangeException {
+        if(inventorySearchCriteriaModel.getFromUnitPrice() > inventorySearchCriteriaModel.getToUnitPrice())
+            throw new InvalidFilterRangeException("The From range must be greater than the To range");
+
         if (paginationModel.getPageSize() == null)
             paginationModel.setPageSize(PaginationModel.DEFAULT_PAGE_SIZE);
+
         List<InventoryModel> inventories = inventoryPersistencePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel);
-        if (inventories.isEmpty())
-            paginationModel.setDescription("No results found");
-        else
-            paginationModel.setDescription("Showing " + paginationModel.getPageNumber() + " to " + paginationModel.getPageSize() + " of " + paginationModel.getTotalResults());
+        paginationModel.updateAttributesFromListResults(inventories);
+
         return inventories;
     }
 }

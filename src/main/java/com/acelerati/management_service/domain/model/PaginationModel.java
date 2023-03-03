@@ -1,19 +1,27 @@
 package com.acelerati.management_service.domain.model;
 
+import java.util.List;
+
 public class PaginationModel {
 
     public static final Integer DEFAULT_PAGE_SIZE = 20;
+    public static final String NO_RECORDS_FOUND = "No records found";
 
     private Integer pageSize;
     private Integer pageNumber;
-    private Long totalResults;
     private String description;
+    private Integer firstResultIndex;
+    private Integer lastResultIndex;
+    private Long totalResults;
 
-    public PaginationModel(Integer pageSize, Integer pageNumber, Long totalResults, String description) {
+    public PaginationModel(Integer pageSize, Integer pageNumber, String description, Integer firstResultIndex,
+                           Integer lastResultIndex, Long totalResults) {
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;
-        this.totalResults = totalResults;
         this.description = description;
+        this.firstResultIndex = firstResultIndex;
+        this.lastResultIndex = lastResultIndex;
+        this.totalResults = totalResults;
     }
 
     public Integer getPageSize() {
@@ -46,5 +54,39 @@ public class PaginationModel {
 
     public void setTotalResults(Long totalResults) {
         this.totalResults = totalResults;
+    }
+
+    /**
+     * Calculates the index of the first record of the page to select.
+     * This method assumes that pageNumber and pageSize are already set for the pageable object.
+     * @return the index which the database will use to start pulling the results.
+     */
+    public Integer getFirstResultIndex() {
+        return firstResultIndex;
+    }
+
+    public Integer getLastResultIndex() {
+        return lastResultIndex;
+    }
+
+    public void setLastResultIndex(Integer lastResultIndex) {
+        this.lastResultIndex = lastResultIndex;
+    }
+
+    public Integer calculateOffset() {
+        return (pageNumber - 1) * pageSize;
+    }
+
+    public void updateAttributesFromListResults(List<?> results) {
+        if (results.isEmpty()) {
+            description = NO_RECORDS_FOUND;
+            firstResultIndex = null;
+            lastResultIndex = null;
+            totalResults = null;
+        } else {
+            firstResultIndex = calculateOffset();
+            lastResultIndex = firstResultIndex + results.size();
+            description = String.format("Showing %d to %d of %d results.", firstResultIndex + 1, lastResultIndex, totalResults);
+        }
     }
 }

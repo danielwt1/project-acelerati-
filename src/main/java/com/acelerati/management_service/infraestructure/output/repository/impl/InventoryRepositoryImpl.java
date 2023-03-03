@@ -70,17 +70,13 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
                 .where(predicates.toArray(new Predicate[0]));
 
         TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(calculateSelectionStartOffset(paginationModel));
+        typedQuery.setFirstResult(paginationModel.calculateOffset());
         typedQuery.setMaxResults(paginationModel.getPageSize());
 
         Long count = getTotalResults(criteriaBuilder, predicates);
         paginationModel.setTotalResults(count);
 
         return typedQuery.getResultList();
-    }
-
-    private int calculateSelectionStartOffset(PaginationModel paginationModel) {
-        return (paginationModel.getPageNumber() - 1) * paginationModel.getPageSize();
     }
 
     private List<Predicate> buildFilteringPredicates(InventorySearchCriteriaModel inventorySearchCriteriaModel,
