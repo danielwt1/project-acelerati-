@@ -1,9 +1,13 @@
 package com.acelerati.management_service.infraestructure.output.adapter;
 import com.acelerati.management_service.domain.model.InventoryModel;
+import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
+import com.acelerati.management_service.domain.model.PaginationModel;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -35,5 +39,11 @@ public class InventoryJpaAdapter implements InventoryPersistencePort {
     @Override
     public void updateInventory(InventoryModel inventoryModel) {
         this.inventoryRepository.updateInventory(this.inventoryEntityMapper.toEntity(inventoryModel));
+    }
+
+    @Override
+    public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaModel inventorySearchCriteriaModel, PaginationModel paginationModel) {
+        List<InventoryEntity> inventoryEntities = inventoryRepository.getInventoriesBy(inventorySearchCriteriaModel, paginationModel);
+        return inventoryEntityMapper.toListModel(inventoryEntities);
     }
 }

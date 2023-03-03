@@ -2,6 +2,8 @@ package com.acelerati.management_service.domain.usecase;
 
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.model.InventoryModel;
+import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
+import com.acelerati.management_service.domain.model.PaginationModel;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 
 import java.math.BigDecimal;
@@ -9,9 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class InventoryUseCase implements InventoryServicePort {
-
+    public static final BigDecimal INITIAL_VALUE_NEW_PRODUCT_SALE_PRICE = BigDecimal.valueOf(0);
+    public static final Long NO_STOCK = 0L;
+    public static final String INVENTORY_SEARCH_BY_PRODUCTS_WITHOUT_SALE_PRICE = "Products without sale price";
+    public static final String INVENTORY_SEARCH_BY_PRODUCTS_WITHOUT_STOCK = "Products without stock";
     private final InventoryPersistencePort inventoryPersistencePort;
-    private static final BigDecimal INITIAL_VALUE_NEW_PRODUCT_SALE_PRICE = BigDecimal.valueOf(0);
 
     public InventoryUseCase(InventoryPersistencePort inventoryPersistencePort) {
         this.inventoryPersistencePort = inventoryPersistencePort;
@@ -29,5 +33,17 @@ public class InventoryUseCase implements InventoryServicePort {
             }
         });
 
+    }
+
+    @Override
+    public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaModel inventorySearchCriteriaModel, PaginationModel paginationModel) {
+        if (paginationModel.getPageSize() == null)
+            paginationModel.setPageSize(PaginationModel.DEFAULT_PAGE_SIZE);
+        List<InventoryModel> inventories = inventoryPersistencePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel);
+        if (inventories.isEmpty())
+            paginationModel.setDescription("No results found");
+        else
+            paginationModel.setDescription("Showing " + paginationModel.getPageNumber() + " to " + paginationModel.getPageSize() + " of " + paginationModel.getTotalResults());
+        return inventories;
     }
 }
