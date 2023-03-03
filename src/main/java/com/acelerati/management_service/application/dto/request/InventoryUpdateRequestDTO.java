@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
-@Validated
 public class InventoryUpdateRequestDTO {
     @NotNull
     @NotEmpty

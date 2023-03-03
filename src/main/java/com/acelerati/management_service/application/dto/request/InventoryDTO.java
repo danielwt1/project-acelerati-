@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 @Getter
 @AllArgsConstructor
-@Validated
 public class InventoryDTO {
     @NotNull
     @NotEmpty

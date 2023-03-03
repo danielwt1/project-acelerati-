@@ -4,7 +4,6 @@ import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.ProductNotFoundException;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,6 @@ public class InventoryUseCase implements InventoryServicePort {
         });
 
     }
-
     @Override
     public void updatePriceSale(InventoryModel inventoryModel) {
         InventoryModel foundProduct = this.inventoryPersistencePort.getElementById(inventoryModel.getIdProduct())
