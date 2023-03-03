@@ -4,7 +4,11 @@ import com.acelerati.management_service.application.dto.request.InventorySearchC
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
 import com.acelerati.management_service.application.dto.response.FilterInventoryResponseDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
+import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +36,19 @@ public class InventoryController {
         this.inventorySpringService.addInventory(inventoryDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @Operation(summary = "Search inventory items by several criteria and serves the result paginated.")
+    @Operation(summary = "Search inventory items by several criteria and serves the result paginated.", responses = {
+            @ApiResponse(responseCode = "200", description = "The search was made successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FilterInventoryResponseDTO.class))),
+            @ApiResponse(responseCode = "500", description = "A business logic error occurred",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)))
+    })
     @GetMapping(path = {"/"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
         FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
         return new ResponseEntity<>(filterInventoryResponse, HttpStatus.OK);
     }
+
+    // array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class) for list only responses.
 }
