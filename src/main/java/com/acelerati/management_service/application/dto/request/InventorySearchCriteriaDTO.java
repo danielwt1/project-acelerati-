@@ -6,9 +6,9 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Min;
 
-@Validated
 @AllArgsConstructor
 @Getter
+@Validated
 public class InventorySearchCriteriaDTO {
 
     @Min(value = 0, message = "The From range of the filter must be at least 0")
