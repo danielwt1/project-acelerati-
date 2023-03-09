@@ -50,4 +50,9 @@ public class InventoryUseCase implements InventoryServicePort {
 
         return inventories;
     }
+
+    @Override
+    public List<InventoryModel> getAllInventoryWithStockAndSalePriceGreaterThan0() {
+        return this.inventoryPersistencePort.getAllInventoryWithStockAndSalePriceGreaterThan0();
+    }
 }

@@ -1,5 +1,4 @@
 package com.acelerati.management_service.application.handler.impl;
-
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
@@ -13,13 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.acelerati.management_service.application.utils.ApplicationDataSet.INVENTORY_1;
 import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class InventorySpringServiceImplTest {
     @Mock
@@ -32,7 +29,6 @@ class InventorySpringServiceImplTest {
     void pruebaTest(){
         List<InventoryDTO> list = new ArrayList<>();
         this.inventoryImpl.addInventory(list);
-
     }
 
     @Test

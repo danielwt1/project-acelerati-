@@ -13,4 +13,7 @@ public interface InventoryPersistencePort {
     Optional<InventoryModel> getElementById(Long idProduct);
     void updateInventory(InventoryModel inventoryModel);
     List<InventoryModel> getInventoriesBy(InventorySearchCriteriaModel inventorySearchCriteriaModel, PaginationModel paginationModel);
+
+    List<InventoryModel>getAllInventoryWithStockAndSalePriceGreaterThan0();
+
 }

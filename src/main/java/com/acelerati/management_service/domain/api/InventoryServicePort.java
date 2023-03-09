@@ -9,4 +9,5 @@ import java.util.List;
 public interface InventoryServicePort {
     void addInventory(List<InventoryModel> inventoryModel);
     List<InventoryModel> getInventoriesBy(InventorySearchCriteriaModel inventorySearchCriteriaModel, PaginationModel paginationModel);
+    List<InventoryModel>getAllInventoryWithStockAndSalePriceGreaterThan0();
 }
