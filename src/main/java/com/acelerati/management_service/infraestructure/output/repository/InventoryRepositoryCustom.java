@@ -11,4 +11,6 @@ public interface InventoryRepositoryCustom <T>{
      Optional<T> getElementById(Long id);
      void updateInventory(T entity);
     List<InventoryEntity> getInventoriesBy(InventorySearchCriteriaModel inventorySearchCriteriaModel, PaginationModel paginationModel);
+    List<InventoryEntity>getAllInventoryWithStockAndSalePriceGreaterThan0();
+
 }

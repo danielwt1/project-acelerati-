@@ -30,7 +30,7 @@ class GlobalExceptionHandlerTest {
     @BeforeEach
     void setUp() {
         globalExceptionHandler = new GlobalExceptionHandler();
-        body = new ErrorDetails(LocalDateTime.of(2023,02,22,10,22),"Error","/path");
+        body = new ErrorDetails(LocalDateTime.of(2023,02,22,10,22),"Error","/path",null);
     }
 
     @Test

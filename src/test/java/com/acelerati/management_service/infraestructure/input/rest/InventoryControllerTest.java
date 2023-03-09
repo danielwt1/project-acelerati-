@@ -27,7 +27,7 @@ class InventoryControllerTest {
     private InventoryController inventoryRestController;
 
     @Test
-    void addInventory_shouldReturnCreatedResponse() throws MethodArgumentNotValidException {
+    void addInventory_shouldReturnCreatedResponse(){
         // Given
         List<InventoryDTO> inventoryDTOList = Arrays.asList(new InventoryDTO("producto",5000L, BigDecimal.valueOf(5000), 1L,1L), new InventoryDTO("producto",5000L,BigDecimal.valueOf(5000), 1L,1L));
          // When

@@ -46,4 +46,9 @@ public class InventoryUseCase implements InventoryServicePort {
             paginationModel.setDescription("Showing " + paginationModel.getPageNumber() + " to " + paginationModel.getPageSize() + " of " + paginationModel.getTotalResults());
         return inventories;
     }
+
+    @Override
+    public List<InventoryModel> getAllInventoryWithStockAndSalePriceGreaterThan0() {
+        return this.inventoryPersistencePort.getAllInventoryWithStockAndSalePriceGreaterThan0();
+    }
 }

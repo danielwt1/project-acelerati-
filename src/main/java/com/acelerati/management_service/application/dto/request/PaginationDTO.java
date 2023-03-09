@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @Getter
-@Validated
 public class PaginationDTO {
 
     private final Integer pageSize;

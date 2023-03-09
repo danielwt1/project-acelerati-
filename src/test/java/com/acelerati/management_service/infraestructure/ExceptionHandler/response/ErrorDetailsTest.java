@@ -14,7 +14,7 @@ class ErrorDetailsTest {
     private static ErrorDetails errorDetails = null;
     @BeforeAll
     static void setUp() {
-        errorDetails = new ErrorDetails(LocalDateTime.of(2023,02,22,6,22),"Error","/ruta");
+        errorDetails = new ErrorDetails(LocalDateTime.of(2023,02,22,6,22),"Error","/ruta",null);
     }
 
     @Test

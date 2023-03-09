@@ -2,11 +2,10 @@ package com.acelerati.management_service.application.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Min;
 
-@Validated
+
 @AllArgsConstructor
 @Getter
 public class InventorySearchCriteriaDTO {

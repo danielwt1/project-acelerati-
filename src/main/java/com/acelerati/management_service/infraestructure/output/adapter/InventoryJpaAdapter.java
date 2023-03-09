@@ -46,4 +46,9 @@ public class InventoryJpaAdapter implements InventoryPersistencePort {
         List<InventoryEntity> inventoryEntities = inventoryRepository.getInventoriesBy(inventorySearchCriteriaModel, paginationModel);
         return inventoryEntityMapper.toListModel(inventoryEntities);
     }
+
+    @Override
+    public List<InventoryModel> getAllInventoryWithStockAndSalePriceGreaterThan0() {
+        return this.inventoryEntityMapper.toListModel(this.inventoryRepository.getAllInventoryWithStockAndSalePriceGreaterThan0());
+    }
 }

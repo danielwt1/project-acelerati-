@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
@@ -79,6 +80,21 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
         return typedQuery.getResultList();
     }
 
+    @Override
+    public List<InventoryEntity> getAllInventoryWithStockAndSalePriceGreaterThan0() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<InventoryEntity> criteriaQuery = criteriaBuilder.createQuery(InventoryEntity.class);
+        Root<InventoryEntity> root = criteriaQuery.from(InventoryEntity.class);
+
+        criteriaQuery.select(root)
+                .where(criteriaBuilder.and(
+                        criteriaBuilder.gt(root.get("salePrice"), 0),
+                        criteriaBuilder.gt(root.get("stock"), 0)));
+
+        TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        return typedQuery.getResultList();
+    }
     private int calculateSelectionStartOffset(PaginationModel paginationModel) {
         return (paginationModel.getPageNumber() - 1) * paginationModel.getPageSize();
     }
