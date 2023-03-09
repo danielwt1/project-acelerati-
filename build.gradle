@@ -19,6 +19,10 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2021.0.5")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -26,6 +30,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.14'
+	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-hystrix
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -36,13 +44,19 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
 test {
 	finalizedBy jacocoTestReport // report is always generated after tests run
 }
-//Eclude  jacoco package
+//Exclude  jacoco package
 jacocoTestReport {
 	dependsOn test // tests are required to run before generating the report
 	afterEvaluate {

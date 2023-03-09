@@ -3,6 +3,7 @@ import com.acelerati.management_service.application.dto.request.InventoryDTO;
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
 import com.acelerati.management_service.application.dto.response.FilterInventoryResponseDTO;
+import com.acelerati.management_service.application.dto.response.ProductFeignClientResponseDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,10 +45,15 @@ public class InventoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @GetMapping(path = {"/"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"/"})
     public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
         FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
         return new ResponseEntity<>(filterInventoryResponse, HttpStatus.OK);
+    }
+
+    @GetMapping(path = {"/fetch"})
+    public ResponseEntity<List<ProductFeignClientResponseDTO>> getProductsFromMicroservice() {
+        return new ResponseEntity<>(inventorySpringService.fetchProductsFromMicroservice(), HttpStatus.OK);
     }
 
     // array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class) for list only responses.

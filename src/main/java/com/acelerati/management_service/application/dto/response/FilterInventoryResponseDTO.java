@@ -8,6 +8,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class FilterInventoryResponseDTO {
-    private List<InventoryResponseDTO> inventoryResponseDTOs;
+    private List<InventoryAndProductResponseDTO> inventoryResponseDTOs;
     private PaginationResponseDTO paginationResponseDTO;
 }

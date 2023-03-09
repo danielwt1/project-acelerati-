@@ -17,6 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +31,7 @@ class GlobalExceptionHandlerTest {
     @BeforeEach
     void setUp() {
         globalExceptionHandler = new GlobalExceptionHandler();
-        body = new ErrorDetails(LocalDateTime.of(2023,02,22,10,22),"Error","/path");
+        body = new ErrorDetails(LocalDateTime.of(2023,02,22,10,22),"Error","/path", new ArrayList<>());
     }
 
     @Test
