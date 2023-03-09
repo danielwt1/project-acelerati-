@@ -44,7 +44,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
     }
 
     @Override
-    public void updateInventory(InventoryEntity entity) {
+    public void  updateInventory(InventoryEntity entity) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaUpdate<InventoryEntity> criteriaUpdate = criteriaBuilder.createCriteriaUpdate(InventoryEntity.class);
         Root<InventoryEntity> root = criteriaUpdate.from(InventoryEntity.class);

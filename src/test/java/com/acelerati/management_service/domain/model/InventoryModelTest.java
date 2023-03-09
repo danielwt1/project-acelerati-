@@ -33,7 +33,6 @@ class InventoryModelTest {
     @Test
     void getName() {
         assertEquals("producto",inventoryModel.getName());
-
     }
 
     @Test
@@ -55,7 +54,6 @@ class InventoryModelTest {
         entity.setStock(20L);
         assertNotNull(entity.getStock());
         assertEquals(20L,entity.getStock());
-
     }
 
     @Test
@@ -66,10 +64,9 @@ class InventoryModelTest {
     @Test
     void setUnitPrice() {
         InventoryEntity entity = new InventoryEntity();
-        entity.setUnitPrice(BigDecimal.valueOf(4000));
+        entity.setUnitPrice(BigDecimal.valueOf(6000));
         assertNotNull(entity.getUnitPrice());
-        assertEquals(BigDecimal.valueOf(4000),entity.getUnitPrice());
-
+        assertEquals(BigDecimal.valueOf(6000),entity.getUnitPrice());
     }
 
     @Test
@@ -80,9 +77,9 @@ class InventoryModelTest {
     @Test
     void setSalePrice() {
         InventoryEntity entity = new InventoryEntity();
-        entity.setSalePrice(BigDecimal.valueOf(6000));
+        entity.setSalePrice(BigDecimal.valueOf(7000));
         assertNotNull(entity.getSalePrice());
-        assertEquals(BigDecimal.valueOf(6000),entity.getSalePrice());
+        assertEquals(BigDecimal.valueOf(7000),entity.getSalePrice());
     }
 
     @Test
