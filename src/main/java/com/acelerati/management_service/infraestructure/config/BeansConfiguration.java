@@ -5,10 +5,9 @@ import com.acelerati.management_service.application.mapper.InventorySearchMapper
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.domain.usecase.InventoryUseCase;
-import com.acelerati.management_service.infraestructure.driving.ProductFeignClientAdapter;
+import com.acelerati.management_service.infraestructure.output.adapter.ProductFeignClientAdapter;
 import com.acelerati.management_service.infraestructure.output.adapter.InventoryJpaAdapter;
-import com.acelerati.management_service.infraestructure.output.adapter.ProductFeingClientAdapter;
-import com.acelerati.management_service.infraestructure.output.feignClient.ProductClient;
+import com.acelerati.management_service.infraestructure.output.feign.ProductFeignClient;
 import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
@@ -20,10 +19,10 @@ public class BeansConfiguration {
     private final InventoryRepository inventoryRepository;
     private final InventoryEntityMapper inventoryEntityMapper;
     private final ProductResponseMapper productResponseMapper;
-    private final ProductClient productClient;
+    private final ProductFeignClient productClient;
     private final ProductRetriever productRetriever;
 
-        public BeansConfiguration(InventoryRepository inventoryRepository, InventoryEntityMapper inventoryEntityMapper, ProductClient productClient, InventorySearchMapper inventorySearchMapper,
+        public BeansConfiguration(InventoryRepository inventoryRepository, InventoryEntityMapper inventoryEntityMapper, ProductFeignClient productClient, InventorySearchMapper inventorySearchMapper,
 				ProductResponseMapper productResponseMapper, ProductRetriever productRetriever) {
 
         this.inventoryRepository = inventoryRepository;

@@ -1,7 +1,6 @@
 package com.acelerati.management_service.application.handler.impl;
 
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
-import com.acelerati.management_service.application.driven.ProductsFeingClientPort;
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
@@ -11,13 +10,11 @@ import com.acelerati.management_service.application.dto.response.ProductsForSale
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
-import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
 import com.acelerati.management_service.domain.model.PaginationModel;
-import com.acelerati.management_service.infraestructure.output.feignClient.ProductsMockFeign;
+import com.acelerati.management_service.infraestructure.output.feign.ProductsMockFeign;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;

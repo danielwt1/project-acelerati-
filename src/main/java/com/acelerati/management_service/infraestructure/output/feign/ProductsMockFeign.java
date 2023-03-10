@@ -1,4 +1,4 @@
-package com.acelerati.management_service.infraestructure.output.feignClient;
+package com.acelerati.management_service.infraestructure.output.feign;
 
 import com.acelerati.management_service.application.dto.response.ProductDTO;
 

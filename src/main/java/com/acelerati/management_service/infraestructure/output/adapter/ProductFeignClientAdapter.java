@@ -1,4 +1,4 @@
-package com.acelerati.management_service.infraestructure.driving;
+package com.acelerati.management_service.infraestructure.output.adapter;
 
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
 import com.acelerati.management_service.application.mapper.ProductResponseMapper;
