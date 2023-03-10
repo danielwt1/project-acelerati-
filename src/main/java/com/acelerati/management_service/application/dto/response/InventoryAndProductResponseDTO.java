@@ -6,5 +6,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class InventoryAndProductResponseDTO {
     private InventoryResponseDTO inventoryResponseDTO;
-    private ProductFeignClientResponseDTO productFeignClientResponseDTO;
+    private ProductDTO productFeignClientResponseDTO;
 }

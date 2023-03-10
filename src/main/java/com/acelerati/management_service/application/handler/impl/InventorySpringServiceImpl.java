@@ -28,22 +28,17 @@ public class InventorySpringServiceImpl implements InventorySpringService {
      private final PaginationRequestMapper paginationRequestMapper;
      private final PaginationResponseMapper paginationResponseMapper;
 	 private final ProductFeignClientPort productFeignClientPort;
-     private final ProductResponseMapper productResponseMapper;
 
-	public InventorySpringServiceImpl(InventoryServicePort inventoryServicePort, InventoryRequestMapper inventoryRequestMapper,
-                                       InventorySearchMapper inventorySearchMapper, PaginationRequestMapper paginationRequestMapper,
-                                       PaginationResponseMapper paginationResponseMapper, ProductFeignClientPort productFeignClientPort,
-                                       ProductResponseMapper productResponseMapper) {
-          this.inventoryServicePort = inventoryServicePort;
-          this.inventoryRequestMapper = inventoryRequestMapper;
-          this.inventorySearchMapper = inventorySearchMapper;
-          this.paginationRequestMapper = paginationRequestMapper;
-          this.paginationResponseMapper = paginationResponseMapper;
-		  this.productFeignClientPort = productFeignClientPort;
-          this.productResponseMapper = productResponseMapper;
+    public InventorySpringServiceImpl(InventoryServicePort inventoryServicePort, InventoryRequestMapper inventoryRequestMapper, InventorySearchMapper inventorySearchMapper, PaginationRequestMapper paginationRequestMapper, PaginationResponseMapper paginationResponseMapper, ProductFeignClientPort productFeignClientPort) {
+        this.inventoryServicePort = inventoryServicePort;
+        this.inventoryRequestMapper = inventoryRequestMapper;
+        this.inventorySearchMapper = inventorySearchMapper;
+        this.paginationRequestMapper = paginationRequestMapper;
+        this.paginationResponseMapper = paginationResponseMapper;
+        this.productFeignClientPort = productFeignClientPort;
     }
 
-     @Override
+    @Override
      public void addInventory(List<InventoryDTO> inventoryDTO) {
           this.inventoryServicePort.addInventory(this.inventoryRequestMapper.toListModel(inventoryDTO));
 
@@ -61,7 +56,7 @@ public class InventorySpringServiceImpl implements InventorySpringService {
                           inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel));
 
           // Fetch products from the corresponding microservice
-          List<ProductFeignClientResponseDTO> feignClientResponseDTOS = fetchProductsFromMicroservice();
+          List<ProductDTO> feignClientResponseDTOS = fetchProductsFromMicroservice();
 
           PaginationResponseDTO paginationResponse = paginationResponseMapper.toResponseDTO(paginationModel);
           return new FilterInventoryResponseDTO(joinInventoryAndProduct(inventoriesResponse, feignClientResponseDTOS),
@@ -104,7 +99,7 @@ public class InventorySpringServiceImpl implements InventorySpringService {
     }
 
     private List<InventoryAndProductResponseDTO> joinInventoryAndProduct(List<InventoryResponseDTO> inventories,
-                                                                         List<ProductFeignClientResponseDTO> products) {
+                                                                         List<ProductDTO> products) {
         Map<Long, InventoryResponseDTO> inventoryMap = inventories.stream()
                 .collect(Collectors.toMap(InventoryResponseDTO::getId, Function.identity()));
         return products.stream()
@@ -114,8 +109,8 @@ public class InventorySpringServiceImpl implements InventorySpringService {
     }
 
     @Override
-    public List<ProductFeignClientResponseDTO> fetchProductsFromMicroservice() {
-        return productResponseMapper.toProductFeignClientResponseDTOList(productFeignClientPort.fetchProductsFromMicroservice());
+    public List<ProductDTO> fetchProductsFromMicroservice() {
+        return productFeignClientPort.fetchProductsFromMicroservice();
     }
 
 }

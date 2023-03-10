@@ -31,7 +31,14 @@ public class InventoryController {
     public InventoryController(InventorySpringService inventorySpringService) {
         this.inventorySpringService = inventorySpringService;
     }
-
+    @Operation(summary = "get all products for sale ", responses = {
+            @ApiResponse(responseCode = "200",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProductsForSaleDTO[].class))),
+            @ApiResponse(responseCode = "500", description = "A business logic error occurred",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)))
+    })
     @GetMapping("/sale")
     public ResponseEntity<List<ProductsForSaleDTO>>getAllProductsForSale(@RequestParam(required = false,defaultValue = "",name = "name")String name,
                                                                          @RequestParam(required = false,defaultValue = "",name = "nombreMarca")String nombreMarca,
@@ -41,7 +48,12 @@ public class InventoryController {
         List<ProductsForSaleDTO>responseData = this.inventorySpringService.getAllProductForSale(name,nombreMarca,nombreCategoria,page,elementPerPage);
         return new ResponseEntity<>(responseData,HttpStatus.OK);
     }
-    @Operation(summary = "Add items to the inventory")
+    @Operation(summary = "Add items to the inventory", responses = {
+            @ApiResponse(responseCode = "200", description = "Add items to the inventory"),
+            @ApiResponse(responseCode = "500", description = "A business logic error occurred",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)))
+    })
     @PostMapping("/")
     public ResponseEntity<Void>addInventory(@RequestBody @NotEmpty(message = "The product list must not be empty") List<@Valid InventoryDTO> inventoryDTO){
         this.inventorySpringService.addInventory(inventoryDTO);

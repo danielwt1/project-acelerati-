@@ -1,8 +1,7 @@
 package com.acelerati.management_service.infraestructure.output.adapter;
 
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
-import com.acelerati.management_service.application.mapper.ProductResponseMapper;
-import com.acelerati.management_service.domain.model.ProductModel;
+import com.acelerati.management_service.application.dto.response.ProductDTO;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
 
 import java.util.List;
@@ -10,15 +9,13 @@ import java.util.List;
 public class ProductFeignClientAdapter implements ProductFeignClientPort {
 
     private final ProductRetriever productRetriever;
-    private final ProductResponseMapper productResponseMapper;
 
-    public ProductFeignClientAdapter(ProductRetriever productRetriever, ProductResponseMapper productResponseMapper) {
+    public ProductFeignClientAdapter(ProductRetriever productRetriever) {
         this.productRetriever = productRetriever;
-        this.productResponseMapper = productResponseMapper;
     }
 
     @Override
-    public List<ProductModel> fetchProductsFromMicroservice() {
-        return productResponseMapper.toProductModelList(productRetriever.getAllProducts());
+    public List<ProductDTO> fetchProductsFromMicroservice() {
+        return productRetriever.getAllProducts();
     }
 }
