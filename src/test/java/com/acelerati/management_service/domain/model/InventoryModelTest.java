@@ -1,14 +1,11 @@
 package com.acelerati.management_service.domain.model;
 
-import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 
 class InventoryModelTest {
     InventoryModel inventoryModel = null;
@@ -24,24 +21,23 @@ class InventoryModelTest {
 
     @Test
     void setId() {
-        InventoryEntity entity = new InventoryEntity();
-        entity.setId(2L);
-        assertNotNull(entity.getId());
-        assertEquals(2L,entity.getId());
+        InventoryModel model = new InventoryModel();
+        model.setId(2L);
+        assertNotNull(model.getId());
+        assertEquals(2L,model.getId());
     }
 
     @Test
     void getName() {
         assertEquals("producto",inventoryModel.getName());
-
     }
 
     @Test
     void setName() {
-        InventoryEntity entity = new InventoryEntity();
-        entity.setName("producto2");
-        assertFalse(entity.getName().isEmpty());
-        assertEquals("producto2",entity.getName());
+        InventoryModel model = new InventoryModel();
+        model.setName("producto2");
+        assertFalse(model.getName().isEmpty());
+        assertEquals("producto2",model.getName());
     }
 
     @Test
@@ -51,11 +47,10 @@ class InventoryModelTest {
 
     @Test
     void setStock() {
-        InventoryEntity entity = new InventoryEntity();
-        entity.setStock(20L);
-        assertNotNull(entity.getStock());
-        assertEquals(20L,entity.getStock());
-
+        InventoryModel model = new InventoryModel();
+        model.setStock(20L);
+        assertNotNull(model.getStock());
+        assertEquals(20L,model.getStock());
     }
 
     @Test
@@ -65,11 +60,10 @@ class InventoryModelTest {
 
     @Test
     void setUnitPrice() {
-        InventoryEntity entity = new InventoryEntity();
-        entity.setUnitPrice(BigDecimal.valueOf(4000));
-        assertNotNull(entity.getUnitPrice());
-        assertEquals(BigDecimal.valueOf(4000),entity.getUnitPrice());
-
+        InventoryModel model = new InventoryModel();
+        model.setUnitPrice(BigDecimal.valueOf(6000));
+        assertNotNull(model.getUnitPrice());
+        assertEquals(BigDecimal.valueOf(6000),model.getUnitPrice());
     }
 
     @Test
@@ -79,10 +73,10 @@ class InventoryModelTest {
 
     @Test
     void setSalePrice() {
-        InventoryEntity entity = new InventoryEntity();
-        entity.setSalePrice(BigDecimal.valueOf(6000));
-        assertNotNull(entity.getSalePrice());
-        assertEquals(BigDecimal.valueOf(6000),entity.getSalePrice());
+        InventoryModel model = new InventoryModel();
+        model.setSalePrice(BigDecimal.valueOf(7000));
+        assertNotNull(model.getSalePrice());
+        assertEquals(BigDecimal.valueOf(7000),model.getSalePrice());
     }
 
     @Test
@@ -92,10 +86,10 @@ class InventoryModelTest {
 
     @Test
     void setIdProduct() {
-        InventoryEntity entity = new InventoryEntity();
-        entity.setIdProduct(2L);
-        assertNotNull(entity.getIdProduct());
-        assertEquals(2L,entity.getIdProduct());
+        InventoryModel model = new InventoryModel();
+        model.setIdProduct(2L);
+        assertNotNull(model.getIdProduct());
+        assertEquals(2L,model.getIdProduct());
     }
 
     @Test
@@ -105,9 +99,9 @@ class InventoryModelTest {
 
     @Test
     void setIdSupplier() {
-        InventoryEntity entity = new InventoryEntity();
-        entity.setIdSupplier(2L);
-        assertNotNull(entity.getIdSupplier());
-        assertEquals(2L,entity.getIdSupplier());
+        InventoryModel model = new InventoryModel();
+        model.setIdSupplier(2L);
+        assertNotNull(model.getIdSupplier());
+        assertEquals(2L,model.getIdSupplier());
     }
 }

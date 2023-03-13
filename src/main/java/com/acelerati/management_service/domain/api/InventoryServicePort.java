@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface InventoryServicePort {
     void addInventory(List<InventoryModel> inventoryModel);
+    void updatePriceSale(InventoryModel inventoryModel);
 }

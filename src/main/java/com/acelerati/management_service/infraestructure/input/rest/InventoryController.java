@@ -1,5 +1,6 @@
 package com.acelerati.management_service.infraestructure.input.rest;
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
+import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,5 +31,11 @@ public class InventoryController {
     public ResponseEntity<Void>addInventory(@RequestBody @NotEmpty(message = "The product list must not be empty") List<@Valid InventoryDTO> inventoryDTO) throws MethodArgumentNotValidException {
         this.inventorySpringService.addInventory(inventoryDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    @Operation(summary = "Update Sale Price to product")
+    @PutMapping("/")
+    public  ResponseEntity<Void>updateSalePrice(@RequestBody @Valid InventoryUpdateRequestDTO inventoryDTO){
+        this.inventorySpringService.updateProductSalePrice(inventoryDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

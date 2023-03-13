@@ -1,6 +1,7 @@
 package com.acelerati.management_service.infraestructure.input.rest;
 
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
+import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,5 +36,16 @@ class InventoryControllerTest {
         // Then
         verify(inventorySpringService).addInventory(inventoryDTOList);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void updateSalePrice_shouldReturnOkStatus() {
+        // Given
+        InventoryUpdateRequestDTO inventoryDTO = new InventoryUpdateRequestDTO("producto",5000L, BigDecimal.valueOf(5000), BigDecimal.valueOf(6000), 1L,1L);
+        // When
+        ResponseEntity<Void> responseEntity = inventoryRestController.updateSalePrice(inventoryDTO);
+        // Then
+        verify(inventorySpringService).updateProductSalePrice(inventoryDTO);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }
