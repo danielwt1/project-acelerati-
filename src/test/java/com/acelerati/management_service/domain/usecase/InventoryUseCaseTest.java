@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,5 +50,15 @@ class InventoryUseCaseTest {
         inventoryUseCase.addInventory(List.of(inventoryModel));
         verify(this.persistencePort).getElementById(inventoryModel.getIdProduct());
         verify(this.persistencePort).updateInventory(inventoryModel);
+    }
+
+    @Test
+    void whenGetAllInventoryWithStockAndSalePriceGreaterThan0ThenReturnList(){
+        List<InventoryModel> listInventory = new ArrayList<>();
+        listInventory.add(inventoryModel);
+        when(this.persistencePort.getAllInventoryWithStockAndSalePriceGreaterThan0()).thenReturn(listInventory);
+        List<InventoryModel> responseList = persistencePort.getAllInventoryWithStockAndSalePriceGreaterThan0();
+        assertEquals(listInventory.size(),responseList.size());
+        verify(this.persistencePort).getAllInventoryWithStockAndSalePriceGreaterThan0();
     }
 }

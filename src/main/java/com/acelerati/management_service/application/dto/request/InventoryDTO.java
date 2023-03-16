@@ -1,7 +1,6 @@
 package com.acelerati.management_service.application.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

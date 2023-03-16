@@ -8,6 +8,7 @@ import com.acelerati.management_service.infraestructure.output.adapter.Inventory
 import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +18,8 @@ public class BeansConfiguration {
     private final InventoryEntityMapper inventoryEntityMapper;
     //private final ProductResponseMapper productResponseMapper;
     private final ProductRetriever productRetriever;
+    @Value("${external.products.microservice.api.base-url}")
+    private  String feignClientUrl;
 
     public BeansConfiguration(InventoryRepository inventoryRepository, InventoryEntityMapper inventoryEntityMapper, ProductRetriever productRetriever) {
         this.inventoryRepository = inventoryRepository;
@@ -36,4 +39,5 @@ public class BeansConfiguration {
     @Bean
     public ProductFeignClientPort productFeignClientPort() {
         return new ProductFeignClientAdapter(productRetriever);
-    }}
+    }
+}

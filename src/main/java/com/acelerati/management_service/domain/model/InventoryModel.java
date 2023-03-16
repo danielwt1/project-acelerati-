@@ -10,6 +10,7 @@ public class InventoryModel {
     private BigDecimal salePrice;
     private Long idProduct;
     private Long idSupplier;
+    
 
     public InventoryModel() {
     }

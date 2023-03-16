@@ -1,14 +1,13 @@
 package com.acelerati.management_service.infraestructure.output.repository.impl;
-import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
-import com.acelerati.management_service.domain.model.PaginationModel;
+import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.usecase.InventoryUseCase;
+import com.acelerati.management_service.domain.util.PaginationUtil;
 import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepositoryCustom;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
@@ -60,7 +59,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
     }
 
     @Override
-    public List<InventoryEntity> getInventoriesBy(InventorySearchCriteriaModel inventorySearchCriteriaModel, PaginationModel paginationModel) {
+    public List<InventoryEntity> getInventoriesBy(InventorySearchCriteriaUtil inventorySearchCriteriaModel, PaginationUtil paginationModel) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<InventoryEntity> criteriaQuery = criteriaBuilder.createQuery(InventoryEntity.class);
         Root<InventoryEntity> root = criteriaQuery.from(InventoryEntity.class);
@@ -97,10 +96,10 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
 
         return typedQuery.getResultList();
     }
-    private int calculateSelectionStartOffset(PaginationModel paginationModel) {
+    private int calculateSelectionStartOffset(PaginationUtil paginationModel) {
         return (paginationModel.getPageNumber() - 1) * paginationModel.getPageSize();
     }
-    private List<Predicate> buildFilteringPredicates(InventorySearchCriteriaModel inventorySearchCriteriaModel,
+    private List<Predicate> buildFilteringPredicates(InventorySearchCriteriaUtil inventorySearchCriteriaModel,
                                                      CriteriaBuilder criteriaBuilder, Root<InventoryEntity> root) {
         List<Predicate> predicates = new ArrayList<>();
         if (inventorySearchCriteriaModel.getToUnitPrice() != null && inventorySearchCriteriaModel.getFromUnitPrice() != null)

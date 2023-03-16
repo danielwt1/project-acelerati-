@@ -1,7 +1,6 @@
 package com.acelerati.management_service.infraestructure.output.retriever;
 
 import com.acelerati.management_service.application.dto.response.ProductDTO;
-import com.acelerati.management_service.application.dto.response.ProductFeignClientResponseDTO;
 import com.acelerati.management_service.infraestructure.output.feign.ProductFeignClient;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.stereotype.Component;
@@ -23,10 +22,10 @@ public class ProductRetriever {
         return productFeignClient.getProducts();
     }
 
-    public List<ProductFeignClientResponseDTO> getFakeProducts() {
-        List<ProductFeignClientResponseDTO> fakeProducts = new ArrayList<>();
-        fakeProducts.add(new ProductFeignClientResponseDTO(1L, "Mother board", "A mother board", "Model 1", 1L, 1L));
-        fakeProducts.add(new ProductFeignClientResponseDTO(4L, "USB Memory 64GB", "A USB Memory 64GB", "Model 4", 4L, 2L));
+    public List<ProductDTO> getFakeProducts() {
+        List<ProductDTO> fakeProducts = new ArrayList<>();
+        fakeProducts.add(new ProductDTO(1L, "Mother board", "A mother board", "Model 1", 1L, 1L));
+        fakeProducts.add(new ProductDTO(4L, "USB Memory 64GB", "A USB Memory 64GB", "Model 4", 4L, 2L));
         return fakeProducts;
     }
 }

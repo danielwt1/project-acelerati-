@@ -10,9 +10,8 @@ import com.acelerati.management_service.application.dto.response.ProductsForSale
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
-import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
-import com.acelerati.management_service.domain.model.PaginationModel;
-import com.acelerati.management_service.infraestructure.output.feign.ProductsMockFeign;
+import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
+import com.acelerati.management_service.domain.util.PaginationUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,8 +46,8 @@ public class InventorySpringServiceImpl implements InventorySpringService {
      @Override
      public FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteriaDTO,
                                                         PaginationDTO paginationDTO) {
-          InventorySearchCriteriaModel inventorySearchCriteriaModel = inventorySearchMapper.toModel(searchCriteriaDTO);
-          PaginationModel paginationModel = paginationRequestMapper.toModel(paginationDTO);
+          InventorySearchCriteriaUtil inventorySearchCriteriaModel = inventorySearchMapper.toModel(searchCriteriaDTO);
+          PaginationUtil paginationModel = paginationRequestMapper.toModel(paginationDTO);
 
           // Do the query against the database and update the paginator
           List<InventoryResponseDTO> inventoriesResponse =
@@ -65,20 +64,15 @@ public class InventorySpringServiceImpl implements InventorySpringService {
 	@Override
     public List<ProductsForSaleDTO> getAllProductForSale(String name, String nombreMarca, String nombreCategoria,int page,int elementPerPage) {
         List<InventoryResponseDTO> inventoryList = this.inventorySearchMapper.toDTOList(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0());
-        List<ProductDTO> products = ProductsMockFeign.getAll();
-        List<ProductsForSaleDTO> dataFiltered = filterData(mergeData(inventoryList, products),name,nombreMarca,nombreCategoria);
+        List<ProductDTO> products = this.productFeignClientPort.fetchProductsFromMicroservice();
+        List<ProductsForSaleDTO> dataFiltered = mergeData(inventoryList, products);
         return dataPaginated(dataFiltered,page,elementPerPage);
     }
 
-    public List<ProductsForSaleDTO> filterData(List<ProductsForSaleDTO> dataMerged,String name,
-                                                            String nombreMarca, String nombreCategoria){
-        return dataMerged.stream()
-                .filter(product->product.getName().contains(name))
-                //.filter(product->product.g)
-                .collect(Collectors.toList());
-    }
+
 
     public List<ProductsForSaleDTO>dataPaginated(List<ProductsForSaleDTO> dataFiltered,int page,int elementPerPage){
+
         return dataFiltered.stream()
                 .skip((long) (page - 1) * elementPerPage)
                 .limit(elementPerPage)
