@@ -5,6 +5,7 @@ import com.acelerati.management_service.application.dto.request.InventorySearchC
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
 import com.acelerati.management_service.application.dto.response.FilterInventoryResponseDTO;
 import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
+import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -64,7 +69,6 @@ public class InventoryController {
         this.inventorySpringService.addInventory(inventoryDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
     @Operation(summary = "Search inventory items by several criteria and serves the result paginated.", responses = {
             @ApiResponse(responseCode = "200", description = "The search was made successfully",
                     content = @Content(mediaType = "application/json",
@@ -78,5 +82,14 @@ public class InventoryController {
                                                                        @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
         FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
         return new ResponseEntity<>(filterInventoryResponse, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Update Sale Price to product")
+    @PutMapping("/")
+    public  ResponseEntity<Void>updateSalePrice(@RequestHeader(value = "user")String user,
+                                                @RequestBody @Valid InventoryUpdateRequestDTO inventoryDTO){
+        this.inventorySpringService.updateProductSalePrice(inventoryDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 }

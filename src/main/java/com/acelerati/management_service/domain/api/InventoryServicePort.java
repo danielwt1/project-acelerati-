@@ -10,4 +10,5 @@ public interface InventoryServicePort {
     void addInventory(List<InventoryModel> inventoryModel);
     List<InventoryModel> getInventoriesBy(InventorySearchCriteriaUtil inventorySearchCriteriaModel, PaginationUtil paginationModel);
     List<InventoryModel>getAllInventoryWithStockAndSalePriceGreaterThan0();
+    void updatePriceSale(InventoryModel inventoryModel);
 }

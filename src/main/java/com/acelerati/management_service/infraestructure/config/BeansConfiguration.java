@@ -31,7 +31,6 @@ public class BeansConfiguration {
     public InventoryPersistencePort inventoryPersistencePPort() {
         return new InventoryJpaAdapter(inventoryRepository, inventoryEntityMapper);
     }
-    //Lo mismo para el servicio
     @Bean
     public InventoryServicePort personServicePort(){
         return new InventoryUseCase(inventoryPersistencePPort());
@@ -40,4 +39,6 @@ public class BeansConfiguration {
     public ProductFeignClientPort productFeignClientPort() {
         return new ProductFeignClientAdapter(productRetriever);
     }
+
+
 }

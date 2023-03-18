@@ -6,6 +6,7 @@ import com.acelerati.management_service.application.dto.request.PaginationDTO;
 import com.acelerati.management_service.application.dto.response.FilterInventoryResponseDTO;
 import com.acelerati.management_service.application.dto.response.PaginationResponseDTO;
 import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
+import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.domain.util.PaginationUtil;
 import org.junit.jupiter.api.Test;
@@ -70,5 +71,14 @@ class InventoryControllerTest {
                 ()->assertEquals(HttpStatus.OK,response.getStatusCode()),
                 ()->verify(this.inventorySpringService).getAllProductForSale("producto1","Pp112","cat1",1,20)
         );
+    }
+    void updateSalePrice_shouldReturnOkStatus() {
+        // Given
+        InventoryUpdateRequestDTO inventoryDTO = new InventoryUpdateRequestDTO("producto",5000L, BigDecimal.valueOf(5000), BigDecimal.valueOf(6000), 1L,1L);
+        // When
+        ResponseEntity<Void> responseEntity = inventoryRestController.updateSalePrice("user",inventoryDTO);
+        // Then
+        verify(inventorySpringService).updateProductSalePrice(inventoryDTO);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }

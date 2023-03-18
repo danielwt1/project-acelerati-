@@ -5,7 +5,11 @@ import com.acelerati.management_service.domain.exception.InvalidFilterRangeExcep
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
+
 import com.acelerati.management_service.domain.util.PaginationUtil;
+
+
+import com.acelerati.management_service.infraestructure.ExceptionHandler.ProductNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,6 +40,7 @@ public class InventoryUseCase implements InventoryServicePort {
 
     }
 
+
     @Override
     public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaUtil inventorySearchCriteriaModel,
                                                  PaginationUtil paginationModel) throws InvalidFilterRangeException {
@@ -55,4 +60,12 @@ public class InventoryUseCase implements InventoryServicePort {
     public List<InventoryModel> getAllInventoryWithStockAndSalePriceGreaterThan0() {
         return this.inventoryPersistencePort.getAllInventoryWithStockAndSalePriceGreaterThan0();
     }
+    @Override
+    public void updatePriceSale(InventoryModel inventoryModel) {
+        InventoryModel foundProduct = this.inventoryPersistencePort.getElementById(inventoryModel.getIdProduct())
+                .orElseThrow(()-> new ProductNotFoundException(String.format("The  Product named %s does not exist",inventoryModel.getName())));
+        foundProduct.setSalePrice(inventoryModel.getSalePrice());
+        this.inventoryPersistencePort.updateInventory(foundProduct);
+    }
+
 }

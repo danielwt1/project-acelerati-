@@ -2,11 +2,15 @@ package com.acelerati.management_service.application.handler.impl;
 
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
+
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
 import com.acelerati.management_service.application.dto.response.*;
 import com.acelerati.management_service.application.dto.response.ProductDTO;
 import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
+
+import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
+
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 public class InventorySpringServiceImpl implements InventorySpringService {
      private final InventoryServicePort inventoryServicePort;
      private final InventoryRequestMapper inventoryRequestMapper;
+
      private final InventorySearchMapper inventorySearchMapper;
      private final PaginationRequestMapper paginationRequestMapper;
      private final PaginationResponseMapper paginationResponseMapper;
@@ -36,11 +41,15 @@ public class InventorySpringServiceImpl implements InventorySpringService {
         this.paginationResponseMapper = paginationResponseMapper;
         this.productFeignClientPort = productFeignClientPort;
     }
-
     @Override
+
      public void addInventory(List<InventoryDTO> inventoryDTO) {
           this.inventoryServicePort.addInventory(this.inventoryRequestMapper.toListModel(inventoryDTO));
+     }
 
+     @Override
+     public void updateProductSalePrice(InventoryUpdateRequestDTO inventoryDTO) {
+          this.inventoryServicePort.updatePriceSale(this.inventoryRequestMapper.toModel(inventoryDTO));
      }
 
      @Override

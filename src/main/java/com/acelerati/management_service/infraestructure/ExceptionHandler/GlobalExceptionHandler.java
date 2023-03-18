@@ -19,8 +19,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleAllExceptions(Exception exception, WebRequest request){
-        ErrorDetails res = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false), null);
-        return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorDetails response = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false),null);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -37,6 +37,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.joining(", "));
         ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false), null);
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleProductNotFoundException(ProductNotFoundException exception, WebRequest request){
+        ErrorDetails response = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false),null);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+
     }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -46,6 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.joining(" "));
         ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false), null);
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+
     }
 
 }
