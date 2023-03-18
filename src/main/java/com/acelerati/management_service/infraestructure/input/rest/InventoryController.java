@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,8 @@ public class InventoryController {
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping("/sale")
-    public ResponseEntity<List<ProductsForSaleDTO>>getAllProductsForSale(@RequestParam(required = false,defaultValue = "",name = "name")String name,
+    public ResponseEntity<List<ProductsForSaleDTO>>getAllProductsForSale(@RequestHeader(value = "user")String user,
+                                                                         @RequestParam(required = false,defaultValue = "",name = "name")String name,
                                                                          @RequestParam(required = false,defaultValue = "",name = "nombreMarca")String nombreMarca,
                                                                          @RequestParam(required = false,defaultValue = "",name = "nombreCategoria")String nombreCategoria,
                                                                          @RequestParam(required = false,defaultValue = "1",name = "page")Integer page,
@@ -53,7 +55,9 @@ public class InventoryController {
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PostMapping("/")
-    public ResponseEntity<Void>addInventory(@RequestBody @NotEmpty(message = "The product list must not be empty") List<@Valid InventoryDTO> inventoryDTO){
+    @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
+    public ResponseEntity<Void>addInventory(@RequestHeader(value = "user")String user,
+                                            @RequestBody @NotEmpty(message = "The product list must not be empty") List<@Valid InventoryDTO> inventoryDTO){
         this.inventorySpringService.addInventory(inventoryDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -66,7 +70,8 @@ public class InventoryController {
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping(path = {"/"})
-    public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
+    public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@RequestHeader(value = "user")String user,
+                                                                       @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
         FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
         return new ResponseEntity<>(filterInventoryResponse, HttpStatus.OK);
     }

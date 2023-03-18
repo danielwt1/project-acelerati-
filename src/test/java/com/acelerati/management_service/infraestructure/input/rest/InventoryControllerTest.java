@@ -6,7 +6,7 @@ import com.acelerati.management_service.application.dto.request.PaginationDTO;
 import com.acelerati.management_service.application.dto.response.FilterInventoryResponseDTO;
 import com.acelerati.management_service.application.dto.response.PaginationResponseDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
-import com.acelerati.management_service.domain.util.PaginationModel;
+import com.acelerati.management_service.domain.util.PaginationUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,7 +37,7 @@ class InventoryControllerTest {
         // Given
         List<InventoryDTO> inventoryDTOList = Arrays.asList(new InventoryDTO("producto",5000L, BigDecimal.valueOf(5000), 1L,1L), new InventoryDTO("producto",5000L,BigDecimal.valueOf(5000), 1L,1L));
          // When
-        ResponseEntity<Void> responseEntity = inventoryRestController.addInventory(inventoryDTOList);
+        ResponseEntity<Void> responseEntity = inventoryRestController.addInventory("admin",inventoryDTOList);
         // Then
         verify(inventorySpringService).addInventory(inventoryDTOList);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -48,12 +48,12 @@ class InventoryControllerTest {
         InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(null, null, null);
         PaginationDTO paginationRequest = new PaginationDTO(null, 1);
 
-        PaginationResponseDTO emptyPaginationResponse = new PaginationResponseDTO(PaginationModel.DEFAULT_PAGE_SIZE, 1, null,
-                null, null, PaginationModel.NO_RECORDS_FOUND);
+        PaginationResponseDTO emptyPaginationResponse = new PaginationResponseDTO(PaginationUtil.DEFAULT_PAGE_SIZE, 1, null,
+                null, null, PaginationUtil.NO_RECORDS_FOUND);
         FilterInventoryResponseDTO noResultsResponse = new FilterInventoryResponseDTO(new ArrayList<>(), emptyPaginationResponse);
 
         when(inventorySpringService.getInventoriesBy(searchCriteriaRequest, paginationRequest)).thenReturn(noResultsResponse);
-        ResponseEntity<FilterInventoryResponseDTO> responseEntity = inventoryRestController.getInventoriesBy(searchCriteriaRequest, paginationRequest);
+        ResponseEntity<FilterInventoryResponseDTO> responseEntity = inventoryRestController.getInventoriesBy("admin",searchCriteriaRequest, paginationRequest);
 
         verify(inventorySpringService).getInventoriesBy(searchCriteriaRequest, paginationRequest);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
