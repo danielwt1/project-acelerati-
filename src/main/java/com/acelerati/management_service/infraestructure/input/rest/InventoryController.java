@@ -1,4 +1,5 @@
 package com.acelerati.management_service.infraestructure.input.rest;
+
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
@@ -30,6 +31,7 @@ public class InventoryController {
     public InventoryController(InventorySpringService inventorySpringService) {
         this.inventorySpringService = inventorySpringService;
     }
+
     @Operation(summary = "get all products for sale ", responses = {
             @ApiResponse(responseCode = "200",
                     content = @Content(mediaType = "application/json",
@@ -39,15 +41,16 @@ public class InventoryController {
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping("/sale")
-    public ResponseEntity<List<ProductsForSaleDTO>>getAllProductsForSale(@RequestHeader(value = "user")String user,
-                                                                         @RequestParam(required = false,defaultValue = "",name = "name")String name,
-                                                                         @RequestParam(required = false,defaultValue = "",name = "nombreMarca")String nombreMarca,
-                                                                         @RequestParam(required = false,defaultValue = "",name = "nombreCategoria")String nombreCategoria,
-                                                                         @RequestParam(required = false,defaultValue = "1",name = "page")Integer page,
-                                                                         @RequestParam(required = false,defaultValue = "10",name = "elementPerPage")Integer elementPerPage){
-        List<ProductsForSaleDTO>responseData = this.inventorySpringService.getAllProductForSale(name,nombreMarca,nombreCategoria,page,elementPerPage);
-        return new ResponseEntity<>(responseData,HttpStatus.OK);
+    public ResponseEntity<List<ProductsForSaleDTO>> getAllProductsForSale(@RequestHeader(value = "user") String user,
+                                                                          @RequestParam(required = false, defaultValue = "", name = "name") String name,
+                                                                          @RequestParam(required = false, defaultValue = "", name = "nombreMarca") String nombreMarca,
+                                                                          @RequestParam(required = false, defaultValue = "", name = "nombreCategoria") String nombreCategoria,
+                                                                          @RequestParam(required = false, defaultValue = "1", name = "page") Integer page,
+                                                                          @RequestParam(required = false, defaultValue = "10", name = "elementPerPage") Integer elementPerPage) {
+        List<ProductsForSaleDTO> responseData = this.inventorySpringService.getAllProductForSale(name, nombreMarca, nombreCategoria, page, elementPerPage);
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
+
     @Operation(summary = "Add items to the inventory", responses = {
             @ApiResponse(responseCode = "200", description = "Add items to the inventory"),
             @ApiResponse(responseCode = "500", description = "A business logic error occurred",
@@ -56,11 +59,12 @@ public class InventoryController {
     })
     @PostMapping("/")
     @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
-    public ResponseEntity<Void>addInventory(@RequestHeader(value = "user")String user,
-                                            @RequestBody @NotEmpty(message = "The product list must not be empty") List<@Valid InventoryDTO> inventoryDTO){
+    public ResponseEntity<Void> addInventory(@RequestHeader(value = "user") String user,
+                                             @RequestBody @NotEmpty(message = "The product list must not be empty") List<@Valid InventoryDTO> inventoryDTO) {
         this.inventorySpringService.addInventory(inventoryDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
     @Operation(summary = "Search inventory items by several criteria and serves the result paginated.", responses = {
             @ApiResponse(responseCode = "200", description = "The search was made successfully",
                     content = @Content(mediaType = "application/json",
@@ -70,7 +74,7 @@ public class InventoryController {
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping(path = {"/"})
-    public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@RequestHeader(value = "user")String user,
+    public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@RequestHeader(value = "user") String user,
                                                                        @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
         FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
         return new ResponseEntity<>(filterInventoryResponse, HttpStatus.OK);

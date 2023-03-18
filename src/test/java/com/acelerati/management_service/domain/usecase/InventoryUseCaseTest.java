@@ -57,7 +57,7 @@ class InventoryUseCaseTest {
         List<InventoryModel> listInventory = new ArrayList<>();
         listInventory.add(inventoryModel);
         when(this.persistencePort.getAllInventoryWithStockAndSalePriceGreaterThan0()).thenReturn(listInventory);
-        List<InventoryModel> responseList = persistencePort.getAllInventoryWithStockAndSalePriceGreaterThan0();
+        List<InventoryModel> responseList = inventoryUseCase.getAllInventoryWithStockAndSalePriceGreaterThan0();
         assertEquals(listInventory.size(),responseList.size());
         verify(this.persistencePort).getAllInventoryWithStockAndSalePriceGreaterThan0();
     }

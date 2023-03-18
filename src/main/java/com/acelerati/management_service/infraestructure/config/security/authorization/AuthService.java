@@ -12,6 +12,9 @@ public class AuthService {
     public boolean checkEmployeeRole(List<String> roles){
         return roles.contains("EMPLOYEE");
     }
+    public boolean checkEmployeeOrAdmin(List<String> roles){
+        return roles.contains("EMPLOYEE") ||roles.contains("ADMIN") ;
+    }
     public List<String> getRolesContext(){
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

@@ -5,6 +5,7 @@ import com.acelerati.management_service.application.dto.request.InventorySearchC
 import com.acelerati.management_service.application.dto.request.PaginationDTO;
 import com.acelerati.management_service.application.dto.response.FilterInventoryResponseDTO;
 import com.acelerati.management_service.application.dto.response.PaginationResponseDTO;
+import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.domain.util.PaginationUtil;
 import org.junit.jupiter.api.Test;
@@ -57,5 +58,17 @@ class InventoryControllerTest {
 
         verify(inventorySpringService).getInventoriesBy(searchCriteriaRequest, paginationRequest);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+    @Test
+    void whenGetAllProductsForSaleThenReturnHttpStatusOk(){
+        ProductsForSaleDTO productsForSaleDTO = new ProductsForSaleDTO(2L,"producto1",new BigDecimal(3000),3L,"Pp112");
+        List<ProductsForSaleDTO> listProductsForSale = Arrays.asList(productsForSaleDTO);
+        when(this.inventorySpringService.getAllProductForSale("producto1","Pp112","cat1",1,20)).thenReturn(listProductsForSale);
+        ResponseEntity<List<ProductsForSaleDTO>>response = this.inventoryRestController.getAllProductsForSale("daniel","producto1","Pp112","cat1",1,20);
+        assertAll(
+                ()-> assertEquals(listProductsForSale.size(),response.getBody().size()),
+                ()->assertEquals(HttpStatus.OK,response.getStatusCode()),
+                ()->verify(this.inventorySpringService).getAllProductForSale("producto1","Pp112","cat1",1,20)
+        );
     }
 }
