@@ -49,10 +49,10 @@ public class InventoryController {
     public ResponseEntity<List<ProductsForSaleDTO>> getAllProductsForSale(@RequestHeader(value = "user") String user,
                                                                           @RequestParam(required = false, defaultValue = "", name = "name") String name,
                                                                           @RequestParam(required = false, defaultValue = "", name = "brandName") String brandName,
-                                                                          @RequestParam(required = false, defaultValue = "", name = "nombreCategoria") String nombreCategoria,
+                                                                          @RequestParam(required = false, defaultValue = "", name = "nombreCategoria") String nameCategory,
                                                                           @RequestParam(required = false, defaultValue = "1", name = "page") Integer page,
                                                                           @RequestParam(required = false, defaultValue = "10", name = "elementPerPage") Integer elementPerPage) {
-        List<ProductsForSaleDTO> responseData = this.inventorySpringService.getAllProductForSale(name, nombreMarca, nombreCategoria, page, elementPerPage);
+        List<ProductsForSaleDTO> responseData = this.inventorySpringService.getAllProductForSale(name, brandName, nameCategory, page, elementPerPage);
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
