@@ -12,7 +12,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,5 +62,19 @@ class InventoryJpaAdapterTest {
     @Test
     void whenUpdateProductoThenCallUpdateDB() {
         this.inventoryJpaAdapter.updateInventory(inventoryModel);
+    }
+
+    @Test
+    void whenGetAllInventoryWithStockAndSalePriceGreaterThan0ThenReturnListWIthElements(){
+        List<InventoryModel> listInventory = Arrays.asList(this.inventoryModel);
+        List<InventoryEntity>listInventoryEntity = Arrays.asList(this.inventoryEntity);
+        when(this.inventoryRepository.getAllInventoryWithStockAndSalePriceGreaterThan0()).thenReturn(listInventoryEntity);
+        when(this.inventoryEntityMapper.toListModel(listInventoryEntity)).thenReturn(listInventory);
+        List<InventoryModel> respoonseFromRepository = this.inventoryJpaAdapter.getAllInventoryWithStockAndSalePriceGreaterThan0();
+        assertAll(
+                ()->assertTrue(respoonseFromRepository.size()>0),
+                ()->assertTrue(respoonseFromRepository.get(0) != null),
+                ()->assertEquals(listInventory.size(),respoonseFromRepository.size())
+        );
     }
 }

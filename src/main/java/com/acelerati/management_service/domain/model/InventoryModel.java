@@ -1,7 +1,6 @@
 package com.acelerati.management_service.domain.model;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public class InventoryModel {
     private Long id;
@@ -11,6 +10,7 @@ public class InventoryModel {
     private BigDecimal salePrice;
     private Long idProduct;
     private Long idSupplier;
+    
 
     public InventoryModel() {
     }
