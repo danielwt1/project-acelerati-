@@ -48,7 +48,7 @@ public class InventoryController {
     @GetMapping("/sale")
     public ResponseEntity<List<ProductsForSaleDTO>> getAllProductsForSale(@RequestHeader(value = "user") String user,
                                                                           @RequestParam(required = false, defaultValue = "", name = "name") String name,
-                                                                          @RequestParam(required = false, defaultValue = "", name = "nombreMarca") String nombreMarca,
+                                                                          @RequestParam(required = false, defaultValue = "", name = "brandName") String brandName,
                                                                           @RequestParam(required = false, defaultValue = "", name = "nombreCategoria") String nombreCategoria,
                                                                           @RequestParam(required = false, defaultValue = "1", name = "page") Integer page,
                                                                           @RequestParam(required = false, defaultValue = "10", name = "elementPerPage") Integer elementPerPage) {

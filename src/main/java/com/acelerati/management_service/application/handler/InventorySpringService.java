@@ -17,7 +17,7 @@ public interface InventorySpringService {
     void addInventory(List<InventoryDTO> inventoryDTO);
 
     FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteria, PaginationDTO paginationDTO);
-	List<ProductsForSaleDTO> getAllProductForSale(String name,String nombreMarca,String nombreCategoria,int page,int elementsPerPage);
+	List<ProductsForSaleDTO> getAllProductForSale(String name,String brandName,String categoryName,int page,int elementsPerPage);
 	List<ProductDTO> fetchProductsFromMicroservice();
 
 
