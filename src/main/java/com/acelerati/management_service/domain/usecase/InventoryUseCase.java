@@ -9,7 +9,7 @@ import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.domain.util.PaginationUtil;
 
 
-import com.acelerati.management_service.infraestructure.ExceptionHandler.ProductNotFoundException;
+import com.acelerati.management_service.domain.exception.ProductNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.List;

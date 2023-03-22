@@ -84,18 +84,4 @@ class InventorySpringServiceImplTest {
         assertEquals(2,productsForSale.size());
     }
 
-
-/*
-    @Test
-    void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() {
-        InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(null, 1);
-        when(inventoryServicePort.getInventoriesBy(Mockito.any(), Mockito.any())).thenReturn(INVENTORY_1);
-
-        FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
-
-        Assertions.assertNotNull(filterInventoryResponse, "Applying no filter to the inventory and requesting the default pagination should not return null");
-        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponseDTOs(), "Applying no filter to the inventory ");
-    }
-    */
 }
