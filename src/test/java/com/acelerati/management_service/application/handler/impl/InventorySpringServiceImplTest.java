@@ -1,18 +1,20 @@
 package com.acelerati.management_service.application.handler.impl;
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
-import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
-import com.acelerati.management_service.application.dto.request.PaginationDTO;
-import com.acelerati.management_service.application.dto.response.FilterInventoryResponseDTO;
+
+import com.acelerati.management_service.application.dto.response.InventoryResponseDTO;
+import com.acelerati.management_service.application.dto.response.ProductDTO;
+import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
 import com.acelerati.management_service.application.dto.response.PaginationResponseDTO;
 import com.acelerati.management_service.application.mapper.*;
+import com.acelerati.management_service.application.mapper.InventorySearchMapper;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
 import com.acelerati.management_service.domain.model.PaginationModel;
 import com.acelerati.management_service.domain.model.ProductModel;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,11 +23,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static com.acelerati.management_service.application.utils.ApplicationDataSet.*;
-import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class InventorySpringServiceImplTest {
     @Mock
@@ -42,20 +46,64 @@ class InventorySpringServiceImplTest {
     private ProductFeignClientPort productFeignClientPort;
     @Mock
     private PaginationResponseMapper paginationResponseMapper;
+    @Mock
+    ProductFeignClientPort productFeignClient;
     @InjectMocks
     private InventorySpringServiceImpl inventoryImpl;
+
     @Test
-    void pruebaTest(){
+    void whenCallSaveInventoryListThenSaveTest(){
         List<InventoryDTO> list = new ArrayList<>();
         this.inventoryImpl.addInventory(list);
     }
+
+    void whenCallMethodForMergeTwoListThenReturnNewListMergedTest() {
+        List<InventoryResponseDTO> inventoryList =new ArrayList<>();
+        InventoryResponseDTO inventory = mock(InventoryResponseDTO.class);
+        inventoryList.add(inventory);
+        List<ProductDTO> products = new ArrayList<>();
+        ProductDTO producto = mock(ProductDTO.class);
+        products.add(producto);
+        List<ProductsForSaleDTO> dataMerged = this.inventoryImpl.mergeData(inventoryList,products);
+        assertEquals(ProductsForSaleDTO.class,dataMerged.get(0).getClass());
+    }
+
     @Test
+    void whenCalldataPaginatedThenReturnListPaginatedTest(){
+        ProductsForSaleDTO products =mock(ProductsForSaleDTO.class);
+        List<ProductsForSaleDTO> productsForSaleDTOList = Arrays.asList(products,products,products,products,products,products,products,products,products);
+        List<ProductsForSaleDTO> dataPaginated = this.inventoryImpl.dataPaginated(productsForSaleDTOList,1,5);
+        assertEquals(5,dataPaginated.size());
+    }
+
+    @Test
+    void whenGetAllProductsForSaleThenResultListWithDataTest(){
+        InventoryResponseDTO products = new InventoryResponseDTO(1L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
+        InventoryResponseDTO products2 = new InventoryResponseDTO(2L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
+        InventoryResponseDTO products3 = new InventoryResponseDTO(3L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
+
+        InventoryModel inventoryModel = new InventoryModel(1L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
+        InventoryModel inventoryModel2= new InventoryModel(2L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
+        InventoryModel inventoryModel3 = new InventoryModel(3L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
+
+        ProductDTO productDTO = new ProductDTO(1L,"Producto1","Producto1Des","Modelo1",2L,1L);
+        ProductDTO productDTO2 = new ProductDTO(2L,"Producto1","Producto1Des","Modelo1",2L,1L);
+
+        List<ProductDTO> productDTOS = Arrays.asList(productDTO,productDTO2);
+        List<InventoryModel> inventoryModels = Arrays.asList(inventoryModel,inventoryModel2,inventoryModel3);
+        List<InventoryResponseDTO> productsForSaleDTOList = Arrays.asList(products,products2,products3);
+        when(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0()).thenReturn(inventoryModels);
+        when(this.inventorySearchMapper.toDTOList(inventoryModels)).thenReturn(productsForSaleDTOList);
+        when(this.productFeignClient.fetchProductsFromMicroservice()).thenReturn(productDTOS);
+        List<ProductsForSaleDTO> productsForSale = this.inventoryImpl.getAllProductForSale("producto","marca","nombreCat",1,5);
+        assertEquals(2,productsForSale.size());
+    }
+
     void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
         InventorySearchCriteriaModel inventorySearchCriteriaModel = new InventorySearchCriteriaModel(null, null, null, null);
         PaginationModel paginationModel = new PaginationModel(null, 1);
-
         when(inventorySearchMapper.toModel(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
         when(paginationRequestMapper.toModel(paginationDTO)).thenReturn(paginationModel);
         when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1);
@@ -65,7 +113,6 @@ class InventorySpringServiceImplTest {
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20, 1, 0, 3, 4L, "Showing 1 to 4 of 4 results."));
 
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
-
         Assertions.assertNotNull(filterInventoryResponse, "Applying no filter to the inventory and requesting the default pagination should not return null");
         Assertions.assertNotNull(filterInventoryResponse.getInventoryResponseDTOs(), "Applying no filter to the inventory should at least return an empty list ");
         Assertions.assertNotNull(filterInventoryResponse.getPaginationResponseDTO(), "Applying no filter to the inventory should at least return an empty pagination object");

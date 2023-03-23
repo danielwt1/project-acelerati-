@@ -1,8 +1,11 @@
 package com.acelerati.management_service.infraestructure.ExceptionHandler;
+import com.acelerati.management_service.domain.exception.ProductNotFoundException;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,8 +20,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleAllExceptions(Exception exception, WebRequest request){
-        ErrorDetails res = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false), null);
-        return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorDetails response = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false),null);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorDetails> handleAccessDeniedException(AccessDeniedException exception, WebRequest request){
+        String message = String.format("%s, %s",exception.getMessage(),"the user haven't the permission necessary that realize this action");
+        ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false), null);
+        return new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
     }
     //Validate Array
     @ExceptionHandler(ConstraintViolationException.class)
@@ -28,6 +38,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.joining(", "));
         ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false), null);
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleProductNotFoundException(ProductNotFoundException exception, WebRequest request){
+        ErrorDetails response = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false),null);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+
     }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -37,6 +55,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.joining(" "));
         ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false), null);
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+
     }
 
 }

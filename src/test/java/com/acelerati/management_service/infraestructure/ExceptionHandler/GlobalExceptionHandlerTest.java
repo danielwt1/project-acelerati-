@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,6 +52,16 @@ class GlobalExceptionHandlerTest {
         when(webrequest.getDescription(false)).thenReturn("/path");
         ResponseEntity<ErrorDetails> responseReal = this.globalExceptionHandler.handleConstraintViolationException(exception,webrequest);
         assertEquals(HttpStatus.BAD_REQUEST,responseReal.getStatusCode());
+    }
+
+    @Test
+    void whenThrowAccessDeniedExceptionThenReturnHttpStatus401(){
+        WebRequest webRequest = mock(WebRequest.class);
+        AccessDeniedException exception = mock(AccessDeniedException.class);
+        response = new ResponseEntity<>(body,HttpStatus.UNAUTHORIZED);
+        when(webRequest.getDescription(false)).thenReturn(("/path"));
+        ResponseEntity<ErrorDetails>responseReal = this.globalExceptionHandler.handleAccessDeniedException(exception,webRequest);
+        assertEquals(HttpStatus.UNAUTHORIZED,responseReal.getStatusCode());
     }
 
 

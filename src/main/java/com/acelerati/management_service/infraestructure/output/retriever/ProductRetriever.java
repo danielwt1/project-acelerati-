@@ -1,6 +1,6 @@
 package com.acelerati.management_service.infraestructure.output.retriever;
 
-import com.acelerati.management_service.application.dto.response.ProductFeignClientResponseDTO;
+import com.acelerati.management_service.application.dto.response.ProductDTO;
 import com.acelerati.management_service.infraestructure.output.feign.ProductFeignClient;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.stereotype.Component;

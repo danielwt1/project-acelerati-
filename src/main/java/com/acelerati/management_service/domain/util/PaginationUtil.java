@@ -1,8 +1,8 @@
-package com.acelerati.management_service.domain.model;
+package com.acelerati.management_service.domain.util;
 
 import java.util.List;
 
-public class PaginationModel {
+public class PaginationUtil {
 
     public static final Integer DEFAULT_PAGE_SIZE = 20;
     public static final String NO_RECORDS_FOUND = "No records found";
@@ -14,11 +14,10 @@ public class PaginationModel {
     private Integer lastResultIndex;
     private Long totalResults;
 
-    public PaginationModel() {
+    public PaginationUtil() {
         // This is used to prevent ambiguous constructors to Mapstructs
     }
-
-    public PaginationModel(Integer pageSize, Integer pageNumber, String description, Integer firstResultIndex,
+    public PaginationUtil(Integer pageSize, Integer pageNumber, String description, Integer firstResultIndex,
                            Integer lastResultIndex, Long totalResults) {
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;

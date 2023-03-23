@@ -1,13 +1,13 @@
-package com.acelerati.management_service.domain.model;
+package com.acelerati.management_service.domain.util;
 
-public class InventorySearchCriteriaModel {
+public class InventorySearchCriteriaUtil{
 
     private Long fromUnitPrice;
     private Long toUnitPrice;
     private Long category;
     private Long brand;
 
-    public InventorySearchCriteriaModel(Long fromUnitPrice, Long toUnitPrice, Long category, Long brand) {
+    public InventorySearchCriteriaUtil(Long fromUnitPrice, Long toUnitPrice, String category, Long category, Long brand) {
         this.fromUnitPrice = fromUnitPrice;
         this.toUnitPrice = toUnitPrice;
         this.category = category;
