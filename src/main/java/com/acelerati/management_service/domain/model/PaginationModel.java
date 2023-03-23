@@ -14,6 +14,10 @@ public class PaginationModel {
     private Integer lastResultIndex;
     private Long totalResults;
 
+    public PaginationModel() {
+        // This is used to prevent ambiguous constructors to Mapstructs
+    }
+
     public PaginationModel(Integer pageSize, Integer pageNumber, String description, Integer firstResultIndex,
                            Integer lastResultIndex, Long totalResults) {
         this.pageSize = pageSize;
@@ -22,6 +26,11 @@ public class PaginationModel {
         this.firstResultIndex = firstResultIndex;
         this.lastResultIndex = lastResultIndex;
         this.totalResults = totalResults;
+    }
+
+    public PaginationModel(Integer pageSize, Integer pageNumber) {
+        this.pageSize = pageSize;
+        this.pageNumber = pageNumber;
     }
 
     public Integer getPageSize() {

@@ -97,20 +97,12 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
 
         return typedQuery.getResultList();
     }
-    private int calculateSelectionStartOffset(PaginationModel paginationModel) {
-        return (paginationModel.getPageNumber() - 1) * paginationModel.getPageSize();
-    }
+
     private List<Predicate> buildFilteringPredicates(InventorySearchCriteriaModel inventorySearchCriteriaModel,
                                                      CriteriaBuilder criteriaBuilder, Root<InventoryEntity> root) {
         List<Predicate> predicates = new ArrayList<>();
         if (inventorySearchCriteriaModel.getToUnitPrice() != null && inventorySearchCriteriaModel.getFromUnitPrice() != null)
             predicates.add(criteriaBuilder.between(root.get("unitPrice"), inventorySearchCriteriaModel.getFromUnitPrice(), inventorySearchCriteriaModel.getToUnitPrice()));
-
-        if (inventorySearchCriteriaModel.getCategory().equalsIgnoreCase(InventoryUseCase.INVENTORY_SEARCH_BY_PRODUCTS_WITHOUT_SALE_PRICE))
-            predicates.add(criteriaBuilder.equal(root.get("salePrice"), InventoryUseCase.INITIAL_VALUE_NEW_PRODUCT_SALE_PRICE));
-        else if (inventorySearchCriteriaModel.getCategory().equalsIgnoreCase(InventoryUseCase.INVENTORY_SEARCH_BY_PRODUCTS_WITHOUT_STOCK))
-            predicates.add(criteriaBuilder.equal(root.get("stock"), InventoryUseCase.NO_STOCK));
-
         return predicates;
     }
 

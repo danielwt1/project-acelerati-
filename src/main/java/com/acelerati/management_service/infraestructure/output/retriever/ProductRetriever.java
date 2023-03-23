@@ -18,8 +18,8 @@ public class ProductRetriever {
     }
 
     @HystrixCommand(fallbackMethod = "getFakeProducts")
-    public List<ProductFeignClientResponseDTO> getAllProducts() {
-        return productFeignClient.getProducts();
+    public List<ProductFeignClientResponseDTO> getAllProducts(Integer page, Integer itemsNumber) {
+        return productFeignClient.getProducts(page, itemsNumber);
     }
 
     public List<ProductFeignClientResponseDTO> getFakeProducts() {
