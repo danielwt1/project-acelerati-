@@ -46,7 +46,7 @@ class InventoryControllerTest {
 
     @Test
     void getInventoryBy_shouldReturnOkResponseWhen() {
-        InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(null, null, null);
+        InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(null, null, null, null);
         PaginationDTO paginationRequest = new PaginationDTO(null, 1);
 
         PaginationResponseDTO emptyPaginationResponse = new PaginationResponseDTO(PaginationModel.DEFAULT_PAGE_SIZE, 1, null,
