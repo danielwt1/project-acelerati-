@@ -1,5 +1,6 @@
-package com.acelerati.management_service.infraestructure.ExceptionHandler;
-import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
+package com.acelerati.management_service.infraestructure.exceptionhandler;
+import com.acelerati.management_service.domain.exception.ProductNotFoundException;
+import com.acelerati.management_service.infraestructure.exceptionhandler.response.ErrorDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

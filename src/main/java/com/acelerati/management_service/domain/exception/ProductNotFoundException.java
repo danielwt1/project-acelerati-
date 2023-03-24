@@ -1,4 +1,4 @@
-package com.acelerati.management_service.infraestructure.ExceptionHandler;
+package com.acelerati.management_service.domain.exception;
 
 public class ProductNotFoundException extends RuntimeException{
     public ProductNotFoundException(String message) {

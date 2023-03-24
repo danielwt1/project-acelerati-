@@ -1,4 +1,4 @@
-package com.acelerati.management_service.infraestructure.ExceptionHandler.response;
+package com.acelerati.management_service.infraestructure.exceptionhandler.response;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

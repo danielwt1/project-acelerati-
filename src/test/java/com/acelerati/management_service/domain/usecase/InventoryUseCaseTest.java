@@ -1,10 +1,8 @@
 package com.acelerati.management_service.domain.usecase;
 
-import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
-import com.acelerati.management_service.infraestructure.ExceptionHandler.ProductNotFoundException;
-import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
+import com.acelerati.management_service.domain.exception.ProductNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +15,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

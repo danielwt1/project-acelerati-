@@ -1,4 +1,4 @@
-package com.acelerati.management_service.infraestructure.ExceptionHandler.response;
+package com.acelerati.management_service.infraestructure.exceptionhandler.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
