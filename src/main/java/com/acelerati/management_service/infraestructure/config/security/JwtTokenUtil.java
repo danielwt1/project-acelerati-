@@ -1,11 +1,16 @@
 package com.acelerati.management_service.infraestructure.config.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,56 +30,59 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.secret}") //EL Expression Language
     private String secret;
 
-        public String getTokenFromRequest(HttpServletRequest request){
-            String authHeader = request.getHeader("Authorization");
-            if(authHeader != null && authHeader.startsWith("Bearer ")){
-                return authHeader.substring(7);
+    public String getTokenFromRequest(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
+    }
+
+    public List<String> getRolesFromToken(String token) {
+        return getClaimFromToken(token, claim -> {
+            List<?> rolesObject = claim.get("roles", List.class);
+            if (rolesObject != null) {
+                return rolesObject.stream()
+                        .filter(String.class::isInstance)
+                        .map(String::valueOf)
+                        .map(role -> role.substring(5))
+                        .collect(Collectors.toList());
+
             }
-            return null;
-    }
-    public List<String> getRolesFromToken(String token){
-            return getClaimFromToken(token,claim->{
-               List<?>rolesObject = claim.get("roles",List.class);
-               if(rolesObject!=null){
-                   return rolesObject.stream()
-                           .filter(String.class::isInstance)
-                           .map(String::valueOf)
-                           .map(role ->role.substring(5))
-                           .collect(Collectors.toList());
-
-               }
-               return Collections.emptyList();
-            });
+            return Collections.emptyList();
+        });
     }
 
-    public Claims getAllClaimsFromToken(String token){
+    public Claims getAllClaimsFromToken(String token) {
 
         return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
     }
+
     private Key getKey() {
         byte[] keyBytes = secret.getBytes();
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver){
+
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
 
-    public String getUsernameFromToken(String token){
+    public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    public Date getExpirationDateFromToken(String token){
+    public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-    private boolean isTokenExpired(String token){
+    private boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
-    public boolean validateToken(String token, String userFromHeader){
-        final String username = getUsernameFromToken(token);
+    public boolean validateToken(String token, String userFromHeader) {
+        String username = username = getUsernameFromToken(token);
         return (username.equalsIgnoreCase(userFromHeader) && !isTokenExpired(token));
     }
 

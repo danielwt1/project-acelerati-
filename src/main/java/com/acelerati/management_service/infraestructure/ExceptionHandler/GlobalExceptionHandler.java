@@ -28,7 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDetails> handleAccessDeniedException(AccessDeniedException exception, WebRequest request){
         String message = String.format("%s, %s",exception.getMessage(),"the user haven't the permission necessary that realize this action");
         ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false), null);
-        return new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(res, HttpStatus.FORBIDDEN);
     }
     //Validate Array
     @ExceptionHandler(ConstraintViolationException.class)
