@@ -1,13 +1,13 @@
 package com.acelerati.management_service.domain.util;
 
-public class InventorySearchCriteriaUtil{
+public class InventorySearchCriteriaUtil {
 
     private Long fromUnitPrice;
     private Long toUnitPrice;
-    private Long category;
-    private Long brand;
+    private String category;
+    private String brand;
 
-    public InventorySearchCriteriaUtil(Long fromUnitPrice, Long toUnitPrice, String category, Long category, Long brand) {
+    public InventorySearchCriteriaUtil(Long fromUnitPrice, Long toUnitPrice, String category, String brand) {
         this.fromUnitPrice = fromUnitPrice;
         this.toUnitPrice = toUnitPrice;
         this.category = category;
@@ -30,19 +30,19 @@ public class InventorySearchCriteriaUtil{
         this.toUnitPrice = toUnitPrice;
     }
 
-    public Long getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Long category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
-    public Long getBrand() {
+    public String getBrand() {
         return brand;
     }
 
-    public void setBrand(Long brand) {
+    public void setBrand(String brand) {
         this.brand = brand;
     }
 }

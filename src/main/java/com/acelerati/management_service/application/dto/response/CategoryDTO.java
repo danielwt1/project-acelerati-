@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BrandFeignClientResponseDTO {
+public class CategoryDTO {
     private Long id;
     private String name;
 }

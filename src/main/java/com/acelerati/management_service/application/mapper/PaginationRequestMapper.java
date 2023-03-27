@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface PaginationRequestMapper {
-    PaginationUtil toModel(PaginationDTO paginationDTO);
+    PaginationUtil toPaginationUtil(PaginationDTO paginationDTO);
 }

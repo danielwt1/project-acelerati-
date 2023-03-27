@@ -2,23 +2,23 @@ package com.acelerati.management_service.application.handler.impl;
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 
-import com.acelerati.management_service.application.dto.response.InventoryResponseDTO;
-import com.acelerati.management_service.application.dto.response.ProductDTO;
-import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
-import com.acelerati.management_service.application.dto.response.PaginationResponseDTO;
+import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
+import com.acelerati.management_service.application.dto.request.PaginationDTO;
+import com.acelerati.management_service.application.dto.response.*;
 import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.application.mapper.InventorySearchMapper;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
 import com.acelerati.management_service.domain.model.PaginationModel;
-import com.acelerati.management_service.domain.model.ProductModel;
 import org.junit.jupiter.api.AfterEach;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static com.acelerati.management_service.application.utils.ApplicationDataSet.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class InventorySpringServiceImplTest {
@@ -57,6 +58,7 @@ class InventorySpringServiceImplTest {
         this.inventoryImpl.addInventory(list);
     }
 
+    @Test
     void whenCallMethodForMergeTwoListThenReturnNewListMergedTest() {
         List<InventoryResponseDTO> inventoryList =new ArrayList<>();
         InventoryResponseDTO inventory = mock(InventoryResponseDTO.class);
@@ -69,7 +71,7 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenCalldataPaginatedThenReturnListPaginatedTest(){
+    void whenCallDataPaginatedThenReturnListPaginatedTest(){
         ProductsForSaleDTO products =mock(ProductsForSaleDTO.class);
         List<ProductsForSaleDTO> productsForSaleDTOList = Arrays.asList(products,products,products,products,products,products,products,products,products);
         List<ProductsForSaleDTO> dataPaginated = this.inventoryImpl.dataPaginated(productsForSaleDTOList,1,5);
@@ -94,7 +96,7 @@ class InventorySpringServiceImplTest {
         List<InventoryResponseDTO> productsForSaleDTOList = Arrays.asList(products,products2,products3);
         when(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0()).thenReturn(inventoryModels);
         when(this.inventorySearchMapper.toDTOList(inventoryModels)).thenReturn(productsForSaleDTOList);
-        when(this.productFeignClient.fetchProductsFromMicroservice()).thenReturn(productDTOS);
+        when(this.productFeignClient.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(productDTOS);
         List<ProductsForSaleDTO> productsForSale = this.inventoryImpl.getAllProductForSale("producto","marca","nombreCat",1,5);
         assertEquals(2,productsForSale.size());
     }
@@ -108,7 +110,7 @@ class InventorySpringServiceImplTest {
         when(paginationRequestMapper.toModel(paginationDTO)).thenReturn(paginationModel);
         when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1);
         when(inventorySearchMapper.toDTOList(INVENTORY_1)).thenReturn(INVENTORY_1_RESPONSE_DTO);
-        when(productFeignClientPort.fetchProductsFromMicroservice()).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
+        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(productResponseMapper.toProductFeignClientResponseDTOList(PRODUCT_MICROSERVICE_RESPONSE_1)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_DTO_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20, 1, 0, 3, 4L, "Showing 1 to 4 of 4 results."));
 
@@ -134,7 +136,7 @@ class InventorySpringServiceImplTest {
         when(paginationRequestMapper.toModel(paginationDTO)).thenReturn(paginationModel);
         when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_2);
         when(inventorySearchMapper.toDTOList(INVENTORY_2)).thenReturn(INVENTORY_2_RESPONSE_DTO);
-        when(productFeignClientPort.fetchProductsFromMicroservice()).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
+        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(productResponseMapper.toProductFeignClientResponseDTOList(PRODUCT_MICROSERVICE_RESPONSE_1)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_DTO_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20, 1, 0, 2, 3L, "Showing 1 to 3 of 3 results."));
 
@@ -163,7 +165,7 @@ class InventorySpringServiceImplTest {
         List<ProductModel> productsFilteredByCategory = PRODUCT_MICROSERVICE_RESPONSE_1.stream()
                 .filter(productModel -> productModel.getIdCategory() == 1L)
                 .collect(Collectors.toList());
-        when(productFeignClientPort.fetchProductsFromMicroservice()).thenReturn(productsFilteredByCategory);
+        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(productsFilteredByCategory);
         when(productResponseMapper.toProductFeignClientResponseDTOList(productsFilteredByCategory)).thenReturn(
                 PRODUCT_MICROSERVICE_RESPONSE_DTO_1.stream()
                         .filter(productFeignClientResponseDTO -> productFeignClientResponseDTO.getIdCategory() == 1L)
@@ -196,7 +198,7 @@ class InventorySpringServiceImplTest {
         List<ProductModel> productsFilteredByBrand = PRODUCT_MICROSERVICE_RESPONSE_1.stream()
                 .filter(productModel -> productModel.getIdBrand() == 2L)
                 .collect(Collectors.toList());
-        when(productFeignClientPort.fetchProductsFromMicroservice()).thenReturn(productsFilteredByBrand);
+        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(productsFilteredByBrand);
         when(productResponseMapper.toProductFeignClientResponseDTOList(productsFilteredByBrand)).thenReturn(
                 PRODUCT_MICROSERVICE_RESPONSE_DTO_1.stream()
                         .filter(productFeignClientResponseDTO -> productFeignClientResponseDTO.getIdBrand() == 2L)
@@ -235,7 +237,7 @@ class InventorySpringServiceImplTest {
         List<ProductModel> productsFilteredByBrand = PRODUCT_MICROSERVICE_RESPONSE_1.stream()
                 .filter(productModel -> productModel.getIdCategory() == 1L)
                 .collect(Collectors.toList());
-        when(productFeignClientPort.fetchProductsFromMicroservice()).thenReturn(productsFilteredByBrand);
+        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(productsFilteredByBrand);
         when(productResponseMapper.toProductFeignClientResponseDTOList(productsFilteredByBrand)).thenReturn(
                 PRODUCT_MICROSERVICE_RESPONSE_DTO_1.stream()
                         .filter(productFeignClientResponseDTO -> productFeignClientResponseDTO.getIdCategory() == 1L)

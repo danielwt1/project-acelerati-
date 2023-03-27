@@ -27,7 +27,7 @@ public class PaginationUtil {
         this.totalResults = totalResults;
     }
 
-    public PaginationModel(Integer pageSize, Integer pageNumber) {
+    public PaginationUtil(Integer pageSize, Integer pageNumber) {
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;
     }
