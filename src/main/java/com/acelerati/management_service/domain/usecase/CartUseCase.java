@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class CartUseCase implements CartServicePort {
 
-    private static final String PRODUCT_NOT_FOUND_MESSAGE = "Product with name %s not found";
+    private static final String PRODUCT_NOT_FOUND_MESSAGE = "Product selected not found";
     private final CartPersistencePort cartPersistencePort;
     private final InventoryPersistencePort inventoryPersistencePort;
 
@@ -23,11 +23,10 @@ public class CartUseCase implements CartServicePort {
     }
 
     @Override
-    public void addProductToCart(Long idUser, InventoryModel inventoryModel, Long amount) {
+    public void addProductToCart(Long idUser, Long idProduct, Long amount) {
 
-        inventoryPersistencePort.getElementById(inventoryModel.getIdProduct())
-                .orElseThrow(()->new ProductNotFoundException(
-                        String.format(PRODUCT_NOT_FOUND_MESSAGE, inventoryModel.getName())));
+        InventoryModel inventoryModel = inventoryPersistencePort.getElementById(idProduct)
+                .orElseThrow(()->new ProductNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
 
         Optional<CartModel> cartModel = cartPersistencePort.getCartByIdUser(idUser);
 

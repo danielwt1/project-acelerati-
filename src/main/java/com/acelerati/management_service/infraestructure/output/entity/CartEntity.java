@@ -1,22 +1,29 @@
-package com.acelerati.management_service.domain.model;
+package com.acelerati.management_service.infraestructure.output.entity;
 
-import com.acelerati.management_service.infraestructure.output.entity.CartInventoryEntity;
-
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartModel {
+@Entity
+@Table(name = "cart")
+public class CartEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCart;
 
     private Long idUser;
 
     private LocalDateTime lastUpdate;
 
-    private List<CartInventoryModel> products = new ArrayList<>();
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<CartInventoryEntity> products = new ArrayList<>();
 
-    public CartModel(Long idCart, Long idUser, LocalDateTime lastUpdate) {
+    public CartEntity() {
+    }
+
+    public CartEntity(Long idCart, Long idUser, LocalDateTime lastUpdate) {
         this.idCart = idCart;
         this.idUser = idUser;
         this.lastUpdate = lastUpdate;
@@ -44,13 +51,5 @@ public class CartModel {
 
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-
-    public List<CartInventoryModel> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<CartInventoryModel> products) {
-        this.products = products;
     }
 }

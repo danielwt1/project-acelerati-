@@ -4,5 +4,5 @@ import com.acelerati.management_service.domain.model.InventoryModel;
 
 public interface CartServicePort {
 
-    void addProductToCart(Long idUser, InventoryModel inventoryModel, Long amount);
+    void addProductToCart(Long idUser, Long idProduct, Long amount);
 }

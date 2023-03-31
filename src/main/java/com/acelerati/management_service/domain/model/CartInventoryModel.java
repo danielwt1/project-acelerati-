@@ -6,14 +6,14 @@ public class CartInventoryModel {
 
     private CartModel cartModel;
 
-    private InventoryModel inventoryModel;
+    private InventoryModel inventory;
 
     private Long amount;
 
-    public CartInventoryModel(Long id, CartModel cartModel, InventoryModel inventoryModel, Long amount) {
+    public CartInventoryModel(Long id, CartModel cartModel, InventoryModel inventory, Long amount) {
         this.id = id;
         this.cartModel = cartModel;
-        this.inventoryModel = inventoryModel;
+        this.inventory = inventory;
         this.amount = amount;
     }
 
@@ -33,12 +33,12 @@ public class CartInventoryModel {
         this.cartModel = cartModel;
     }
 
-    public InventoryModel getInventoryModel() {
-        return inventoryModel;
+    public InventoryModel getInventory() {
+        return inventory;
     }
 
-    public void setInventoryModel(InventoryModel inventoryModel) {
-        this.inventoryModel = inventoryModel;
+    public void setInventory(InventoryModel inventory) {
+        this.inventory = inventory;
     }
 
     public Long getAmount() {
