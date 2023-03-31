@@ -13,6 +13,7 @@ import com.acelerati.management_service.application.dto.request.InventoryUpdateR
 
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.application.mapper.*;
+import com.acelerati.management_service.application.util.UtilGlobalMethods;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.util.PaginationUtil;
@@ -75,23 +76,12 @@ public class InventorySpringServiceImpl implements InventorySpringService {
         List<InventoryResponseDTO> inventoryList = this.inventorySearchMapper.toDTOList(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0());
         List<ProductDTO> products = this.productFeignClientPort.fetchProductsFromMicroservice();
         List<ProductsForSaleDTO> dataFiltered = mergeData(inventoryList, products);
-        return dataPaginated(dataFiltered,page,elementPerPage);
+        return UtilGlobalMethods.dataPaginated(dataFiltered,page,elementPerPage);
     }
-
-
-
-    public List<ProductsForSaleDTO>dataPaginated(List<ProductsForSaleDTO> dataFiltered,int page,int elementPerPage){
-
-        return dataFiltered.stream()
-                .skip((long) (page - 1) * elementPerPage)
-                .limit(elementPerPage)
-                .collect(Collectors.toList());
-    }
-
     public List<ProductsForSaleDTO> mergeData(List<InventoryResponseDTO> inventoryList, List<ProductDTO> products) {
         Map<Long, InventoryResponseDTO> dataInventory = inventoryList.stream()
                 //Function.identity() is equal to element -> element
-                .collect(Collectors.toMap(InventoryResponseDTO::getId, Function.identity()));
+                .collect(Collectors.toMap(InventoryResponseDTO::getIdInventory, Function.identity()));
         return products.stream()
                 .filter(product -> dataInventory.containsKey(Long.valueOf(product.getId())))
                 .map(product -> new ProductsForSaleDTO(Long.valueOf(product.getId()),
@@ -104,7 +94,7 @@ public class InventorySpringServiceImpl implements InventorySpringService {
     private List<InventoryAndProductResponseDTO> joinInventoryAndProduct(List<InventoryResponseDTO> inventories,
                                                                          List<ProductDTO> products) {
         Map<Long, InventoryResponseDTO> inventoryMap = inventories.stream()
-                .collect(Collectors.toMap(InventoryResponseDTO::getId, Function.identity()));
+                .collect(Collectors.toMap(InventoryResponseDTO::getIdInventory, Function.identity()));
         return products.stream()
                 .filter(product -> inventoryMap.containsKey(product.getId()))
                 .map(product -> new InventoryAndProductResponseDTO(inventoryMap.get(product.getId()), product))

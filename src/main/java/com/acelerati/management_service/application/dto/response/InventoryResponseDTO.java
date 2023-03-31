@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 @Getter
 @AllArgsConstructor
 public class InventoryResponseDTO {
-    private final Long id;
+    private final Long idInventory;
     private final String name;
     private final Long stock;
     private final BigDecimal unitPrice;

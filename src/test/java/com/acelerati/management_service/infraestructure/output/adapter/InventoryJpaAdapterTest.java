@@ -54,7 +54,7 @@ class InventoryJpaAdapterTest {
     }
     @Test
     void whenFindElementByIdIsEmptyThenReturnEntity() {
-        when(this.inventoryRepository.getElementById(inventoryModel.getId())).thenReturn(Optional.of(inventoryEntity));
+        when(this.inventoryRepository.getElementById(inventoryModel.getIdInventory())).thenReturn(Optional.of(inventoryEntity));
         when(this.inventoryEntityMapper.toModel(inventoryEntity)).thenReturn(inventoryModel);
         this.inventoryJpaAdapter.getElementById(inventoryModel.getIdProduct());
     }

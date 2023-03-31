@@ -53,7 +53,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
         criteriaUpdate.set(root.get("salePrice"), entity.getSalePrice());
         criteriaUpdate.set(root.get("idProduct"), entity.getIdProduct());
         criteriaUpdate.set(root.get("idSupplier"), entity.getIdSupplier());
-        criteriaUpdate.where(criteriaBuilder.equal(root.get("id"), entity.getId()));
+        criteriaUpdate.where(criteriaBuilder.equal(root.get("idInventory"), entity.getIdInventory()));
         entityManager.createQuery(criteriaUpdate).executeUpdate();
     }
 
@@ -77,8 +77,6 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
 
         return typedQuery.getResultList();
     }
-
-    
 
 	@Override
     public List<InventoryEntity> getAllInventoryWithStockAndSalePriceGreaterThan0() {
