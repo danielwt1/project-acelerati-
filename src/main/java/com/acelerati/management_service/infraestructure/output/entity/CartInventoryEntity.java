@@ -28,8 +28,10 @@ public class CartInventoryEntity {
         this.inventory = inventory;
         this.amount = amount;
     }
+
     public CartInventoryEntity() {
     }
+
     public Long getId() {
         return id;
     }

@@ -35,6 +35,10 @@ public class CartController {
         this.cartSpringService.deleteProductCart(idProduct);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @Operation(summary = "Find cart by userId", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "A business logic error occurred", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/")
     public ResponseEntity<CartDTO>getCart(@RequestHeader(name = "user")String user
             ,@RequestParam(name = "page")Integer page

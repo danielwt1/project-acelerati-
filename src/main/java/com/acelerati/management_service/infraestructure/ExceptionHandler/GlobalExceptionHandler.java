@@ -1,5 +1,4 @@
 package com.acelerati.management_service.infraestructure.ExceptionHandler;
-import com.acelerati.management_service.domain.exception.CartNotFoundException;
 import com.acelerati.management_service.domain.exception.ProductNotFoundException;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
 
@@ -47,11 +46,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorDetails response = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false),null);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 
-    }
-    @ExceptionHandler(CartNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleCartNotFoundException(CartNotFoundException exception, WebRequest request){
-        ErrorDetails response = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false),null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {

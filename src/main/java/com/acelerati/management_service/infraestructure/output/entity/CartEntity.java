@@ -24,15 +24,16 @@ public class CartEntity {
     private LocalDateTime lastUpdate;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CartInventoryEntity> products = new ArrayList<>();
-
-    public CartEntity() {
-    }
     public CartEntity(Long idCart, Long idUser, LocalDateTime lastUpdate, List<CartInventoryEntity> products) {
         this.idCart = idCart;
         this.idUser = idUser;
         this.lastUpdate = lastUpdate;
         this.products = products;
     }
+
+    public CartEntity() {
+    }
+
     public Long getIdCart() {
         return idCart;
     }

@@ -1,5 +1,6 @@
 package com.acelerati.management_service.infraestructure.ExceptionHandler;
 
+import com.acelerati.management_service.domain.exception.ProductNotFoundException;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
 import org.apache.catalina.connector.Response;
@@ -63,6 +64,14 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ErrorDetails>responseReal = this.globalExceptionHandler.handleAccessDeniedException(exception,webRequest);
         assertEquals(HttpStatus.FORBIDDEN,responseReal.getStatusCode());
     }
-
+    @Test
+    void whenThrowProductNotFoundExceptionThenReturnHttStatus404(){
+        WebRequest webRequest = mock(WebRequest.class);
+        ProductNotFoundException exception = mock(ProductNotFoundException.class);
+        response = new ResponseEntity<>(body,HttpStatus.NOT_FOUND);
+        when(webRequest.getDescription(false)).thenReturn(("/path"));
+        ResponseEntity<ErrorDetails>responseReal = this.globalExceptionHandler.handleProductNotFoundException(exception,webRequest);
+        assertEquals(HttpStatus.NOT_FOUND,responseReal.getStatusCode());
+    }
 
 }

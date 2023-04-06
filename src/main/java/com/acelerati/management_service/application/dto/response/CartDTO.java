@@ -10,8 +10,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class CartDTO {
-    private Long idCart;
-    private Long idUser;
     private LocalDateTime lastUpdate;
     private List<CartInventoryDTO> products;
 

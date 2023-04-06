@@ -9,4 +9,5 @@ import lombok.Getter;
 public class CartInventoryDTO {
     private Long id;
     private InventoryResponseDTO inventory;
+
 }
