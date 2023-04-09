@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -31,6 +32,7 @@ public class CartController {
             @ApiResponse(responseCode = "500", description = "A business logic error occurred", content = @Content(mediaType = "application/json"))
     })
     @DeleteMapping("/")
+    @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
     public ResponseEntity<Void> deleteProductFromCart(@RequestHeader(name = "user") String user, @RequestParam(value = "idProduct") Long idProduct) {
         this.cartSpringService.deleteProductCart(idProduct);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -40,6 +42,7 @@ public class CartController {
             @ApiResponse(responseCode = "500", description = "A business logic error occurred", content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/")
+    @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
     public ResponseEntity<CartDTO>getCart(@RequestHeader(name = "user")String user
             ,@RequestParam(name = "page")Integer page
             ,@RequestParam(name = "elementPerPage")Integer elementPerPage){

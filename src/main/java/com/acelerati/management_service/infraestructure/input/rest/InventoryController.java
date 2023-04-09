@@ -46,6 +46,7 @@ public class InventoryController {
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping("/sale")
+    @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
     public ResponseEntity<List<ProductsForSaleDTO>> getAllProductsForSale(@RequestHeader(value = "user") String user,
                                                                           @RequestParam(required = false, defaultValue = "", name = "name") String name,
                                                                           @RequestParam(required = false, defaultValue = "", name = "brandName") String brandName,
