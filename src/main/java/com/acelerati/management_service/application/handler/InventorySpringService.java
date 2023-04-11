@@ -7,17 +7,16 @@ import com.acelerati.management_service.application.dto.request.PaginationDTO;
 import com.acelerati.management_service.application.dto.response.*;
 
 import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
+import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 
 
 import java.util.List;
 
 public interface InventorySpringService {
     void addInventory(List<InventoryDTO> inventoryDTO);
-    FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteria, PaginationDTO paginationDTO);
-	List<ProductsForSaleDTO> getAllProductForSale(String name,String brandName,String categoryName,int page,int elementsPerPage);
-	List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber);
-    List<CategoryDTO> fetchCategoriesFromMicroservice(Integer page, Integer itemsNumber);
-    List<BrandDTO> fetchBrandsFromMicroservice(Integer page, Integer itemsNumber);
+    FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteria, PaginationDTO paginationDTO) throws UnavailableMicroserviceException;
+	List<ProductsForSaleDTO> getAllProductForSale(String name,String brandName,String categoryName,int page,int elementsPerPage) throws UnavailableMicroserviceException;
+	List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber) throws UnavailableMicroserviceException;
     void updateProductSalePrice(InventoryUpdateRequestDTO inventoryDTO);
 
 }

@@ -90,11 +90,11 @@ public class PaginationUtil {
             description = NO_RECORDS_FOUND;
             firstResultIndex = null;
             lastResultIndex = null;
-            totalResults = null;
+            totalResults = 0L;
         } else {
             firstResultIndex = calculateOffset();
-            lastResultIndex = firstResultIndex + results.size();
-            description = String.format("Showing %d to %d of %d results.", firstResultIndex + 1, lastResultIndex, totalResults);
+            lastResultIndex = firstResultIndex + results.size() - 1;
+            description = String.format("Showing %d to %d of %d results.", firstResultIndex + 1, lastResultIndex + 1, totalResults);
         }
     }
 }

@@ -9,23 +9,21 @@ import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.application.mapper.InventorySearchMapper;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.model.InventoryModel;
-import com.acelerati.management_service.domain.model.InventorySearchCriteriaModel;
-import com.acelerati.management_service.domain.model.PaginationModel;
-import org.junit.jupiter.api.AfterEach;
+import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
+import com.acelerati.management_service.domain.util.PaginationUtil;
 
+import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static com.acelerati.management_service.application.utils.ApplicationDataSet.*;
@@ -36,19 +34,15 @@ class InventorySpringServiceImplTest {
     @Mock
     private InventoryServicePort inventoryServicePort;
     @Mock
-    private InventoryRequestMapper inventoryRequestMapper;
-    @Mock
     private InventorySearchMapper inventorySearchMapper;
     @Mock
-    private PaginationRequestMapper paginationRequestMapper;
+    InventoryRequestMapper inventoryRequestMapper;
     @Mock
-    private ProductResponseMapper productResponseMapper;
+    private PaginationRequestMapper paginationRequestMapper;
     @Mock
     private ProductFeignClientPort productFeignClientPort;
     @Mock
     private PaginationResponseMapper paginationResponseMapper;
-    @Mock
-    ProductFeignClientPort productFeignClient;
     @InjectMocks
     private InventorySpringServiceImpl inventoryImpl;
 
@@ -79,7 +73,7 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetAllProductsForSaleThenResultListWithDataTest(){
+    void whenGetAllProductsForSaleThenResultListWithDataTest() throws UnavailableMicroserviceException {
         InventoryResponseDTO products = new InventoryResponseDTO(1L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
         InventoryResponseDTO products2 = new InventoryResponseDTO(2L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
         InventoryResponseDTO products3 = new InventoryResponseDTO(3L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
@@ -96,22 +90,22 @@ class InventorySpringServiceImplTest {
         List<InventoryResponseDTO> productsForSaleDTOList = Arrays.asList(products,products2,products3);
         when(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0()).thenReturn(inventoryModels);
         when(this.inventorySearchMapper.toDTOList(inventoryModels)).thenReturn(productsForSaleDTOList);
-        when(this.productFeignClient.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(productDTOS);
+        when(this.productFeignClientPort.fetchProductsFromMicroservice(1, 5)).thenReturn(productDTOS);
         List<ProductsForSaleDTO> productsForSale = this.inventoryImpl.getAllProductForSale("producto","marca","nombreCat",1,5);
         assertEquals(2,productsForSale.size());
     }
 
-    void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() {
+    @Test
+    void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() throws UnavailableMicroserviceException {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
-        InventorySearchCriteriaModel inventorySearchCriteriaModel = new InventorySearchCriteriaModel(null, null, null, null);
-        PaginationModel paginationModel = new PaginationModel(null, 1);
-        when(inventorySearchMapper.toModel(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
-        when(paginationRequestMapper.toModel(paginationDTO)).thenReturn(paginationModel);
+        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, null);
+        PaginationUtil paginationModel = new PaginationUtil(null, 1);
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
         when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1);
         when(inventorySearchMapper.toDTOList(INVENTORY_1)).thenReturn(INVENTORY_1_RESPONSE_DTO);
-        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
-        when(productResponseMapper.toProductFeignClientResponseDTOList(PRODUCT_MICROSERVICE_RESPONSE_1)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_DTO_1);
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20, 1, 0, 3, 4L, "Showing 1 to 4 of 4 results."));
 
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
@@ -126,18 +120,17 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithPriceRangeFilter_itShouldReturnProductsWithinTheSpecifiedRange() {
+    void whenGetInventoriesByCalledWithPriceRangeFilter_itShouldReturnProductsWithinTheSpecifiedRange() throws UnavailableMicroserviceException {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, null, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
-        InventorySearchCriteriaModel inventorySearchCriteriaModel = new InventorySearchCriteriaModel(100_000L, 250_000L, null, null);
-        PaginationModel paginationModel = new PaginationModel(null, 1);
+        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(100_000L, 250_000L, null, null);
+        PaginationUtil paginationModel = new PaginationUtil(null, 1);
 
-        when(inventorySearchMapper.toModel(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
-        when(paginationRequestMapper.toModel(paginationDTO)).thenReturn(paginationModel);
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
         when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_2);
         when(inventorySearchMapper.toDTOList(INVENTORY_2)).thenReturn(INVENTORY_2_RESPONSE_DTO);
-        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
-        when(productResponseMapper.toProductFeignClientResponseDTOList(PRODUCT_MICROSERVICE_RESPONSE_1)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_DTO_1);
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20, 1, 0, 2, 3L, "Showing 1 to 3 of 3 results."));
 
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
@@ -152,25 +145,17 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithCategoryFilter_itShouldReturnCategoryMatchingOnlyProducts() {
+    void whenGetInventoriesByCalledWithCategoryFilter_itShouldReturnCategoryMatchingOnlyProducts() throws UnavailableMicroserviceException {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, 1L, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
-        InventorySearchCriteriaModel inventorySearchCriteriaModel = new InventorySearchCriteriaModel(null, null, 1L, null);
-        PaginationModel paginationModel = new PaginationModel(null, 1);
+        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, 1L, null);
+        PaginationUtil paginationModel = new PaginationUtil(null, 1);
 
-        when(inventorySearchMapper.toModel(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
-        when(paginationRequestMapper.toModel(paginationDTO)).thenReturn(paginationModel);
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
         when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1);
         when(inventorySearchMapper.toDTOList(INVENTORY_1)).thenReturn(INVENTORY_1_RESPONSE_DTO);
-        List<ProductModel> productsFilteredByCategory = PRODUCT_MICROSERVICE_RESPONSE_1.stream()
-                .filter(productModel -> productModel.getIdCategory() == 1L)
-                .collect(Collectors.toList());
-        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(productsFilteredByCategory);
-        when(productResponseMapper.toProductFeignClientResponseDTOList(productsFilteredByCategory)).thenReturn(
-                PRODUCT_MICROSERVICE_RESPONSE_DTO_1.stream()
-                        .filter(productFeignClientResponseDTO -> productFeignClientResponseDTO.getIdCategory() == 1L)
-                        .collect(Collectors.toList())
-        );
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20, 1, 0, 2, 3L, "Showing 1 to 3 of 3 results."));
 
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
@@ -185,25 +170,17 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithBrandFilter_itShouldReturnBrandMatchingOnlyProducts() {
+    void whenGetInventoriesByCalledWithBrandFilter_itShouldReturnBrandMatchingOnlyProducts() throws UnavailableMicroserviceException {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, 2L);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
-        InventorySearchCriteriaModel inventorySearchCriteriaModel = new InventorySearchCriteriaModel(null, null, null, 2L);
-        PaginationModel paginationModel = new PaginationModel(null, 1);
+        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, 2L);
+        PaginationUtil paginationModel = new PaginationUtil(null, 1);
 
-        when(inventorySearchMapper.toModel(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
-        when(paginationRequestMapper.toModel(paginationDTO)).thenReturn(paginationModel);
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
         when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1);
         when(inventorySearchMapper.toDTOList(INVENTORY_1)).thenReturn(INVENTORY_1_RESPONSE_DTO);
-        List<ProductModel> productsFilteredByBrand = PRODUCT_MICROSERVICE_RESPONSE_1.stream()
-                .filter(productModel -> productModel.getIdBrand() == 2L)
-                .collect(Collectors.toList());
-        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(productsFilteredByBrand);
-        when(productResponseMapper.toProductFeignClientResponseDTOList(productsFilteredByBrand)).thenReturn(
-                PRODUCT_MICROSERVICE_RESPONSE_DTO_1.stream()
-                        .filter(productFeignClientResponseDTO -> productFeignClientResponseDTO.getIdBrand() == 2L)
-                        .collect(Collectors.toList())
-        );
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20, 1, 0, 1, 2L, "Showing 1 to 2 of 2 results."));
 
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
@@ -217,32 +194,17 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithPriceRangeAndCategory_itShouldReturnPriceAndCategoryMatchingProducts() {
+    void whenGetInventoriesByCalledWithPriceRangeAndCategory_itShouldReturnPriceAndCategoryMatchingProducts() throws UnavailableMicroserviceException {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, 1L, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
-        InventorySearchCriteriaModel inventorySearchCriteriaModel = new InventorySearchCriteriaModel(100_000L, 250_000L, 1L, null);
-        PaginationModel paginationModel = new PaginationModel(null, 1);
+        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(100_000L, 250_000L, 1L, null);
+        PaginationUtil paginationModel = new PaginationUtil(null, 1);
 
-        when(inventorySearchMapper.toModel(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
-        when(paginationRequestMapper.toModel(paginationDTO)).thenReturn(paginationModel);
-        List<InventoryModel> inventoriesFilteredByPrice = INVENTORY_1.stream()
-                        .filter(inventoryModel -> inventoryModel.getSalePrice().compareTo(BigDecimal.valueOf(100_000L)) >= 0 && inventoryModel.getSalePrice().compareTo(BigDecimal.valueOf(250_000L)) <= 0)
-                        .collect(Collectors.toList());
-        when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(inventoriesFilteredByPrice);
-        when(inventorySearchMapper.toDTOList(inventoriesFilteredByPrice)).thenReturn(
-                INVENTORY_1_RESPONSE_DTO.stream()
-                        .filter(inventoryResponseDTO -> inventoryResponseDTO.getSalePrice().compareTo(BigDecimal.valueOf(100_000L)) >= 0 && inventoryResponseDTO.getSalePrice().compareTo(BigDecimal.valueOf(250_000L)) <= 0)
-                        .collect(Collectors.toList())
-        );
-        List<ProductModel> productsFilteredByBrand = PRODUCT_MICROSERVICE_RESPONSE_1.stream()
-                .filter(productModel -> productModel.getIdCategory() == 1L)
-                .collect(Collectors.toList());
-        when(productFeignClientPort.fetchProductsFromMicroservice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(productsFilteredByBrand);
-        when(productResponseMapper.toProductFeignClientResponseDTOList(productsFilteredByBrand)).thenReturn(
-                PRODUCT_MICROSERVICE_RESPONSE_DTO_1.stream()
-                        .filter(productFeignClientResponseDTO -> productFeignClientResponseDTO.getIdCategory() == 1L)
-                        .collect(Collectors.toList())
-        );
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
+        when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1_FILTERED_BY_CATEGORY_1_MODEL);
+        when(inventorySearchMapper.toDTOList(INVENTORY_1_FILTERED_BY_CATEGORY_1_MODEL)).thenReturn(INVENTORY_1_FILTERED_BY_CATEGORY_1_DTO);
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20, 1, 0, 1, 2L, "Showing 1 to 2 of 2 results."));
 
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
@@ -252,16 +214,6 @@ class InventorySpringServiceImplTest {
         Assertions.assertNotNull(filterInventoryResponse.getPaginationResponseDTO(), "Applying price and category filter to the inventory should at least return an empty pagination object");
 
         Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponseDTOs().get(0).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(4L, filterInventoryResponse.getInventoryResponseDTOs().get(1).getInventoryResponseDTO().getIdProduct());
-    }
-
-    @AfterEach
-    void resetMocks() {
-        reset(inventorySearchMapper);
-        reset(paginationRequestMapper);
-        reset(inventoryServicePort);
-        reset(productFeignClientPort);
-        reset(productResponseMapper);
-        reset(paginationResponseMapper);
+        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponseDTOs().get(1).getInventoryResponseDTO().getIdProduct());
     }
 }

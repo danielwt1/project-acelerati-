@@ -42,16 +42,23 @@ public class InventoryUseCase implements InventoryServicePort {
 
 
     @Override
-    public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaUtil inventorySearchCriteriaModel,
-                                                 PaginationUtil paginationModel) throws InvalidFilterRangeException {
-        if(inventorySearchCriteriaModel.getFromUnitPrice() > inventorySearchCriteriaModel.getToUnitPrice())
+    public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaUtil searchCriteria,
+                                                 PaginationUtil paginationUtil) throws InvalidFilterRangeException {
+        if (searchCriteria.getFromUnitPrice() == null && searchCriteria.getToUnitPrice() != null
+        || searchCriteria.getFromUnitPrice() != null && searchCriteria.getToUnitPrice() == null) {
+                throw new InvalidFilterRangeException("If one of either the From or To ranges is defined, the other must be defined too.");
+        }
+
+        if ((searchCriteria.getFromUnitPrice() != null && searchCriteria.getToUnitPrice() != null) &&
+                (searchCriteria.getFromUnitPrice() > searchCriteria.getToUnitPrice())) {
             throw new InvalidFilterRangeException("The From range must be greater than the To range");
+        }
 
-        if (paginationModel.getPageSize() == null)
-            paginationModel.setPageSize(PaginationUtil.DEFAULT_PAGE_SIZE);
+        if (paginationUtil.getPageSize() == null)
+            paginationUtil.setPageSize(PaginationUtil.DEFAULT_PAGE_SIZE);
 
-        List<InventoryModel> inventories = inventoryPersistencePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel);
-        paginationModel.updateAttributesFromListResults(inventories);
+        List<InventoryModel> inventories = inventoryPersistencePort.getInventoriesBy(searchCriteria, paginationUtil);
+        paginationUtil.updateAttributesFromListResults(inventories);
 
         return inventories;
     }

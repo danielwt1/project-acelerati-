@@ -8,7 +8,9 @@ import com.acelerati.management_service.application.dto.response.ProductsForSale
 import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
+import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,7 +53,7 @@ public class InventoryController {
                                                                           @RequestParam(required = false, defaultValue = "", name = "brandName") String brandName,
                                                                           @RequestParam(required = false, defaultValue = "", name = "nombreCategoria") String nameCategory,
                                                                           @RequestParam(required = false, defaultValue = "1", name = "page") Integer page,
-                                                                          @RequestParam(required = false, defaultValue = "10", name = "elementPerPage") Integer elementPerPage) {
+                                                                          @RequestParam(required = false, defaultValue = "10", name = "elementPerPage") Integer elementPerPage) throws UnavailableMicroserviceException {
         List<ProductsForSaleDTO> responseData = this.inventorySpringService.getAllProductForSale(name, brandName, nameCategory, page, elementPerPage);
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
@@ -76,11 +78,13 @@ public class InventoryController {
             @ApiResponse(responseCode = "500", description = "A business logic error occurred",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)))
+    }, parameters = {
+            @Parameter()
     })
     @GetMapping(path = {"/"})
     @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
     public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@RequestHeader(value = "user") String user,
-                                                                       @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
+                                                                       @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) throws UnavailableMicroserviceException {
         FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
         return new ResponseEntity<>(filterInventoryResponse, HttpStatus.OK);
     }

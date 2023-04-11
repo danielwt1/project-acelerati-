@@ -4,14 +4,14 @@ public class InventorySearchCriteriaUtil {
 
     private Long fromUnitPrice;
     private Long toUnitPrice;
-    private String category;
-    private String brand;
+    private Long categoryId;
+    private Long brandId;
 
-    public InventorySearchCriteriaUtil(Long fromUnitPrice, Long toUnitPrice, String category, String brand) {
+    public InventorySearchCriteriaUtil(Long fromUnitPrice, Long toUnitPrice, Long categoryId, Long brandId) {
         this.fromUnitPrice = fromUnitPrice;
         this.toUnitPrice = toUnitPrice;
-        this.category = category;
-        this.brand = brand;
+        this.categoryId = categoryId;
+        this.brandId = brandId;
     }
 
     public Long getFromUnitPrice() {
@@ -30,19 +30,19 @@ public class InventorySearchCriteriaUtil {
         this.toUnitPrice = toUnitPrice;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getBrand() {
-        return brand;
+    public Long getBrandId() {
+        return brandId;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
     }
 }

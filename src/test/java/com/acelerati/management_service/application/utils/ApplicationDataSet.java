@@ -24,6 +24,16 @@ public class ApplicationDataSet {
             new InventoryResponseDTO(4L, "USB Memory 64GB", 100L, BigDecimal.valueOf(180_000), BigDecimal.valueOf(180_000), 4L, 1L)
     );
 
+    public static final List<InventoryResponseDTO> INVENTORY_1_FILTERED_BY_CATEGORY_1_DTO = Arrays.asList(
+            new InventoryResponseDTO(2L, "Ram 16GB DDR4", 100L, BigDecimal.valueOf(120_000), BigDecimal.valueOf(125_000), 2L, 1L),
+            new InventoryResponseDTO(3L, "SSD Disk .m2 250GB", 100L, BigDecimal.valueOf(240_000), BigDecimal.valueOf(240_000), 3L, 1L)
+    );
+
+    public static final List<InventoryModel> INVENTORY_1_FILTERED_BY_CATEGORY_1_MODEL = Arrays.asList(
+            new InventoryModel(2L, "Ram 16GB DDR4", 100L, BigDecimal.valueOf(120_000), BigDecimal.valueOf(125_000), 2L, 1L),
+            new InventoryModel(3L, "SSD Disk .m2 250GB", 100L, BigDecimal.valueOf(240_000), BigDecimal.valueOf(240_000), 3L, 1L)
+    );
+
     public static final List<ProductDTO> PRODUCT_MICROSERVICE_RESPONSE_1 = Arrays.asList(
             new ProductDTO(1L, "Mother board", "Description 1", "Model 1", 1L, 1L),
             new ProductDTO(2L, "Ram 16GB DDR4", "Description 2", "Model 2", 2L, 1L),

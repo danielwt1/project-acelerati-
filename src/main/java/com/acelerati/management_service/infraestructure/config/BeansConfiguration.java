@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
 public class BeansConfiguration {
     private final InventoryRepository inventoryRepository;
     private final InventoryEntityMapper inventoryEntityMapper;
-    //private final ProductResponseMapper productResponseMapper;
     private final ProductRetriever productRetriever;
     @Value("${external.products.microservice.api.base-url}")
     private  String feignClientUrl;

@@ -16,9 +16,9 @@ import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.util.PaginationUtil;
+import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 public class InventorySpringServiceImpl implements InventorySpringService {
      private final InventoryServicePort inventoryServicePort;
      private final InventoryRequestMapper inventoryRequestMapper;
-
      private final InventorySearchMapper inventorySearchMapper;
      private final PaginationRequestMapper paginationRequestMapper;
      private final PaginationResponseMapper paginationResponseMapper;
@@ -43,7 +42,6 @@ public class InventorySpringServiceImpl implements InventorySpringService {
         this.productFeignClientPort = productFeignClientPort;
     }
     @Override
-
      public void addInventory(List<InventoryDTO> inventoryDTO) {
           this.inventoryServicePort.addInventory(this.inventoryRequestMapper.toListModel(inventoryDTO));
      }
@@ -55,7 +53,7 @@ public class InventorySpringServiceImpl implements InventorySpringService {
 
      @Override
      public FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteriaDTO,
-                                                        PaginationDTO paginationDTO) {
+                                                        PaginationDTO paginationDTO) throws UnavailableMicroserviceException {
           InventorySearchCriteriaUtil criteriaUtil = inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO);
           PaginationUtil paginationUtil = paginationRequestMapper.toPaginationUtil(paginationDTO);
 
@@ -67,61 +65,31 @@ public class InventorySpringServiceImpl implements InventorySpringService {
          // Fetch products from the corresponding microservice
          List<ProductDTO> productDTOS = fetchProductsFromMicroservice(0, 1000);
 
-         productDTOS = applyBrandFilter(criteriaUtil.getBrand(), productDTOS);
-         productDTOS = applyCategoryFilter(criteriaUtil.getCategory(), productDTOS);
+         // Filter by brand and category if they were specified
+         if (criteriaUtil.getBrandId() != null) {
+             productDTOS = productDTOS.stream()
+                     .filter(productDTO -> productDTO.getIdBrand().equals(criteriaUtil.getBrandId()))
+                     .collect(Collectors.toList());
+         }
+
+         if (criteriaUtil.getCategoryId() != null) {
+             productDTOS = productDTOS.stream()
+                     .filter(productDTO -> productDTO.getIdCategory().equals(criteriaUtil.getCategoryId()))
+                     .collect(Collectors.toList());
+         }
 
          PaginationResponseDTO paginationResponse = paginationResponseMapper.toResponseDTO(paginationUtil);
-          return new FilterInventoryResponseDTO(joinInventoryAndProduct(inventoriesResponse, productDTOS),
+         return new FilterInventoryResponseDTO(prepareProductsFromStockDTO(inventoriesResponse, productDTOS),
                   paginationResponse);
      }
 
-    private List<ProductDTO> applyCategoryFilter(final String category, List<ProductDTO> productDTOS) {
-        List<CategoryDTO> categoryDTOS;
-        if (category != null) {
-            categoryDTOS = fetchCategoriesFromMicroservice(0, 1000);
-            final List<Long> categoryIDs;
-            if (!categoryDTOS.isEmpty()) {
-                categoryIDs = categoryDTOS.stream()
-                        .filter(categoryDTO -> categoryDTO.getName().contains(category))
-                        .mapToLong(CategoryDTO::getId)
-                        .boxed()
-                        .collect(Collectors.toList());
-                productDTOS = productDTOS.stream()
-                        .filter(productDTO -> categoryIDs.contains(productDTO.getIdCategory()))
-                        .collect(Collectors.toList());
-            }
-        }
-        return productDTOS;
-    }
-
-    private List<ProductDTO> applyBrandFilter(final String brand, List<ProductDTO> productDTOS) {
-        List<BrandDTO> brandDTOS;
-        if (brand != null) {
-            brandDTOS = fetchBrandsFromMicroservice(0, 1000);
-            final List<Long> brandIDs;
-            if (!brandDTOS.isEmpty()) {
-                brandIDs = brandDTOS.stream()
-                        .filter(brandDTO -> brandDTO.getName().contains(brand))
-                        .mapToLong(BrandDTO::getId)
-                        .boxed()
-                        .collect(Collectors.toList());
-                productDTOS = productDTOS.stream()
-                        .filter(productDTO -> brandIDs.contains(productDTO.getIdBrand()))
-                        .collect(Collectors.toList());
-            }
-        }
-        return productDTOS;
-    }
-
     @Override
-    public List<ProductsForSaleDTO> getAllProductForSale(String name, String nombreMarca, String nombreCategoria,int page,int elementPerPage) {
+    public List<ProductsForSaleDTO> getAllProductForSale(String name, String nombreMarca, String nombreCategoria,int page,int elementPerPage) throws UnavailableMicroserviceException {
         List<InventoryResponseDTO> inventoryList = this.inventorySearchMapper.toDTOList(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0());
         List<ProductDTO> products = this.productFeignClientPort.fetchProductsFromMicroservice(page, elementPerPage);
         List<ProductsForSaleDTO> dataFiltered = mergeData(inventoryList, products);
         return dataPaginated(dataFiltered,page,elementPerPage);
     }
-
-
 
     public List<ProductsForSaleDTO>dataPaginated(List<ProductsForSaleDTO> dataFiltered,int page,int elementPerPage){
 
@@ -136,37 +104,28 @@ public class InventorySpringServiceImpl implements InventorySpringService {
                 //Function.identity() is equal to element -> element
                 .collect(Collectors.toMap(InventoryResponseDTO::getId, Function.identity()));
         return products.stream()
-                .filter(product -> dataInventory.containsKey(Long.valueOf(product.getId())))
-                .map(product -> new ProductsForSaleDTO(Long.valueOf(product.getId()),
+                .filter(product -> dataInventory.containsKey(product.getId()))
+                .map(product -> new ProductsForSaleDTO(product.getId(),
                         product.getName(),
-                        dataInventory.get(Long.valueOf(product.getId())).getSalePrice(),
-                        dataInventory.get(Long.valueOf(product.getId())).getStock(),
+                        dataInventory.get(product.getId()).getSalePrice(),
+                        dataInventory.get(product.getId()).getStock(),
                         product.getDescription())).collect(Collectors.toList());
     }
 
-    private List<InventoryAndProductResponseDTO> joinInventoryAndProduct(List<InventoryResponseDTO> inventories,
-                                                                         List<ProductDTO> products) {
+    private List<ProductsFromStockDTO> prepareProductsFromStockDTO(List<InventoryResponseDTO> inventories,
+                                                                   List<ProductDTO> products) {
         Map<Long, InventoryResponseDTO> inventoryMap = inventories.stream()
                 .collect(Collectors.toMap(InventoryResponseDTO::getId, Function.identity()));
         return products.stream()
                 .filter(product -> inventoryMap.containsKey(product.getId()))
-                .map(product -> new InventoryAndProductResponseDTO(inventoryMap.get(product.getId()), product))
+                .map(product -> new ProductsFromStockDTO(inventoryMap.get(product.getId()), product.getIdBrand(),
+                        product.getIdCategory()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber) {
+    public List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber) throws UnavailableMicroserviceException {
         return productFeignClientPort.fetchProductsFromMicroservice(page, itemsNumber);
-    }
-
-    @Override
-    public List<CategoryDTO> fetchCategoriesFromMicroservice(Integer page, Integer itemsNumber) {
-        return productFeignClientPort.fetchCategoriesFromMicroservice(page, itemsNumber);
-    }
-
-    @Override
-    public List<BrandDTO> fetchBrandsFromMicroservice(Integer page, Integer itemsNumber) {
-        return productFeignClientPort.fetchBrandsFromMicroservice(page, itemsNumber);
     }
 
 }

@@ -9,11 +9,13 @@ import com.acelerati.management_service.application.dto.response.ProductsForSale
 import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.domain.util.PaginationUtil;
+import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.context.properties.bind.validation.BindValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -46,7 +48,7 @@ class InventoryControllerTest {
     }
 
     @Test
-    void getInventoryBy_shouldReturnOkResponseWhen() {
+    void getInventoryBy_shouldReturnOkResponseWhenNoRecordsFound() throws UnavailableMicroserviceException {
         InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(null, null, null, null);
         PaginationDTO paginationRequest = new PaginationDTO(null, 1);
 
@@ -57,11 +59,37 @@ class InventoryControllerTest {
         when(inventorySpringService.getInventoriesBy(searchCriteriaRequest, paginationRequest)).thenReturn(noResultsResponse);
         ResponseEntity<FilterInventoryResponseDTO> responseEntity = inventoryRestController.getInventoriesBy("admin",searchCriteriaRequest, paginationRequest);
 
+        assertNull(paginationRequest.getPageSize());
+        assertEquals(1, paginationRequest.getPageNumber());
+        assertNull(searchCriteriaRequest.getFromUnitPrice());
+        assertNull(searchCriteriaRequest.getToUnitPrice());
+        assertNull(searchCriteriaRequest.getBrandId());
+        assertNull(searchCriteriaRequest.getCategoryId());
         verify(inventorySpringService).getInventoriesBy(searchCriteriaRequest, paginationRequest);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
+
     @Test
-    void whenGetAllProductsForSaleThenReturnHttpStatusOk(){
+    void getInventoryBy_shouldNotReturnOkResponseWhenInvalidParameterPassed() throws UnavailableMicroserviceException {
+        InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(-1L, -1L, -1L, -1L);
+        PaginationDTO paginationRequest = new PaginationDTO(-1, -1);
+
+        // The BindValidationException is being thrown from the interceptor before hitting the controller, but I think
+        // we can simulate it by making the service to throw it to verify at least that the OK won't be served to the
+        // client.
+        when(inventorySpringService.getInventoriesBy(searchCriteriaRequest, paginationRequest)).thenThrow(BindValidationException.class);
+
+        assertEquals(-1, paginationRequest.getPageNumber());
+        assertEquals(-1, paginationRequest.getPageSize());
+        assertEquals(-1L, searchCriteriaRequest.getFromUnitPrice());
+        assertEquals(-1L, searchCriteriaRequest.getToUnitPrice());
+        assertEquals(-1L, searchCriteriaRequest.getBrandId());
+        assertEquals(-1L, searchCriteriaRequest.getCategoryId());
+        assertThrows(BindValidationException.class, () -> inventoryRestController.getInventoriesBy("admin", searchCriteriaRequest, paginationRequest));
+    }
+
+    @Test
+    void whenGetAllProductsForSaleThenReturnHttpStatusOk() throws UnavailableMicroserviceException {
         ProductsForSaleDTO productsForSaleDTO = new ProductsForSaleDTO(2L,"producto1",new BigDecimal(3000),3L,"Pp112");
         List<ProductsForSaleDTO> listProductsForSale = Arrays.asList(productsForSaleDTO);
         when(this.inventorySpringService.getAllProductForSale("producto1","Pp112","cat1",1,20)).thenReturn(listProductsForSale);

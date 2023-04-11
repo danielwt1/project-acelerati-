@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 @Getter
 @AllArgsConstructor
-public class InventoryAndProductResponseDTO {
+public class ProductsFromStockDTO {
     private InventoryResponseDTO inventoryResponseDTO;
-    private ProductDTO productFeignClientResponseDTO;
+    private Long idBrand;
+    private Long idCategory;
 }
