@@ -12,7 +12,6 @@ import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.util.PaginationUtil;
 
-import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,7 +72,7 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetAllProductsForSaleThenResultListWithDataTest() throws UnavailableMicroserviceException {
+    void whenGetAllProductsForSaleThenResultListWithDataTest() {
         InventoryResponseDTO products = new InventoryResponseDTO(1L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
         InventoryResponseDTO products2 = new InventoryResponseDTO(2L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
         InventoryResponseDTO products3 = new InventoryResponseDTO(3L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
@@ -96,7 +95,7 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() throws UnavailableMicroserviceException {
+    void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, null);
@@ -120,7 +119,7 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithPriceRangeFilter_itShouldReturnProductsWithinTheSpecifiedRange() throws UnavailableMicroserviceException {
+    void whenGetInventoriesByCalledWithPriceRangeFilter_itShouldReturnProductsWithinTheSpecifiedRange() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, null, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(100_000L, 250_000L, null, null);
@@ -145,7 +144,7 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithCategoryFilter_itShouldReturnCategoryMatchingOnlyProducts() throws UnavailableMicroserviceException {
+    void whenGetInventoriesByCalledWithCategoryFilter_itShouldReturnCategoryMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, 1L, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, 1L, null);
@@ -170,7 +169,7 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithBrandFilter_itShouldReturnBrandMatchingOnlyProducts() throws UnavailableMicroserviceException {
+    void whenGetInventoriesByCalledWithBrandFilter_itShouldReturnBrandMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, 2L);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, 2L);
@@ -194,7 +193,7 @@ class InventorySpringServiceImplTest {
     }
 
     @Test
-    void whenGetInventoriesByCalledWithPriceRangeAndCategory_itShouldReturnPriceAndCategoryMatchingProducts() throws UnavailableMicroserviceException {
+    void whenGetInventoriesByCalledWithPriceRangeAndCategory_itShouldReturnPriceAndCategoryMatchingProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, 1L, null);
         PaginationDTO paginationDTO = new PaginationDTO(null, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(100_000L, 250_000L, 1L, null);

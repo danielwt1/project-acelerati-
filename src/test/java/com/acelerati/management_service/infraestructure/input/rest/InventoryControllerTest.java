@@ -9,7 +9,6 @@ import com.acelerati.management_service.application.dto.response.ProductsForSale
 import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.domain.util.PaginationUtil;
-import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,7 +47,7 @@ class InventoryControllerTest {
     }
 
     @Test
-    void getInventoryBy_shouldReturnOkResponseWhenNoRecordsFound() throws UnavailableMicroserviceException {
+    void getInventoryBy_shouldReturnOkResponseWhenNoRecordsFound() {
         InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(null, null, null, null);
         PaginationDTO paginationRequest = new PaginationDTO(null, 1);
 
@@ -61,8 +60,8 @@ class InventoryControllerTest {
 
         assertNull(paginationRequest.getPageSize());
         assertEquals(1, paginationRequest.getPageNumber());
-        assertNull(searchCriteriaRequest.getFromUnitPrice());
-        assertNull(searchCriteriaRequest.getToUnitPrice());
+        assertNull(searchCriteriaRequest.getFromSalePrice());
+        assertNull(searchCriteriaRequest.getToSalePrice());
         assertNull(searchCriteriaRequest.getBrandId());
         assertNull(searchCriteriaRequest.getCategoryId());
         verify(inventorySpringService).getInventoriesBy(searchCriteriaRequest, paginationRequest);
@@ -70,7 +69,7 @@ class InventoryControllerTest {
     }
 
     @Test
-    void getInventoryBy_shouldNotReturnOkResponseWhenInvalidParameterPassed() throws UnavailableMicroserviceException {
+    void getInventoryBy_shouldNotReturnOkResponseWhenInvalidParameterPassed() {
         InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(-1L, -1L, -1L, -1L);
         PaginationDTO paginationRequest = new PaginationDTO(-1, -1);
 
@@ -81,15 +80,15 @@ class InventoryControllerTest {
 
         assertEquals(-1, paginationRequest.getPageNumber());
         assertEquals(-1, paginationRequest.getPageSize());
-        assertEquals(-1L, searchCriteriaRequest.getFromUnitPrice());
-        assertEquals(-1L, searchCriteriaRequest.getToUnitPrice());
+        assertEquals(-1L, searchCriteriaRequest.getFromSalePrice());
+        assertEquals(-1L, searchCriteriaRequest.getToSalePrice());
         assertEquals(-1L, searchCriteriaRequest.getBrandId());
         assertEquals(-1L, searchCriteriaRequest.getCategoryId());
         assertThrows(BindValidationException.class, () -> inventoryRestController.getInventoriesBy("admin", searchCriteriaRequest, paginationRequest));
     }
 
     @Test
-    void whenGetAllProductsForSaleThenReturnHttpStatusOk() throws UnavailableMicroserviceException {
+    void whenGetAllProductsForSaleThenReturnHttpStatusOk() {
         ProductsForSaleDTO productsForSaleDTO = new ProductsForSaleDTO(2L,"producto1",new BigDecimal(3000),3L,"Pp112");
         List<ProductsForSaleDTO> listProductsForSale = Arrays.asList(productsForSaleDTO);
         when(this.inventorySpringService.getAllProductForSale("producto1","Pp112","cat1",1,20)).thenReturn(listProductsForSale);

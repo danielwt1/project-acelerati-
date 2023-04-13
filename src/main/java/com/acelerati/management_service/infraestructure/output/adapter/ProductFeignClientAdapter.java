@@ -2,7 +2,6 @@ package com.acelerati.management_service.infraestructure.output.adapter;
 
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
 import com.acelerati.management_service.application.dto.response.ProductDTO;
-import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public class ProductFeignClientAdapter implements ProductFeignClientPort {
     }
 
     @Override
-    public List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber) throws UnavailableMicroserviceException {
+    public List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber) {
         return productRetriever.getAllProducts(page, itemsNumber);
     }
 }
