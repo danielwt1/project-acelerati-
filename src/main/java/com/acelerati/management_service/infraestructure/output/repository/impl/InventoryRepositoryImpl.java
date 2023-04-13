@@ -1,6 +1,5 @@
 package com.acelerati.management_service.infraestructure.output.repository.impl;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
-import com.acelerati.management_service.domain.usecase.InventoryUseCase;
 import com.acelerati.management_service.domain.util.PaginationUtil;
 import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepositoryCustom;
@@ -58,27 +57,20 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
     }
 
     @Override
-    public List<InventoryEntity> getInventoriesBy(InventorySearchCriteriaUtil inventorySearchCriteriaModel, PaginationUtil paginationModel) {
+    public List<InventoryEntity> getInventoriesBy(InventorySearchCriteriaUtil searchCriteriaUtil, PaginationUtil paginationModel) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<InventoryEntity> criteriaQuery = criteriaBuilder.createQuery(InventoryEntity.class);
         Root<InventoryEntity> root = criteriaQuery.from(InventoryEntity.class);
-        List<Predicate> predicates = buildFilteringPredicates(inventorySearchCriteriaModel, criteriaBuilder, root);
+        List<Predicate> predicates = buildFilteringPredicates(searchCriteriaUtil, criteriaBuilder, root);
 
         criteriaQuery
                 .select(root)
                 .where(predicates.toArray(new Predicate[0]));
 
         TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(paginationModel.calculateOffset());
-        typedQuery.setMaxResults(paginationModel.getPageSize());
-
-        Long count = getTotalResults(criteriaBuilder, predicates);
-        paginationModel.setTotalResults(count);
 
         return typedQuery.getResultList();
     }
-
-    
 
 	@Override
     public List<InventoryEntity> getAllInventoryWithStockAndSalePriceGreaterThan0() {
@@ -96,24 +88,12 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
         return typedQuery.getResultList();
     }
 
-    private int calculateSelectionStartOffset(PaginationUtil paginationModel) {
-        return (paginationModel.getPageNumber() - 1) * paginationModel.getPageSize();
-    }
-
     private List<Predicate> buildFilteringPredicates(InventorySearchCriteriaUtil inventorySearchCriteriaModel,
                                                      CriteriaBuilder criteriaBuilder, Root<InventoryEntity> root) {
         List<Predicate> predicates = new ArrayList<>();
-        if (inventorySearchCriteriaModel.getToUnitPrice() != null && inventorySearchCriteriaModel.getFromUnitPrice() != null)
-            predicates.add(criteriaBuilder.between(root.get("unitPrice"), inventorySearchCriteriaModel.getFromUnitPrice(), inventorySearchCriteriaModel.getToUnitPrice()));
+        if (inventorySearchCriteriaModel.getToSalePrice() != null && inventorySearchCriteriaModel.getFromSalePrice() != null)
+            predicates.add(criteriaBuilder.between(root.get("salePrice"), inventorySearchCriteriaModel.getFromSalePrice(), inventorySearchCriteriaModel.getToSalePrice()));
         return predicates;
-    }
-
-    private Long getTotalResults(CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        countQuery
-                .select(criteriaBuilder.count(countQuery.from(InventoryEntity.class)))
-                .where(predicates.toArray(new Predicate[0]));
-        return entityManager.createQuery(countQuery).getSingleResult();
     }
 
 }
