@@ -6,7 +6,6 @@ import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.domain.exception.ProductNotFoundException;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.util.PaginationUtil;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -92,8 +91,8 @@ class InventoryUseCaseTest {
     @Test
     void getInventoriesBy_whenFromRangeGreaterThanToRangeItShouldThrowException() {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(250_000L, 180_000L, null, null);
-        assertEquals(250_000L, searchCriteria.getFromUnitPrice());
-        assertEquals(180_000L, searchCriteria.getToUnitPrice());
+        assertEquals(250_000L, searchCriteria.getFromSalePrice());
+        assertEquals(180_000L, searchCriteria.getToSalePrice());
         InvalidFilterRangeException exception = assertThrows(InvalidFilterRangeException.class,
                 () -> inventoryUseCase.getInventoriesBy(searchCriteria, null));
         assertEquals("The From range must be greater than the To range", exception.getMessage());
