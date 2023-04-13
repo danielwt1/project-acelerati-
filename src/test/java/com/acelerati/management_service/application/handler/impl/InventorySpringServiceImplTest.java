@@ -57,7 +57,7 @@ class InventorySpringServiceImplTest {
     @Test
     void whenCallSaveInventoryListThenSaveTest(){
         List<InventoryDTO> list = new ArrayList<>();
-        this.inventoryImpl.addInventory(list);
+        assertDoesNotThrow(() -> inventoryImpl.addInventory(list));
     }
 
     @Test

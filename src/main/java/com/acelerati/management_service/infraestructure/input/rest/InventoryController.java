@@ -7,7 +7,7 @@ import com.acelerati.management_service.application.dto.response.FilterInventory
 import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
 import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
-import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
+import com.acelerati.management_service.infraestructure.exceptionhandler.response.ErrorDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

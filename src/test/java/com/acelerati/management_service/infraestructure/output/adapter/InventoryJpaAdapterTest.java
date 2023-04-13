@@ -44,8 +44,7 @@ class InventoryJpaAdapterTest {
 
     @Test
     void whenCallAddInventoryWithEntityThenSaveDB() {
-        this.inventoryJpaAdapter.addInventory(inventoryModel);
-
+        assertDoesNotThrow(() -> inventoryJpaAdapter.addInventory(inventoryModel));
     }
 
     @Test
@@ -60,8 +59,8 @@ class InventoryJpaAdapterTest {
     }
 
     @Test
-    void whenUpdateProductoThenCallUpdateDB() {
-        this.inventoryJpaAdapter.updateInventory(inventoryModel);
+    void whenUpdateProductThenCallUpdateDB() {
+        assertDoesNotThrow(() -> inventoryJpaAdapter.updateInventory(inventoryModel));
     }
 
     @Test
@@ -73,7 +72,7 @@ class InventoryJpaAdapterTest {
         List<InventoryModel> respoonseFromRepository = this.inventoryJpaAdapter.getAllInventoryWithStockAndSalePriceGreaterThan0();
         assertAll(
                 ()->assertTrue(respoonseFromRepository.size()>0),
-                ()->assertTrue(respoonseFromRepository.get(0) != null),
+                ()->assertNotNull(respoonseFromRepository.get(0)),
                 ()->assertEquals(listInventory.size(),respoonseFromRepository.size())
         );
     }

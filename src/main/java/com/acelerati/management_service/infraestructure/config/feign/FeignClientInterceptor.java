@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class FeignClientInterceptor implements RequestInterceptor {
 
     private static final String AUTHORIZATION_HEADER="Authorization";
-    private static final String TOKEN_TYPE = "Bearer";
+
     @Value("${external.products.microservice.api.base-url}")
     private  String feignClientUrl;
 

@@ -28,6 +28,10 @@ public class ProductRetriever {
         return response.getBody();
     }
 
+    /*
+     * Parameters can not be removed because Hystrix uses method signature matching to find the right fallback one.
+     * This makes part of the assumed technical debt.
+     */
     public List<ProductDTO> getEmptyProductList(Integer page, Integer itemsNumber) {
         logger.error("Could not get connection to the Products Microservice. Try again later");
         return new ArrayList<>();
