@@ -22,15 +22,6 @@ public class PaginationUtil {
     public PaginationUtil() {
         // This is used to prevent ambiguous constructors to Mapstructs
     }
-    public PaginationUtil(Long pageSize, Long pageNumber, String description, Long firstResultIndex,
-                           Long lastResultIndex, Long totalResults) {
-        this.pageSize = pageSize;
-        this.pageNumber = pageNumber;
-        this.description = description;
-        this.firstResultIndex = firstResultIndex;
-        this.lastResultIndex = lastResultIndex;
-        this.totalResults = totalResults;
-    }
 
     public PaginationUtil(Long pageSize, Long pageNumber) {
         this.pageSize = pageSize;
@@ -49,25 +40,15 @@ public class PaginationUtil {
         return pageNumber;
     }
 
-    public void setPageNumber(Long pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public Long getTotalResults() {
         return totalResults;
     }
 
-    public void setTotalResults(Long totalResults) {
-        this.totalResults = totalResults;
-    }
 
     /**
      * Calculates the index of the first record of the page to select.
@@ -80,10 +61,6 @@ public class PaginationUtil {
 
     public Long getLastResultIndex() {
         return lastResultIndex;
-    }
-
-    public void setLastResultIndex(Long lastResultIndex) {
-        this.lastResultIndex = lastResultIndex;
     }
 
     public Long calculateOffset() {

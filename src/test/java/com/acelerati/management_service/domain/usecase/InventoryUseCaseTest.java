@@ -123,4 +123,22 @@ class InventoryUseCaseTest {
         assertEquals(DEFAULT_PAGE_SIZE, paginationUtil.getPageSize());
         assertEquals(1, paginationUtil.getPageNumber());
     }
+
+    @Test
+    void getInventoriesBy_whenThePageSizeIsSpecifiedItShouldNotFallbackIt() {
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
+        PaginationUtil paginationUtil = new PaginationUtil(10L, 1L);
+        when(persistencePort.getInventoriesBy(Mockito.any(), Mockito.eq(paginationUtil))).thenReturn(INVENTORY_1);
+        inventoryUseCase.getInventoriesBy(searchCriteria, paginationUtil);
+        assertNotEquals(20L, paginationUtil.getPageSize());
+        assertEquals(10L, paginationUtil.getPageSize());
+    }
+
+    @Test
+    void getInventoriesBy_whenTheRangesAreWellSpecifiedItShouldNotThrowAnyException() {
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(180_000L, 250_000L, null, null);
+        PaginationUtil paginationUtil = new PaginationUtil(null, 1L);
+        when(persistencePort.getInventoriesBy(Mockito.any(), Mockito.eq(paginationUtil))).thenReturn(INVENTORY_1);
+        assertDoesNotThrow(() -> inventoryUseCase.getInventoriesBy(searchCriteria, paginationUtil));
+    }
 }

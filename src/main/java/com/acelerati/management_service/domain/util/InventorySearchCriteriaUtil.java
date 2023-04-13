@@ -18,31 +18,15 @@ public class InventorySearchCriteriaUtil {
         return fromSalePrice;
     }
 
-    public void setFromSalePrice(Long fromSalePrice) {
-        this.fromSalePrice = fromSalePrice;
-    }
-
     public Long getToSalePrice() {
         return toSalePrice;
-    }
-
-    public void setToSalePrice(Long toSalePrice) {
-        this.toSalePrice = toSalePrice;
     }
 
     public Long getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
     public Long getBrandId() {
         return brandId;
-    }
-
-    public void setBrandId(Long brandId) {
-        this.brandId = brandId;
     }
 }
