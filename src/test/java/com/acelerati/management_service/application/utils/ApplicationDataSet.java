@@ -57,4 +57,26 @@ public class ApplicationDataSet {
             new InventoryResponseDTO(4L, "USB Memory 64GB", 100L, BigDecimal.valueOf(180_000), BigDecimal.valueOf(180_000), 4L, 1L)
     );
 
+    public static final List<InventoryModel> INVENTORY_3 = Arrays.asList(
+            new InventoryModel(1L, "Mother board", 100L, BigDecimal.valueOf(300_000), BigDecimal.valueOf(350_000), 1L, 1L),
+            new InventoryModel(2L, "Ram 16GB DDR4", 100L, BigDecimal.valueOf(120_000), BigDecimal.valueOf(125_000), 2L, 1L),
+            new InventoryModel(3L, "SSD Disk .m2 250GB", 100L, BigDecimal.valueOf(240_000), BigDecimal.valueOf(240_000), 3L, 1L),
+            new InventoryModel(4L, "USB Memory 64GB", 100L, BigDecimal.valueOf(180_000), BigDecimal.valueOf(180_000), 4L, 1L),
+            new InventoryModel(5L, "SD Card 64GB", 100L, BigDecimal.valueOf(300_000), BigDecimal.valueOf(350_000), 5L, 1L),
+            new InventoryModel(6L, "Logitech Headset", 100L, BigDecimal.valueOf(120_000), BigDecimal.valueOf(125_000), 6L, 1L),
+            new InventoryModel(7L, "USB Hub 8 portsB", 100L, BigDecimal.valueOf(240_000), BigDecimal.valueOf(240_000), 7L, 1L),
+            new InventoryModel(8L, "Dell Full HD monitor 25", 100L, BigDecimal.valueOf(180_000), BigDecimal.valueOf(180_000), 8L, 1L)
+    );
+
+    public static final List<InventoryResponseDTO> INVENTORY_3_RESPONSE_DTO = Arrays.asList(
+            new InventoryResponseDTO(1L, "Mother board", 100L, BigDecimal.valueOf(300_000), BigDecimal.valueOf(350_000), 1L, 1L),
+            new InventoryResponseDTO(2L, "Ram 16GB DDR4", 100L, BigDecimal.valueOf(120_000), BigDecimal.valueOf(125_000), 2L, 1L),
+            new InventoryResponseDTO(3L, "SSD Disk .m2 250GB", 100L, BigDecimal.valueOf(240_000), BigDecimal.valueOf(240_000), 3L, 1L),
+            new InventoryResponseDTO(4L, "USB Memory 64GB", 100L, BigDecimal.valueOf(180_000), BigDecimal.valueOf(180_000), 4L, 1L),
+            new InventoryResponseDTO(5L, "SD Card 64GB", 100L, BigDecimal.valueOf(300_000), BigDecimal.valueOf(350_000), 5L, 1L),
+            new InventoryResponseDTO(6L, "Logitech Headset", 100L, BigDecimal.valueOf(120_000), BigDecimal.valueOf(125_000), 6L, 1L),
+            new InventoryResponseDTO(7L, "USB Hub 8 portsB", 100L, BigDecimal.valueOf(240_000), BigDecimal.valueOf(240_000), 7L, 1L),
+            new InventoryResponseDTO(8L, "Dell Full HD monitor 25", 100L, BigDecimal.valueOf(180_000), BigDecimal.valueOf(180_000), 8L, 1L)
+    );
+
 }

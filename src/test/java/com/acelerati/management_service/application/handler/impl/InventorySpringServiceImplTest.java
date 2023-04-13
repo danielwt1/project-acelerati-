@@ -8,6 +8,7 @@ import com.acelerati.management_service.application.dto.response.*;
 import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.application.mapper.InventorySearchMapper;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
+import com.acelerati.management_service.domain.exception.PageOutOfBoundsException;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.util.PaginationUtil;
@@ -15,17 +16,25 @@ import com.acelerati.management_service.domain.util.PaginationUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.acelerati.management_service.domain.util.PaginationUtil.NO_RECORDS_FOUND;
 import static com.acelerati.management_service.application.utils.ApplicationDataSet.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -122,12 +131,12 @@ class InventorySpringServiceImplTest {
     void whenGetInventoriesByCalledWithPriceRangeFilter_itShouldReturnProductsWithinTheSpecifiedRange() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, null, null);
         PaginationDTO paginationDTO = new PaginationDTO(20, 1);
-        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(100_000L, 250_000L, null, null);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(100_000L, 250_000L, null, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
-        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
-        when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_2);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationModel)).thenReturn(INVENTORY_2);
         when(inventorySearchMapper.toDTOList(INVENTORY_2)).thenReturn(INVENTORY_2_RESPONSE_DTO);
         when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 2L, 3L, "Showing 1 to 3 of 3 results."));
@@ -147,12 +156,12 @@ class InventorySpringServiceImplTest {
     void whenGetInventoriesByCalledWithCategoryFilter_itShouldReturnCategoryMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, 1L, null);
         PaginationDTO paginationDTO = new PaginationDTO(20, 1);
-        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, 1L, null);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, 1L, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
-        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
-        when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationModel)).thenReturn(INVENTORY_1);
         when(inventorySearchMapper.toDTOList(INVENTORY_1)).thenReturn(INVENTORY_1_RESPONSE_DTO);
         when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 2L, 3L, "Showing 1 to 3 of 3 results."));
@@ -172,12 +181,12 @@ class InventorySpringServiceImplTest {
     void whenGetInventoriesByCalledWithBrandFilter_itShouldReturnBrandMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, 2L);
         PaginationDTO paginationDTO = new PaginationDTO(20, 1);
-        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, 2L);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, 2L);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
-        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
-        when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationModel)).thenReturn(INVENTORY_1);
         when(inventorySearchMapper.toDTOList(INVENTORY_1)).thenReturn(INVENTORY_1_RESPONSE_DTO);
         when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
@@ -196,12 +205,12 @@ class InventorySpringServiceImplTest {
     void whenGetInventoriesByCalledWithPriceRangeAndCategory_itShouldReturnPriceAndCategoryMatchingProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, 1L, null);
         PaginationDTO paginationDTO = new PaginationDTO(20, 1);
-        InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(100_000L, 250_000L, 1L, null);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(100_000L, 250_000L, 1L, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
-        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
-        when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1_FILTERED_BY_CATEGORY_1_MODEL);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationModel)).thenReturn(INVENTORY_1_FILTERED_BY_CATEGORY_1_MODEL);
         when(inventorySearchMapper.toDTOList(INVENTORY_1_FILTERED_BY_CATEGORY_1_MODEL)).thenReturn(INVENTORY_1_FILTERED_BY_CATEGORY_1_DTO);
         when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationModel)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
@@ -215,4 +224,174 @@ class InventorySpringServiceImplTest {
         Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponseDTOs().get(0).getInventoryResponseDTO().getIdProduct());
         Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponseDTOs().get(1).getInventoryResponseDTO().getIdProduct());
     }
+
+    @Test
+    void getInventoriesBy_onceTheSearchFinishedItShouldLeaveThePaginationReadyToServe() {
+        InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
+        PaginationDTO paginationDTO = new PaginationDTO(4, 1);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
+        PaginationUtil paginationUtil = new PaginationUtil(4L, 1L);
+
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(INVENTORY_1);
+        when(inventorySearchMapper.toDTOList(INVENTORY_1)).thenReturn(INVENTORY_1_RESPONSE_DTO);
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
+        when(paginationResponseMapper.toResponseDTO(paginationUtil)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
+
+        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
+
+        assertEquals("Showing 1 to 4 of 4 results.", paginationUtil.getDescription());
+        assertEquals(4L, paginationUtil.getTotalResults());
+        assertEquals(0, paginationUtil.getFirstResultIndex());
+        assertEquals(3, paginationUtil.getLastResultIndex());
+    }
+
+    @Test
+    void getInventoriesBy_whenNoResultsFoundThePaginationResponseShouldBeOnEmptyState() {
+        InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
+        PaginationDTO paginationDTO = new PaginationDTO(4, 1);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
+        PaginationUtil paginationUtil = new PaginationUtil(4L, 1L);
+
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(Collections.emptyList());
+        when(inventorySearchMapper.toDTOList(Collections.emptyList())).thenReturn(Collections.emptyList());
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
+        when(paginationResponseMapper.toResponseDTO(paginationUtil)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
+
+        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
+        assertEquals(NO_RECORDS_FOUND, paginationUtil.getDescription());
+        assertEquals(0L, paginationUtil.getTotalResults());
+        assertEquals(0L, paginationUtil.getFirstResultIndex());
+        assertEquals(0L, paginationUtil.getLastResultIndex());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 4})
+    void getInventoriesBy_paginationInfoIsCorrectWhenMoreThanOnePageIsPresent(long pageNumber) {
+        InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
+
+        final long pageSize = 2;
+        PaginationDTO paginationDTO = new PaginationDTO((int) pageSize, (int) pageNumber);
+        PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
+
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(INVENTORY_3);
+        when(inventorySearchMapper.toDTOList(INVENTORY_3)).thenReturn(INVENTORY_3_RESPONSE_DTO);
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
+        when(paginationResponseMapper.toResponseDTO(paginationUtil)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
+
+        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
+        String expectedDescription = "";
+        int expectedFirstIndex = 0;
+        int expectedLastIndex = 0;
+        if (pageNumber == 1) {
+            expectedDescription = "Showing 1 to 2 of 8 results.";
+            expectedLastIndex = 1;
+        } else if (pageNumber == 2) {
+            expectedDescription = "Showing 3 to 4 of 8 results.";
+            expectedFirstIndex = 2;
+            expectedLastIndex = 3;
+        } else if (pageNumber == 4) {
+            expectedDescription = "Showing 7 to 8 of 8 results.";
+            expectedFirstIndex = 6;
+            expectedLastIndex = 7;
+        }
+        assertEquals(expectedDescription, paginationUtil.getDescription());
+        assertEquals(8L, paginationUtil.getTotalResults());
+        assertEquals(expectedFirstIndex, paginationUtil.getFirstResultIndex());
+        assertEquals(expectedLastIndex, paginationUtil.getLastResultIndex());
+
+        tearDown();
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTwoLastPages_irregular")
+    void getInventoriesBy_paginationInfoIsCorrectWhenLastPageHasLessResultsThanPageSize(
+            long pageNumber, List<InventoryModel> returnedInventories, List<InventoryResponseDTO> returnedDTOS) {
+        InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
+
+        final long pageSize = 3;
+        PaginationDTO paginationDTO = new PaginationDTO((int) pageSize, (int) pageNumber);
+        PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
+
+
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(returnedInventories);
+        when(inventorySearchMapper.toDTOList(returnedInventories)).thenReturn(returnedDTOS);
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
+        when(paginationResponseMapper.toResponseDTO(paginationUtil)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
+
+        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
+        String expectedDescription = "";
+        int expectedFirstIndex = 0;
+        int expectedLastIndex = 0;
+        long expectedTotalResults = 0L;
+        if (pageNumber == 2) {
+            expectedDescription = "Showing 4 to 4 of 4 results.";
+            expectedFirstIndex = 3;
+            expectedLastIndex = 3;
+            expectedTotalResults = 4L;
+        } else if (pageNumber == 3) {
+            expectedDescription = "Showing 7 to 8 of 8 results.";
+            expectedFirstIndex = 6;
+            expectedLastIndex = 7;
+            expectedTotalResults = 8L;
+        }
+        assertEquals(expectedDescription, paginationUtil.getDescription());
+        assertEquals(expectedTotalResults, paginationUtil.getTotalResults());
+        assertEquals(expectedFirstIndex, paginationUtil.getFirstResultIndex());
+        assertEquals(expectedLastIndex, paginationUtil.getLastResultIndex());
+
+        tearDown();
+    }
+
+    private static Stream<Arguments> provideTwoLastPages_irregular() {
+        return Stream.of(
+                Arguments.of(2, INVENTORY_1, INVENTORY_1_RESPONSE_DTO),
+                Arguments.of(3, INVENTORY_3, INVENTORY_3_RESPONSE_DTO)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideOutOfBoundsPages")
+    void getInventoriesBy_pageOutOfBoundsExceptionIsThrownWhenUserRequestTooHighPages(
+            long pageNumber, List<InventoryModel> returnedInventories, List<InventoryResponseDTO> returnedDTOS) {
+        InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
+        InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
+
+        final long pageSize = 3;
+        PaginationDTO paginationDTO = new PaginationDTO((int) pageSize, (int) pageNumber);
+        PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
+
+        when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
+        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(returnedInventories);
+        when(inventorySearchMapper.toDTOList(returnedInventories)).thenReturn(returnedDTOS);
+        when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
+
+        PageOutOfBoundsException exception = assertThrows(PageOutOfBoundsException.class,
+                () -> inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO));
+        assertEquals("This record set cannot be navigated any further", exception.getMessage());
+
+        tearDown();
+    }
+
+    private static Stream<Arguments> provideOutOfBoundsPages() {
+        return Stream.of(
+                Arguments.of(3, INVENTORY_1, INVENTORY_1_RESPONSE_DTO),
+                Arguments.of(4, INVENTORY_3, INVENTORY_3_RESPONSE_DTO)
+        );
+    }
+
+    private void tearDown() {
+        Mockito.reset(inventoryServicePort);
+    }
+
 }
