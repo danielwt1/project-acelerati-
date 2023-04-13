@@ -8,12 +8,12 @@ import com.acelerati.management_service.application.dto.response.ProductsForSale
 import com.acelerati.management_service.application.dto.request.InventoryUpdateRequestDTO;
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
-import com.acelerati.management_service.infraestructure.exception.UnavailableMicroserviceException;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +33,7 @@ import java.util.List;
 @RestController
 @Validated
 public class InventoryController {
+    private static final Logger logger = LoggerFactory.getLogger(InventoryController.class);
     private final InventorySpringService inventorySpringService;
 
     public InventoryController(InventorySpringService inventorySpringService) {
@@ -53,7 +54,7 @@ public class InventoryController {
                                                                           @RequestParam(required = false, defaultValue = "", name = "brandName") String brandName,
                                                                           @RequestParam(required = false, defaultValue = "", name = "nombreCategoria") String nameCategory,
                                                                           @RequestParam(required = false, defaultValue = "1", name = "page") Integer page,
-                                                                          @RequestParam(required = false, defaultValue = "10", name = "elementPerPage") Integer elementPerPage) throws UnavailableMicroserviceException {
+                                                                          @RequestParam(required = false, defaultValue = "10", name = "elementPerPage") Integer elementPerPage) {
         List<ProductsForSaleDTO> responseData = this.inventorySpringService.getAllProductForSale(name, brandName, nameCategory, page, elementPerPage);
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
@@ -78,13 +79,13 @@ public class InventoryController {
             @ApiResponse(responseCode = "500", description = "A business logic error occurred",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)))
-    }, parameters = {
-            @Parameter()
     })
     @GetMapping(path = {"/"})
     @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
     public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@RequestHeader(value = "user") String user,
-                                                                       @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) throws UnavailableMicroserviceException {
+                                                                       @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
+        logger.debug("Search criteria will be {}", searchCriteria);
+        logger.debug("Pagination requested as {}", paginationDTO);
         FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
         return new ResponseEntity<>(filterInventoryResponse, HttpStatus.OK);
     }

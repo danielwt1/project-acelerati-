@@ -2,11 +2,14 @@ package com.acelerati.management_service.application.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @Getter
+@ToString
 public class PaginationDTO {
 
     private final Integer pageSize;
