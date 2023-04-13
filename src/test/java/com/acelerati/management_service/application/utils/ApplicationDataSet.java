@@ -3,6 +3,7 @@ package com.acelerati.management_service.application.utils;
 import com.acelerati.management_service.application.dto.response.InventoryResponseDTO;
 import com.acelerati.management_service.application.dto.response.ProductDTO;
 import com.acelerati.management_service.domain.model.InventoryModel;
+import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -22,6 +23,13 @@ public class ApplicationDataSet {
             new InventoryResponseDTO(2L, "Ram 16GB DDR4", 100L, BigDecimal.valueOf(120_000), BigDecimal.valueOf(125_000), 2L, 1L),
             new InventoryResponseDTO(3L, "SSD Disk .m2 250GB", 100L, BigDecimal.valueOf(240_000), BigDecimal.valueOf(240_000), 3L, 1L),
             new InventoryResponseDTO(4L, "USB Memory 64GB", 100L, BigDecimal.valueOf(180_000), BigDecimal.valueOf(180_000), 4L, 1L)
+    );
+
+    public static final List<InventoryEntity> INVENTORY_1_ENTITY_LIST = Arrays.asList(
+            new InventoryEntity(1L, "Mother board", 100L, BigDecimal.valueOf(300_000), BigDecimal.valueOf(350_000), 1L, 1L),
+            new InventoryEntity(2L, "Ram 16GB DDR4", 100L, BigDecimal.valueOf(120_000), BigDecimal.valueOf(125_000), 2L, 1L),
+            new InventoryEntity(3L, "SSD Disk .m2 250GB", 100L, BigDecimal.valueOf(240_000), BigDecimal.valueOf(240_000), 3L, 1L),
+            new InventoryEntity(4L, "USB Memory 64GB", 100L, BigDecimal.valueOf(180_000), BigDecimal.valueOf(180_000), 4L, 1L)
     );
 
     public static final List<InventoryResponseDTO> INVENTORY_1_FILTERED_BY_CATEGORY_1_DTO = Arrays.asList(

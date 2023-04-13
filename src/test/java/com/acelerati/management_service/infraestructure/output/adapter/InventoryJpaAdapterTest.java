@@ -1,6 +1,8 @@
 package com.acelerati.management_service.infraestructure.output.adapter;
 
 import com.acelerati.management_service.domain.model.InventoryModel;
+import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
+import com.acelerati.management_service.domain.util.PaginationUtil;
 import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
@@ -9,18 +11,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.acelerati.management_service.application.utils.ApplicationDataSet.INVENTORY_1;
+import static com.acelerati.management_service.application.utils.ApplicationDataSet.INVENTORY_1_ENTITY_LIST;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,5 +76,29 @@ class InventoryJpaAdapterTest {
                 ()->assertTrue(respoonseFromRepository.get(0) != null),
                 ()->assertEquals(listInventory.size(),respoonseFromRepository.size())
         );
+    }
+
+    @Test
+    void getInventoriesBy_whenRepositoryRetrievalSucceedItShouldReturnTheInventoryModels() {
+        InventorySearchCriteriaUtil searchCriteriaUtil = new InventorySearchCriteriaUtil(null, null, null, null);
+        PaginationUtil paginationUtil = new PaginationUtil(PaginationUtil.DEFAULT_PAGE_SIZE, 1L);
+
+        when(inventoryRepository.getInventoriesBy(searchCriteriaUtil, paginationUtil)).thenReturn(INVENTORY_1_ENTITY_LIST);
+        when(inventoryEntityMapper.toListModel(INVENTORY_1_ENTITY_LIST)).thenReturn(INVENTORY_1);
+
+        List<InventoryModel> inventoryModels = inventoryJpaAdapter.getInventoriesBy(searchCriteriaUtil, paginationUtil);
+
+        assertNotNull(inventoryModels);
+        assertEquals(4, inventoryModels.size());
+    }
+
+    @Test
+    void getInventoriesBy_whenRepositoryRetrievalFailsItShouldPropagateTheException() {
+        InventorySearchCriteriaUtil searchCriteriaUtil = new InventorySearchCriteriaUtil(null, null, null, null);
+        PaginationUtil paginationUtil = new PaginationUtil(PaginationUtil.DEFAULT_PAGE_SIZE, 1L);
+
+        when(inventoryRepository.getInventoriesBy(searchCriteriaUtil, paginationUtil)).thenThrow(RuntimeException.class);
+
+        assertThrows(RuntimeException.class, () -> inventoryJpaAdapter.getInventoriesBy(searchCriteriaUtil, paginationUtil));
     }
 }
