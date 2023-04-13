@@ -97,9 +97,9 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(null, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, null);
-        PaginationUtil paginationModel = new PaginationUtil(null, 1L);
+        PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
         when(inventoryServicePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel)).thenReturn(INVENTORY_1);
@@ -121,9 +121,9 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithPriceRangeFilter_itShouldReturnProductsWithinTheSpecifiedRange() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(null, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(100_000L, 250_000L, null, null);
-        PaginationUtil paginationModel = new PaginationUtil(null, 1L);
+        PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
@@ -146,9 +146,9 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithCategoryFilter_itShouldReturnCategoryMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, 1L, null);
-        PaginationDTO paginationDTO = new PaginationDTO(null, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, 1L, null);
-        PaginationUtil paginationModel = new PaginationUtil(null, 1L);
+        PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
@@ -171,9 +171,9 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithBrandFilter_itShouldReturnBrandMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, 2L);
-        PaginationDTO paginationDTO = new PaginationDTO(null, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, 2L);
-        PaginationUtil paginationModel = new PaginationUtil(null, 1L);
+        PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
@@ -195,9 +195,9 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithPriceRangeAndCategory_itShouldReturnPriceAndCategoryMatchingProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, 1L, null);
-        PaginationDTO paginationDTO = new PaginationDTO(null, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(100_000L, 250_000L, 1L, null);
-        PaginationUtil paginationModel = new PaginationUtil(null, 1L);
+        PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
         when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationModel);
