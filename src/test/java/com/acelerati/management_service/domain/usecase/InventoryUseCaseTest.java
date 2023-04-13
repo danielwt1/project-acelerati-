@@ -117,7 +117,7 @@ class InventoryUseCaseTest {
     @Test
     void getInventoriesBy_whenThePageSizeIsNullItShouldFallbackTo20() {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
-        PaginationUtil paginationUtil = new PaginationUtil(null, 1);
+        PaginationUtil paginationUtil = new PaginationUtil(null, 1L);
         when(persistencePort.getInventoriesBy(Mockito.any(), Mockito.eq(paginationUtil))).thenReturn(INVENTORY_1);
         inventoryUseCase.getInventoriesBy(searchCriteria, paginationUtil);
         assertEquals(DEFAULT_PAGE_SIZE, paginationUtil.getPageSize());
@@ -127,7 +127,7 @@ class InventoryUseCaseTest {
     @Test
     void getInventoriesBy_onceTheSearchFinishedItShouldLeaveThePaginationReadyToServe() {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
-        PaginationUtil paginationUtil = new PaginationUtil(4, 1);
+        PaginationUtil paginationUtil = new PaginationUtil(4L, 1L);
         when(persistencePort.getInventoriesBy(Mockito.any(), Mockito.eq(paginationUtil))).thenReturn(INVENTORY_1);
         // Doing this because the grand total depends on the SQL count.
         paginationUtil.setTotalResults(4L);
@@ -141,7 +141,7 @@ class InventoryUseCaseTest {
     @Test
     void getInventoriesBy_whenNoResultsFoundThePaginationResponseShouldBeOnEmptyState() {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
-        PaginationUtil paginationUtil = new PaginationUtil(4, 1);
+        PaginationUtil paginationUtil = new PaginationUtil(4L, 1L);
         when(persistencePort.getInventoriesBy(Mockito.any(), Mockito.eq(paginationUtil))).thenReturn(Collections.emptyList());
         // Doing this because the grand total depends on the SQL count.
         paginationUtil.setTotalResults(0L);
@@ -154,9 +154,9 @@ class InventoryUseCaseTest {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 5})
-    void getInventoriesBy_paginationInfoIsCorrectWhenMoreThanOnePageIsPresent(int pageNumber) {
+    void getInventoriesBy_paginationInfoIsCorrectWhenMoreThanOnePageIsPresent(long pageNumber) {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
-        final int pageSize = 4;
+        final long pageSize = 4;
         final long totalResults = 20L;
         PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
         when(persistencePort.getInventoriesBy(Mockito.any(), Mockito.eq(paginationUtil))).thenReturn(INVENTORY_1);
@@ -189,9 +189,9 @@ class InventoryUseCaseTest {
     @ParameterizedTest
     @MethodSource("provideTwoLastPages_irregular")
     void getInventoriesBy_paginationInfoIsCorrectWhenLastPageHasLessResultsThanPageSize(
-            int pageNumber, List<InventoryModel> returnedInventories) {
+            long pageNumber, List<InventoryModel> returnedInventories) {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
-        final int pageSize = 4;
+        final long pageSize = 4;
         final long totalResults = 23L;
         PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
         when(persistencePort.getInventoriesBy(Mockito.any(), Mockito.eq(paginationUtil))).thenReturn(returnedInventories);

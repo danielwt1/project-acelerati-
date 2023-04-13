@@ -7,10 +7,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PaginationResponseDTO {
 
-    private Integer pageSize;
-    private Integer pageNumber;
-    private Integer firstResultIndex;
-    private Integer lastResultIndex;
+    private Long pageSize;
+    private Long pageNumber;
+    private Long firstResultIndex;
+    private Long lastResultIndex;
     private Long totalResults;
     private String description;
 

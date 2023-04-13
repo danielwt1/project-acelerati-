@@ -51,7 +51,7 @@ class InventoryControllerTest {
         InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(null, null, null, null);
         PaginationDTO paginationRequest = new PaginationDTO(null, 1);
 
-        PaginationResponseDTO emptyPaginationResponse = new PaginationResponseDTO(PaginationUtil.DEFAULT_PAGE_SIZE, 1, null,
+        PaginationResponseDTO emptyPaginationResponse = new PaginationResponseDTO(PaginationUtil.DEFAULT_PAGE_SIZE, 1L, null,
                 null, null, PaginationUtil.NO_RECORDS_FOUND);
         FilterInventoryResponseDTO noResultsResponse = new FilterInventoryResponseDTO(new ArrayList<>(), emptyPaginationResponse);
 
