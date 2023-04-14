@@ -1,16 +1,9 @@
 package com.acelerati.management_service.infraestructure.config.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,7 +75,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public boolean validateToken(String token, String userFromHeader) {
-        String username = username = getUsernameFromToken(token);
+        final String username = getUsernameFromToken(token);
         return (username.equalsIgnoreCase(userFromHeader) && !isTokenExpired(token));
     }
 
