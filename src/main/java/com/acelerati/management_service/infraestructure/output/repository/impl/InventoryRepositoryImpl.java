@@ -2,6 +2,7 @@ package com.acelerati.management_service.infraestructure.output.repository.impl;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.util.PaginationUtil;
 import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
+import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity_;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepositoryCustom;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
@@ -9,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +36,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
         Root<InventoryEntity> root = query.from(InventoryEntity.class);
         query.select(root)
                 .where(criteriaBuilder
-                        .equal(root.get("idProduct"), id));
+                        .equal(root.get(InventoryEntity_.idProduct), id));
         TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(query);
 
         return typedQuery.getResultList().stream().findFirst();
@@ -46,13 +48,13 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaUpdate<InventoryEntity> criteriaUpdate = criteriaBuilder.createCriteriaUpdate(InventoryEntity.class);
         Root<InventoryEntity> root = criteriaUpdate.from(InventoryEntity.class);
-        criteriaUpdate.set(root.get("name"), entity.getName());
-        criteriaUpdate.set(root.get("stock"), entity.getStock());
-        criteriaUpdate.set(root.get("unitPrice"), entity.getUnitPrice());
-        criteriaUpdate.set(root.get("salePrice"), entity.getSalePrice());
-        criteriaUpdate.set(root.get("idProduct"), entity.getIdProduct());
-        criteriaUpdate.set(root.get("idSupplier"), entity.getIdSupplier());
-        criteriaUpdate.where(criteriaBuilder.equal(root.get("id"), entity.getId()));
+        criteriaUpdate.set(InventoryEntity_.name, entity.getName());
+        criteriaUpdate.set(root.get(InventoryEntity_.stock), entity.getStock());
+        criteriaUpdate.set(root.get(InventoryEntity_.unitPrice), entity.getUnitPrice());
+        criteriaUpdate.set(root.get(InventoryEntity_.salePrice), entity.getSalePrice());
+        criteriaUpdate.set(root.get(InventoryEntity_.idProduct), entity.getIdProduct());
+        criteriaUpdate.set(root.get(InventoryEntity_.idSupplier), entity.getIdSupplier());
+        criteriaUpdate.where(criteriaBuilder.equal(root.get(InventoryEntity_.id), entity.getId()));
         entityManager.createQuery(criteriaUpdate).executeUpdate();
     }
 
@@ -80,8 +82,8 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
 
         criteriaQuery.select(root)
                 .where(criteriaBuilder.and(
-                        criteriaBuilder.gt(root.get("salePrice"), 0),
-                        criteriaBuilder.gt(root.get("stock"), 0)));
+                        criteriaBuilder.gt(root.get(InventoryEntity_.salePrice), 0),
+                        criteriaBuilder.gt(root.get(InventoryEntity_.stock), 0)));
 
         TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(criteriaQuery);
 
@@ -91,8 +93,11 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
     private List<Predicate> buildFilteringPredicates(InventorySearchCriteriaUtil inventorySearchCriteriaModel,
                                                      CriteriaBuilder criteriaBuilder, Root<InventoryEntity> root) {
         List<Predicate> predicates = new ArrayList<>();
-        if (inventorySearchCriteriaModel.getToSalePrice() != null && inventorySearchCriteriaModel.getFromSalePrice() != null)
-            predicates.add(criteriaBuilder.between(root.get("salePrice"), inventorySearchCriteriaModel.getFromSalePrice(), inventorySearchCriteriaModel.getToSalePrice()));
+        if (inventorySearchCriteriaModel.getToSalePrice() != null && inventorySearchCriteriaModel.getFromSalePrice() != null) {
+            predicates.add(criteriaBuilder.between(root.get(InventoryEntity_.salePrice),
+                    BigDecimal.valueOf(inventorySearchCriteriaModel.getFromSalePrice()),
+                    BigDecimal.valueOf(inventorySearchCriteriaModel.getToSalePrice())));
+        }
         return predicates;
     }
 
