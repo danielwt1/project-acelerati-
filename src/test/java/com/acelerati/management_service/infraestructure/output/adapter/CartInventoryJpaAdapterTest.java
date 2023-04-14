@@ -41,7 +41,7 @@ class CartInventoryJpaAdapterTest {
     }
 
     @Test
-    void whendeleteProductFromCartThenDeleteProductFromCart() {
+    void whenDeleteProductFromCartThenDeleteProductFromCart() {
         CartInventoryModel cartInventoryModel = mock(CartInventoryModel.class);
         this.cartInventoryJpaAdapter.deleteProductFromCart(cartInventoryModel);
     }
