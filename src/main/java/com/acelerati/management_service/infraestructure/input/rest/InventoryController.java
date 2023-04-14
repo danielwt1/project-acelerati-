@@ -98,4 +98,12 @@ public class InventoryController {
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
+
+    /*
+     *
+     */
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Hello from Excalibur!");
+    }
 }
