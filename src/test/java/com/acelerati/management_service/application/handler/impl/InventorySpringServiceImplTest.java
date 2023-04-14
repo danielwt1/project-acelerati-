@@ -83,19 +83,17 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetAllProductsForSaleThenResultListWithDataTest() {
         InventoryResponseDTO products = new InventoryResponseDTO(1L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
-        InventoryResponseDTO products2 = new InventoryResponseDTO(2L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
-        InventoryResponseDTO products3 = new InventoryResponseDTO(3L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
+        InventoryResponseDTO products2 = new InventoryResponseDTO(2L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 2L,1L);
 
         InventoryModel inventoryModel = new InventoryModel(1L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
-        InventoryModel inventoryModel2= new InventoryModel(2L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
-        InventoryModel inventoryModel3 = new InventoryModel(3L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 1L,1L);
+        InventoryModel inventoryModel2= new InventoryModel(2L,"producto",5000L, BigDecimal.valueOf(5000),BigDecimal.valueOf(6000), 2L,1L);
 
         ProductDTO productDTO = new ProductDTO(1L,"Producto1","Producto1Des","Modelo1",2L,1L);
         ProductDTO productDTO2 = new ProductDTO(2L,"Producto1","Producto1Des","Modelo1",2L,1L);
 
         List<ProductDTO> productDTOS = Arrays.asList(productDTO,productDTO2);
-        List<InventoryModel> inventoryModels = Arrays.asList(inventoryModel,inventoryModel2,inventoryModel3);
-        List<InventoryResponseDTO> productsForSaleDTOList = Arrays.asList(products,products2,products3);
+        List<InventoryModel> inventoryModels = Arrays.asList(inventoryModel,inventoryModel2);
+        List<InventoryResponseDTO> productsForSaleDTOList = Arrays.asList(products,products2);
         when(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0()).thenReturn(inventoryModels);
         when(this.inventorySearchMapper.toDTOList(inventoryModels)).thenReturn(productsForSaleDTOList);
         when(this.productFeignClientPort.fetchProductsFromMicroservice(1, 5)).thenReturn(productDTOS);
