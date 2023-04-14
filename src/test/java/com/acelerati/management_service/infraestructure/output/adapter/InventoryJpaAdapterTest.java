@@ -45,23 +45,26 @@ class InventoryJpaAdapterTest {
     @Test
     void whenCallAddInventoryWithEntityThenSaveDB() {
         this.inventoryJpaAdapter.addInventory(inventoryModel);
-
+        verify(this.inventoryRepository).save(inventoryEntity);
     }
 
     @Test
     void whenFindElementByIdThenReturnEntity() {
         this.inventoryJpaAdapter.getElementById(1L);
+        verify(this.inventoryRepository).getElementById(1L);
     }
     @Test
     void whenFindElementByIdIsEmptyThenReturnEntity() {
         when(this.inventoryRepository.getElementById(inventoryModel.getIdInventory())).thenReturn(Optional.of(inventoryEntity));
         when(this.inventoryEntityMapper.toModel(inventoryEntity)).thenReturn(inventoryModel);
         this.inventoryJpaAdapter.getElementById(inventoryModel.getIdProduct());
+        verify(this.inventoryRepository).getElementById(inventoryModel.getIdProduct());
     }
 
     @Test
     void whenUpdateProductoThenCallUpdateDB() {
         this.inventoryJpaAdapter.updateInventory(inventoryModel);
+        verify(this.inventoryRepository).save(inventoryEntity);
     }
 
     @Test
@@ -73,7 +76,7 @@ class InventoryJpaAdapterTest {
         List<InventoryModel> respoonseFromRepository = this.inventoryJpaAdapter.getAllInventoryWithStockAndSalePriceGreaterThan0();
         assertAll(
                 ()->assertTrue(respoonseFromRepository.size()>0),
-                ()->assertTrue(respoonseFromRepository.get(0) != null),
+                ()-> assertNotNull(respoonseFromRepository.get(0)),
                 ()->assertEquals(listInventory.size(),respoonseFromRepository.size())
         );
     }

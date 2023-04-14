@@ -22,6 +22,7 @@ class CartInventoryEntityTest {
     @Test
     void constructor(){
         CartInventoryEntity cartInventoryEntity1 = new CartInventoryEntity();
+        assertNotNull(cartInventoryEntity1);
     }
     @Test
     void getId() {

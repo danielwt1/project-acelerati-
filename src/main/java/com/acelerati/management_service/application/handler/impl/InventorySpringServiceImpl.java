@@ -83,11 +83,11 @@ public class InventorySpringServiceImpl implements InventorySpringService {
                 //Function.identity() is equal to element -> element
                 .collect(Collectors.toMap(InventoryResponseDTO::getIdInventory, Function.identity()));
         return products.stream()
-                .filter(product -> dataInventory.containsKey(Long.valueOf(product.getId())))
-                .map(product -> new ProductsForSaleDTO(Long.valueOf(product.getId()),
+                .filter(product -> dataInventory.containsKey(product.getId()))
+                .map(product -> new ProductsForSaleDTO(product.getId(),
                         product.getName(),
-                        dataInventory.get(Long.valueOf(product.getId())).getSalePrice(),
-                        dataInventory.get(Long.valueOf(product.getId())).getStock(),
+                        dataInventory.get(product.getId()).getSalePrice(),
+                        dataInventory.get(product.getId()).getStock(),
                         product.getDescription())).collect(Collectors.toList());
     }
 
