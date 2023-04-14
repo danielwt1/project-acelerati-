@@ -117,7 +117,7 @@ public class InventorySpringServiceImpl implements InventorySpringService {
     public List<ProductsForSaleDTO> mergeData(List<InventoryResponseDTO> inventoryList, List<ProductDTO> products) {
         Map<Long, InventoryResponseDTO> dataInventory = inventoryList.stream()
                 //Function.identity() is equal to element -> element
-                .collect(Collectors.toMap(InventoryResponseDTO::getId, Function.identity()));
+                .collect(Collectors.toMap(InventoryResponseDTO::getIdProduct, Function.identity()));
         return products.stream()
                 .filter(product -> dataInventory.containsKey(product.getId()))
                 .map(product -> new ProductsForSaleDTO(product.getId(),
