@@ -6,9 +6,10 @@ import com.acelerati.management_service.infraestructure.output.entity.CartInvent
 import org.mapstruct.Mapping;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public interface UtilMapperCustom {
+public interface BidirectionalCartMapperCustom {
     @Mapping(source = "cart", target = "cartModel")
     CartInventoryModel toModel(CartInventoryEntity cartInventoryEntity);
     default CartEntity truncateBidirectionalRelationCart(CartEntity cartEntity) {
@@ -17,7 +18,7 @@ public interface UtilMapperCustom {
     }
     default List<CartInventoryModel> toListModel(List<CartInventoryEntity> products) {
         if (products == null) {
-            return null;
+            return Collections.emptyList();
         }
         List<CartInventoryModel> models = new ArrayList<>(products.size());
         products.forEach(product -> {

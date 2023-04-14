@@ -20,7 +20,6 @@ import com.acelerati.management_service.infraestructure.output.repository.CartIn
 import com.acelerati.management_service.infraestructure.output.repository.CartRepository;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

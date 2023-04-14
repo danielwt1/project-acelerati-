@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UtilGlobalMethods {
-    
+    private UtilGlobalMethods() {
+    }
+
     public static <T> List<T> dataPaginated(List<T> dataFiltered, int page, int elementPerPage){
 
         return dataFiltered.stream()

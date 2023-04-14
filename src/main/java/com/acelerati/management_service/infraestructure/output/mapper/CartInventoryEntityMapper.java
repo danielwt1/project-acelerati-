@@ -12,7 +12,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface CartInventoryEntityMapper extends UtilMapperCustom {
+public interface CartInventoryEntityMapper extends BidirectionalCartMapperCustom {
 
     @Mapping(target = "cart", source = "cartModel")
     CartInventoryEntity toEntity(CartInventoryModel cartInventoryModel, @Context CycleAvoidingMappingContext cycleAvoidingMappingContext);

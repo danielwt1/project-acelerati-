@@ -41,6 +41,7 @@ class InventorySpringServiceImplTest {
     void whenCallSaveInventoryListThenSaveTest(){
         List<InventoryDTO> list = new ArrayList<>();
         this.inventoryImpl.addInventory(list);
+        assertEquals(0,list.size());
     }
     @Test
     void whenCallMethodForMergeTwoListThenReturnNewListMergedTest() {

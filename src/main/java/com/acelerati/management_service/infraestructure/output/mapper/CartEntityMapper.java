@@ -8,7 +8,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface CartEntityMapper extends UtilMapperCustom {
+public interface CartEntityMapper extends BidirectionalCartMapperCustom {
     CartModel toModel(CartEntity cartEntity);
     CartEntity toEntity(CartModel cartModel);
 }
