@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +28,7 @@ class CartInventoryUseCaseTest {
         CartInventoryModel cartInventoryModel = mock(CartInventoryModel.class);
         when(this.cartInventoryPersistencePort.findByIdProduct(USER_ID)).thenReturn(Optional.of(cartInventoryModel));
         this.cartInventoryUseCase.deleteProductCart(USER_ID);
+        verify(cartInventoryPersistencePort).deleteProductFromCart(cartInventoryModel);
     }
     @Test
     void whenFindCartThenThrowProductNotFoundException(){

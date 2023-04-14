@@ -1,7 +1,6 @@
 package com.acelerati.management_service.infraestructure.input.rest;
 
 import com.acelerati.management_service.application.dto.response.CartDTO;
-import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
 import com.acelerati.management_service.application.handler.CartSpringService;
 import com.acelerati.management_service.infraestructure.ExceptionHandler.response.ErrorDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +28,12 @@ public class CartController {
 
     @Operation(summary = "Delete Product from cart ", responses = {
             @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "500", description = "A business logic error occurred", content = @Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "500", description = "A business logic error occurred", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "403", description = "UNNECESSARY PERMISSIONS",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "401", description = "unauthorized",
+                    content = @Content(mediaType = "application/json"))
     })
     @DeleteMapping("/")
     @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
@@ -38,9 +42,18 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @Operation(summary = "Find cart by userId", responses = {
-            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "500", description = "A business logic error occurred", content = @Content(mediaType = "application/json"))
+            @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartDTO.class))),
+            @ApiResponse(responseCode = "500", description = "A business logic error occurred",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "403", description = "UNNECESSARY PERMISSIONS",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "401", description = "unauthorized",
+                    content = @Content(mediaType = "application/json"))
+
     })
+
     @GetMapping("/")
     @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
     public ResponseEntity<CartDTO>getCart(@RequestHeader(name = "user")String user

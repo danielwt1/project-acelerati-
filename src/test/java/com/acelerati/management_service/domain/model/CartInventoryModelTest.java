@@ -1,8 +1,5 @@
 package com.acelerati.management_service.domain.model;
 
-import com.acelerati.management_service.infraestructure.output.entity.CartEntity;
-import com.acelerati.management_service.infraestructure.output.entity.CartInventoryEntity;
-import com.acelerati.management_service.infraestructure.output.entity.InventoryEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
