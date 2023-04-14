@@ -49,7 +49,7 @@ class InventoryControllerTest {
     @Test
     void getInventoryBy_shouldReturnOkResponseWhenNoRecordsFound() {
         InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(null, null, null, null);
-        PaginationDTO paginationRequest = new PaginationDTO(null, 1);
+        PaginationDTO paginationRequest = new PaginationDTO(null, 1L);
 
         PaginationResponseDTO emptyPaginationResponse = new PaginationResponseDTO(PaginationUtil.DEFAULT_PAGE_SIZE, 1L, null,
                 null, null, PaginationUtil.NO_RECORDS_FOUND);
@@ -71,7 +71,7 @@ class InventoryControllerTest {
     @Test
     void getInventoryBy_shouldNotReturnOkResponseWhenInvalidParameterPassed() {
         InventorySearchCriteriaDTO searchCriteriaRequest = new InventorySearchCriteriaDTO(-1L, -1L, -1L, -1L);
-        PaginationDTO paginationRequest = new PaginationDTO(-1, -1);
+        PaginationDTO paginationRequest = new PaginationDTO(-1L, -1L);
 
         // The BindValidationException is being thrown from the interceptor before hitting the controller, but I think
         // we can simulate it by making the service to throw it to verify at least that the OK won't be served to the

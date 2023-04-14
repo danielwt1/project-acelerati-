@@ -106,7 +106,7 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
@@ -130,7 +130,7 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithPriceRangeFilter_itShouldReturnProductsWithinTheSpecifiedRange() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(100_000L, 250_000L, null, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
@@ -155,7 +155,7 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithCategoryFilter_itShouldReturnCategoryMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, 1L, null);
-        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, 1L, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
@@ -180,7 +180,7 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithBrandFilter_itShouldReturnBrandMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, 2L);
-        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, 2L);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
@@ -204,7 +204,7 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithPriceRangeAndCategory_itShouldReturnPriceAndCategoryMatchingProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, 1L, null);
-        PaginationDTO paginationDTO = new PaginationDTO(20, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(100_000L, 250_000L, 1L, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
@@ -228,7 +228,7 @@ class InventorySpringServiceImplTest {
     @Test
     void getInventoriesBy_onceTheSearchFinishedItShouldLeaveThePaginationReadyToServe() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(4, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(4L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
         PaginationUtil paginationUtil = new PaginationUtil(4L, 1L);
 
@@ -250,7 +250,7 @@ class InventorySpringServiceImplTest {
     @Test
     void getInventoriesBy_whenNoResultsFoundThePaginationResponseShouldBeOnEmptyState() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(4, 1);
+        PaginationDTO paginationDTO = new PaginationDTO(4L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
         PaginationUtil paginationUtil = new PaginationUtil(4L, 1L);
 
@@ -275,7 +275,7 @@ class InventorySpringServiceImplTest {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
 
         final long pageSize = 2;
-        PaginationDTO paginationDTO = new PaginationDTO((int) pageSize, (int) pageNumber);
+        PaginationDTO paginationDTO = new PaginationDTO(pageSize, pageNumber);
         PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
@@ -317,7 +317,7 @@ class InventorySpringServiceImplTest {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
 
         final long pageSize = 3;
-        PaginationDTO paginationDTO = new PaginationDTO((int) pageSize, (int) pageNumber);
+        PaginationDTO paginationDTO = new PaginationDTO(pageSize, pageNumber);
         PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
 
 
@@ -367,7 +367,7 @@ class InventorySpringServiceImplTest {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
 
         final long pageSize = 3;
-        PaginationDTO paginationDTO = new PaginationDTO((int) pageSize, (int) pageNumber);
+        PaginationDTO paginationDTO = new PaginationDTO(pageSize, pageNumber);
         PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);

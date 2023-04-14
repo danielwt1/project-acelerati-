@@ -40,27 +40,40 @@ public class PaginationUtil {
         return pageNumber;
     }
 
+    public void setPageNumber(Long pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getFirstResultIndex() {
+        return firstResultIndex;
+    }
+
+    public void setFirstResultIndex(Long firstResultIndex) {
+        this.firstResultIndex = firstResultIndex;
+    }
+
+    public Long getLastResultIndex() {
+        return lastResultIndex;
+    }
+
+    public void setLastResultIndex(Long lastResultIndex) {
+        this.lastResultIndex = lastResultIndex;
+    }
 
     public Long getTotalResults() {
         return totalResults;
     }
 
-
-    /**
-     * Calculates the index of the first record of the page to select.
-     * This method assumes that pageNumber and pageSize are already set for the pageable object.
-     * @return the index which the database will use to start pulling the results.
-     */
-    public Long getFirstResultIndex() {
-        return firstResultIndex;
-    }
-
-    public Long getLastResultIndex() {
-        return lastResultIndex;
+    public void setTotalResults(Long totalResults) {
+        this.totalResults = totalResults;
     }
 
     public Long calculateOffset() {

@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class PaginationDTO {
 
-    private final Integer pageSize;
+    private final Long pageSize;
 
     @NotNull(message = "The page number must be defined")
     @Min(value = 1, message = "The page number must be at least 1")
-    private final Integer pageNumber;
+    private final Long pageNumber;
 
 }
