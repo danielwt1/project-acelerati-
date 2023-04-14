@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
 @Service
 public class InventorySpringServiceImpl implements InventorySpringService {
     private static final Logger logger = LoggerFactory.getLogger(InventorySpringServiceImpl.class);
-     private final InventoryServicePort inventoryServicePort;
-     private final InventoryRequestMapper inventoryRequestMapper;
-     private final InventorySearchMapper inventorySearchMapper;
-     private final PaginationRequestMapper paginationRequestMapper;
-     private final PaginationResponseMapper paginationResponseMapper;
-	 private final ProductFeignClientPort productFeignClientPort;
+    private final InventoryServicePort inventoryServicePort;
+    private final InventoryRequestMapper inventoryRequestMapper;
+    private final InventorySearchMapper inventorySearchMapper;
+    private final PaginationRequestMapper paginationRequestMapper;
+    private final PaginationResponseMapper paginationResponseMapper;
+    private final ProductFeignClientPort productFeignClientPort;
 
     public InventorySpringServiceImpl(InventoryServicePort inventoryServicePort, InventoryRequestMapper inventoryRequestMapper, InventorySearchMapper inventorySearchMapper, PaginationRequestMapper paginationRequestMapper, PaginationResponseMapper paginationResponseMapper, ProductFeignClientPort productFeignClientPort) {
         this.inventoryServicePort = inventoryServicePort;
@@ -43,70 +43,71 @@ public class InventorySpringServiceImpl implements InventorySpringService {
         this.paginationResponseMapper = paginationResponseMapper;
         this.productFeignClientPort = productFeignClientPort;
     }
-    @Override
-     public void addInventory(List<InventoryDTO> inventoryDTO) {
-          this.inventoryServicePort.addInventory(this.inventoryRequestMapper.toListModel(inventoryDTO));
-     }
-
-     @Override
-     public void updateProductSalePrice(InventoryUpdateRequestDTO inventoryDTO) {
-          this.inventoryServicePort.updatePriceSale(this.inventoryRequestMapper.toModel(inventoryDTO));
-     }
-
-     @Override
-     public FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteriaDTO,
-                                                        PaginationDTO paginationDTO) {
-          InventorySearchCriteriaUtil criteriaUtil = inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO);
-          PaginationUtil paginationUtil = paginationRequestMapper.toPaginationUtil(paginationDTO);
-
-          // Do the query against the database and update the paginator
-          List<InventoryResponseDTO> inventoriesResponse =
-                  inventorySearchMapper.toDTOList(
-                          inventoryServicePort.getInventoriesBy(criteriaUtil, paginationUtil));
-         logger.debug("{} inventories retrieved from our database", inventoriesResponse.size());
-
-         // Fetch products from the corresponding microservice
-         List<ProductDTO> productDTOS = fetchProductsFromMicroservice(0, 1000);
-         logger.debug("{} products retrieved from the Products Microservice", productDTOS.size());
-
-         // Filter by brand and category if they were specified
-         if (criteriaUtil.getBrandId() != null) {
-             productDTOS = productDTOS.stream()
-                     .filter(productDTO -> productDTO.getIdBrand().equals(criteriaUtil.getBrandId()))
-                     .collect(Collectors.toList());
-             logger.debug("{} products left after brand filtering", productDTOS.size());
-         }
-
-         if (criteriaUtil.getCategoryId() != null) {
-             productDTOS = productDTOS.stream()
-                     .filter(productDTO -> productDTO.getIdCategory().equals(criteriaUtil.getCategoryId()))
-                     .collect(Collectors.toList());
-             logger.debug("{} products left after category filtering", productDTOS.size());
-         }
-
-         List<ProductsFromStockDTO> productsFromStock = prepareProductsFromStockDTO(inventoriesResponse, productDTOS);
-         logger.debug("{} total products from stock matching the search criteria", productsFromStock.size());
-
-         // Update pagination information
-         paginationUtil.updateAttributesFromListResults(productsFromStock);
-         logger.debug("Pagination will result on {}", paginationUtil.getDescription());
-         // Return paginated information
-         productsFromStock = paginationUtil.getPaginatedData(productsFromStock);
-         logger.debug("Products from stock were reduced to {} after pagination applied", productsFromStock.size());
-
-         PaginationResponseDTO paginationResponse = paginationResponseMapper.toResponseDTO(paginationUtil);
-         return new FilterInventoryResponseDTO(productsFromStock, paginationResponse);
-     }
 
     @Override
-    public List<ProductsForSaleDTO> getAllProductForSale(String name, String nombreMarca, String nombreCategoria,int page,int elementPerPage) {
+    public void addInventory(List<InventoryDTO> inventoryDTO) {
+        this.inventoryServicePort.addInventory(this.inventoryRequestMapper.toListModel(inventoryDTO));
+    }
+
+    @Override
+    public void updateProductSalePrice(InventoryUpdateRequestDTO inventoryDTO) {
+        this.inventoryServicePort.updatePriceSale(this.inventoryRequestMapper.toModel(inventoryDTO));
+    }
+
+    @Override
+    public FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteriaDTO,
+                                                       PaginationDTO paginationDTO) {
+        InventorySearchCriteriaUtil criteriaUtil = inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO);
+        PaginationUtil paginationUtil = paginationRequestMapper.toPaginationUtil(paginationDTO);
+
+        // Do the query against the database and update the paginator
+        List<InventoryResponseDTO> inventoriesResponse =
+                inventorySearchMapper.toDTOList(
+                        inventoryServicePort.getInventoriesBy(criteriaUtil, paginationUtil));
+        logger.debug("{} inventories retrieved from our database", inventoriesResponse.size());
+
+        // Fetch products from the corresponding microservice
+        List<ProductDTO> productDTOS = fetchProductsFromMicroservice(0, 1000);
+        logger.debug("{} products retrieved from the Products Microservice", productDTOS.size());
+
+        // Filter by brand and category if they were specified
+        if (criteriaUtil.getBrandId() != null) {
+            productDTOS = productDTOS.stream()
+                    .filter(productDTO -> productDTO.getIdBrand().equals(criteriaUtil.getBrandId()))
+                    .collect(Collectors.toList());
+            logger.debug("{} products left after brand filtering", productDTOS.size());
+        }
+
+        if (criteriaUtil.getCategoryId() != null) {
+            productDTOS = productDTOS.stream()
+                    .filter(productDTO -> productDTO.getIdCategory().equals(criteriaUtil.getCategoryId()))
+                    .collect(Collectors.toList());
+            logger.debug("{} products left after category filtering", productDTOS.size());
+        }
+
+        List<ProductsFromStockDTO> productsFromStock = prepareProductsFromStockDTO(inventoriesResponse, productDTOS);
+        logger.debug("{} total products from stock matching the search criteria", productsFromStock.size());
+
+        // Update pagination information
+        paginationUtil.updateAttributesFromListResults(productsFromStock);
+        logger.debug("Pagination will result on {}", paginationUtil.getDescription());
+        // Return paginated information
+        productsFromStock = paginationUtil.getPaginatedData(productsFromStock);
+        logger.debug("Products from stock were reduced to {} after pagination applied", productsFromStock.size());
+
+        PaginationResponseDTO paginationResponse = paginationResponseMapper.toResponseDTO(paginationUtil);
+        return new FilterInventoryResponseDTO(productsFromStock, paginationResponse);
+    }
+
+    @Override
+    public List<ProductsForSaleDTO> getAllProductForSale(String name, String nombreMarca, String nombreCategoria, int page, int elementPerPage) {
         List<InventoryResponseDTO> inventoryList = this.inventorySearchMapper.toDTOList(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0());
         List<ProductDTO> products = this.productFeignClientPort.fetchProductsFromMicroservice(page, elementPerPage);
         List<ProductsForSaleDTO> dataFiltered = mergeData(inventoryList, products);
-        return dataPaginated(dataFiltered,page,elementPerPage);
+        return dataPaginated(dataFiltered, page, elementPerPage);
     }
 
-    public List<ProductsForSaleDTO>dataPaginated(List<ProductsForSaleDTO> dataFiltered,int page,int elementPerPage){
+    public List<ProductsForSaleDTO> dataPaginated(List<ProductsForSaleDTO> dataFiltered, int page, int elementPerPage) {
 
         return dataFiltered.stream()
                 .skip((long) (page - 1) * elementPerPage)
