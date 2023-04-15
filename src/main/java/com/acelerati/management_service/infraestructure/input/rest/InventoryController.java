@@ -62,7 +62,7 @@ public class InventoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PostMapping
+    @PostMapping("/")
     @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
     public ResponseEntity<Void> addInventory(@RequestHeader(value = "user") String user,
                                              @RequestBody @NotEmpty(message = "The product list must not be empty") List<@Valid InventoryDTO> inventoryDTO) {
@@ -77,7 +77,7 @@ public class InventoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @GetMapping
+    @GetMapping(path = {"/"})
     public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@RequestHeader(value = "user") String user,
                                                                        @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationDTO paginationDTO) {
         FilterInventoryResponseDTO filterInventoryResponse = inventorySpringService.getInventoriesBy(searchCriteria, paginationDTO);
@@ -85,16 +85,11 @@ public class InventoryController {
     }
 
     @Operation(summary = "Update Sale Price to product")
-    @PutMapping
+    @PutMapping("/")
     public  ResponseEntity<Void>updateSalePrice(@RequestHeader(value = "user")String user,
                                                 @RequestBody @Valid InventoryUpdateRequestDTO inventoryDTO){
         this.inventorySpringService.updateProductSalePrice(inventoryDTO);
         return new ResponseEntity<>(HttpStatus.OK);
 
-    }
-
-    @GetMapping("/health")
-    public ResponseEntity<String> healthCheck() {
-        return ResponseEntity.ok("Hello from Excalibur");
     }
 }
