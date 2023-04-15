@@ -40,7 +40,7 @@ class CartSpringServiceImplTest {
     @Test
     void whendeleteProductCartThenRemoveProductFromCart() {
         this.cartSpringService.deleteProductCart(ID_USER);
-        verify(this.cartServicePort).getCartByUserId(ID_USER);
+        verify(this.cartInventoryServicePort).deleteProductCart(ID_USER);
     }
 
     @Test
