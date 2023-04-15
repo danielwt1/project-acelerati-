@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class InventoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idInventory;
     private String name;
     private Long stock;
     @Column(name = "unit_price")
@@ -28,8 +28,8 @@ public class InventoryEntity {
     public InventoryEntity() {
     }
 
-    public InventoryEntity(Long id, String name, Long stock, BigDecimal unitPrice, BigDecimal salePrice, Long idProduct, Long idSupplier) {
-        this.id = id;
+    public InventoryEntity(Long idInventory, String name, Long stock, BigDecimal unitPrice, BigDecimal salePrice, Long idProduct, Long idSupplier) {
+        this.idInventory = idInventory;
         this.name = name;
         this.stock = stock;
         this.unitPrice = unitPrice;
@@ -38,12 +38,12 @@ public class InventoryEntity {
         this.idSupplier = idSupplier;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdInventory() {
+        return idInventory;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdInventory(Long idInventory) {
+        this.idInventory = idInventory;
     }
 
     public String getName() {

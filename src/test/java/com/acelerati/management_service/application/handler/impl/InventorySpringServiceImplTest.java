@@ -7,6 +7,7 @@ import com.acelerati.management_service.application.dto.response.ProductDTO;
 import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
 import com.acelerati.management_service.application.mapper.InventoryRequestMapper;
 import com.acelerati.management_service.application.mapper.InventorySearchMapper;
+import com.acelerati.management_service.application.util.UtilGlobalMethods;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.model.InventoryModel;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ class InventorySpringServiceImplTest {
     void whenCallSaveInventoryListThenSaveTest(){
         List<InventoryDTO> list = new ArrayList<>();
         this.inventoryImpl.addInventory(list);
+        assertEquals(0,list.size());
     }
     @Test
     void whenCallMethodForMergeTwoListThenReturnNewListMergedTest() {
@@ -57,7 +59,7 @@ class InventorySpringServiceImplTest {
     void whenCalldataPaginatedThenReturnListPaginatedTest(){
         ProductsForSaleDTO products =mock(ProductsForSaleDTO.class);
         List<ProductsForSaleDTO> productsForSaleDTOList = Arrays.asList(products,products,products,products,products,products,products,products,products);
-        List<ProductsForSaleDTO> dataPaginated = this.inventoryImpl.dataPaginated(productsForSaleDTOList,1,5);
+        List<ProductsForSaleDTO> dataPaginated = UtilGlobalMethods.dataPaginated(productsForSaleDTOList,1,5);
         assertEquals(5,dataPaginated.size());
     }
 

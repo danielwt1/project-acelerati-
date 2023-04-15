@@ -15,6 +15,9 @@ public class AuthService {
     public boolean checkEmployeeRole(List<String> roles){
         return roles.contains(ROLE_EMPLOYEE);
     }
+    public boolean checkClientRole(List<String> roles){
+        return roles.contains(ROLE_CLIENT);
+    }
     public boolean checkEmployeeOrClient(List<String> roles){
         return roles.contains(ROLE_EMPLOYEE) || roles.contains(ROLE_CLIENT) ;
     }

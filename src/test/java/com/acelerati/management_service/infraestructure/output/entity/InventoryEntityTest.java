@@ -21,14 +21,14 @@ class InventoryEntityTest {
 
     @Test
     void getId() {
-        assertEquals(1L,inventoryEntity.getId());
+        assertEquals(1L,inventoryEntity.getIdInventory());
     }
 
     @Test
     void setId() {
         InventoryEntity entity = new InventoryEntity();
-        entity.setId(2L);
-        assertEquals(2L,entity.getId());
+        entity.setIdInventory(2L);
+        assertEquals(2L,entity.getIdInventory());
     }
 
     @Test
