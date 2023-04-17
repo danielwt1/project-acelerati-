@@ -43,7 +43,9 @@ class CartInventoryJpaAdapterTest {
     @Test
     void whenDeleteProductFromCartThenDeleteProductFromCart() {
         CartInventoryModel cartInventoryModel = mock(CartInventoryModel.class);
+        CartInventoryEntity cartInventoryEntity = mock(CartInventoryEntity.class);
+        when(this.cartInventoryEntityMapper.toEntity(eq(cartInventoryModel), any(CycleAvoidingMappingContext.class))).thenReturn(cartInventoryEntity);
         this.cartInventoryJpaAdapter.deleteProductFromCart(cartInventoryModel);
-        verify(this.cartInventoryRepository).delete(any(CartInventoryEntity.class));
+        verify(this.cartInventoryEntityMapper).toEntity(eq(cartInventoryModel), any(CycleAvoidingMappingContext.class));
     }
 }

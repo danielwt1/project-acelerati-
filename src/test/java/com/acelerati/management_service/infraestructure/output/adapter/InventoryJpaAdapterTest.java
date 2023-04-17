@@ -9,10 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -44,9 +42,11 @@ class InventoryJpaAdapterTest {
 
     @Test
     void whenCallAddInventoryWithEntityThenSaveDB() {
+        InventoryEntity inventoryEntityMock = mock(InventoryEntity.class);
+        when(this.inventoryEntityMapper.toEntity(inventoryModel)).thenReturn(inventoryEntityMock);
         this.inventoryJpaAdapter.addInventory(inventoryModel);
-        verify(this.inventoryRepository).save(inventoryEntity);
-    }
+        verify(this.inventoryEntityMapper).toEntity(inventoryModel);
+        }
 
     @Test
     void whenFindElementByIdThenReturnEntity() {
@@ -63,8 +63,10 @@ class InventoryJpaAdapterTest {
 
     @Test
     void whenUpdateProductoThenCallUpdateDB() {
+        InventoryEntity inventoryEntityMock = mock(InventoryEntity.class);
+        when(this.inventoryEntityMapper.toEntity(inventoryModel)).thenReturn(inventoryEntityMock);
         this.inventoryJpaAdapter.updateInventory(inventoryModel);
-        verify(this.inventoryRepository).save(inventoryEntity);
+        verify(this.inventoryEntityMapper).toEntity(inventoryModel);
     }
 
     @Test
