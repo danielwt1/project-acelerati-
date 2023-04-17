@@ -19,7 +19,7 @@ class ProductsFromStockDTOTest {
 
     @Test
     void whenInventoryResponseDTOAssignedItShouldBePreserved() {
-        assertEquals(1L, productsFromStockDTO.getInventoryResponse().getId());
+        assertEquals(1L, productsFromStockDTO.getInventoryResponse().getIdInventory());
         assertEquals("Mother board", productsFromStockDTO.getInventoryResponse().getName());
         assertEquals(100L, productsFromStockDTO.getInventoryResponse().getStock());
         assertEquals(BigDecimal.valueOf(300_000), productsFromStockDTO.getInventoryResponse().getUnitPrice());
