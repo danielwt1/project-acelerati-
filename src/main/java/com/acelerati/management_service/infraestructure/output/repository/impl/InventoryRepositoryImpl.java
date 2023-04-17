@@ -54,7 +54,7 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
         criteriaUpdate.set(root.get(InventoryEntity_.salePrice), entity.getSalePrice());
         criteriaUpdate.set(root.get(InventoryEntity_.idProduct), entity.getIdProduct());
         criteriaUpdate.set(root.get(InventoryEntity_.idSupplier), entity.getIdSupplier());
-        criteriaUpdate.where(criteriaBuilder.equal(root.get(InventoryEntity_.id), entity.getId()));
+        criteriaUpdate.where(criteriaBuilder.equal(root.get(InventoryEntity_.idInventory), entity.getIdInventory()));
         entityManager.createQuery(criteriaUpdate).executeUpdate();
     }
 
@@ -70,7 +70,6 @@ public class InventoryRepositoryImpl implements InventoryRepositoryCustom<Invent
                 .where(predicates.toArray(new Predicate[0]));
 
         TypedQuery<InventoryEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-
         return typedQuery.getResultList();
     }
 

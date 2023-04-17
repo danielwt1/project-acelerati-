@@ -21,6 +21,7 @@ import java.util.Optional;
 import static com.acelerati.management_service.application.utils.ApplicationDataSet.INVENTORY_1;
 import static com.acelerati.management_service.application.utils.ApplicationDataSet.INVENTORY_1_ENTITY_LIST;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,22 +46,26 @@ class InventoryJpaAdapterTest {
     @Test
     void whenCallAddInventoryWithEntityThenSaveDB() {
         assertDoesNotThrow(() -> inventoryJpaAdapter.addInventory(inventoryModel));
+        verify(this.inventoryRepository).save(inventoryEntity);
     }
 
     @Test
     void whenFindElementByIdThenReturnEntity() {
         this.inventoryJpaAdapter.getElementById(1L);
+        verify(this.inventoryRepository).getElementById(1L);
     }
     @Test
     void whenFindElementByIdIsEmptyThenReturnEntity() {
-        when(this.inventoryRepository.getElementById(inventoryModel.getId())).thenReturn(Optional.of(inventoryEntity));
+        when(this.inventoryRepository.getElementById(inventoryModel.getIdInventory())).thenReturn(Optional.of(inventoryEntity));
         when(this.inventoryEntityMapper.toModel(inventoryEntity)).thenReturn(inventoryModel);
         this.inventoryJpaAdapter.getElementById(inventoryModel.getIdProduct());
+        verify(this.inventoryRepository).getElementById(inventoryModel.getIdProduct());
     }
 
     @Test
     void whenUpdateProductThenCallUpdateDB() {
         assertDoesNotThrow(() -> inventoryJpaAdapter.updateInventory(inventoryModel));
+        verify(this.inventoryRepository).save(inventoryEntity);
     }
 
     @Test
@@ -72,7 +77,7 @@ class InventoryJpaAdapterTest {
         List<InventoryModel> respoonseFromRepository = this.inventoryJpaAdapter.getAllInventoryWithStockAndSalePriceGreaterThan0();
         assertAll(
                 ()->assertTrue(respoonseFromRepository.size()>0),
-                ()->assertNotNull(respoonseFromRepository.get(0)),
+                ()-> assertNotNull(respoonseFromRepository.get(0)),
                 ()->assertEquals(listInventory.size(),respoonseFromRepository.size())
         );
     }

@@ -4,6 +4,7 @@ import com.acelerati.management_service.application.driven.ProductFeignClientPor
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
+
 import com.acelerati.management_service.application.dto.request.PaginationRequestDTO;
 import com.acelerati.management_service.application.dto.response.*;
 import com.acelerati.management_service.application.dto.response.ProductDTO;
@@ -13,6 +14,7 @@ import com.acelerati.management_service.application.dto.request.InventoryUpdateR
 
 import com.acelerati.management_service.application.handler.InventorySpringService;
 import com.acelerati.management_service.application.mapper.*;
+import com.acelerati.management_service.application.util.UtilGlobalMethods;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.util.InventorySearchCriteriaUtil;
 import com.acelerati.management_service.domain.util.PaginationUtil;
@@ -56,6 +58,7 @@ public class InventorySpringServiceImpl implements InventorySpringService {
 
     @Override
     public FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteriaDTO,
+
                                                        PaginationRequestDTO paginationDTO) {
         InventorySearchCriteriaUtil criteriaUtil = inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO);
         PaginationUtil paginationUtil = paginationRequestMapper.toPaginationUtil(paginationDTO);
@@ -63,12 +66,15 @@ public class InventorySpringServiceImpl implements InventorySpringService {
         // Do the query against the database and update the paginator
         List<InventoryResponseDTO> inventoriesResponse =
                 inventorySearchMapper.toDTOList(
+
                         inventoryServicePort.getInventoriesBy(criteriaUtil, paginationUtil));
         logger.debug("{} inventories retrieved from our database", inventoriesResponse.size());
 
         // Fetch products from the corresponding microservice
+
         List<ProductDTO> productDTOS = fetchProductsFromMicroservice(0, 1000);
         logger.debug("{} products retrieved from the Products Microservice", productDTOS.size());
+
 
         // Filter by brand and category if they were specified
         if (criteriaUtil.getBrandId() != null) {
@@ -100,46 +106,48 @@ public class InventorySpringServiceImpl implements InventorySpringService {
     }
 
     @Override
+
     public List<ProductsForSaleDTO> getAllProductForSale(String name, String nombreMarca, String nombreCategoria, int page, int elementPerPage) {
         List<InventoryResponseDTO> inventoryList = this.inventorySearchMapper.toDTOList(this.inventoryServicePort.getAllInventoryWithStockAndSalePriceGreaterThan0());
+
         List<ProductDTO> products = this.productFeignClientPort.fetchProductsFromMicroservice(page, elementPerPage);
         List<ProductsForSaleDTO> dataFiltered = mergeData(inventoryList, products);
-        return dataPaginated(dataFiltered, page, elementPerPage);
-    }
 
-    public List<ProductsForSaleDTO> dataPaginated(List<ProductsForSaleDTO> dataFiltered, int page, int elementPerPage) {
-
-        return dataFiltered.stream()
-                .skip((long) (page - 1) * elementPerPage)
-                .limit(elementPerPage)
-                .collect(Collectors.toList());
+        return UtilGlobalMethods.dataPaginated(dataFiltered,page,elementPerPage);
     }
 
     public List<ProductsForSaleDTO> mergeData(List<InventoryResponseDTO> inventoryList, List<ProductDTO> products) {
         Map<Long, InventoryResponseDTO> dataInventory = inventoryList.stream()
                 //Function.identity() is equal to element -> element
+
                 .collect(Collectors.toMap(InventoryResponseDTO::getIdProduct, Function.identity()));
         return products.stream()
+
                 .filter(product -> dataInventory.containsKey(product.getId()))
                 .map(product -> new ProductsForSaleDTO(product.getId(),
                         product.getName(),
+
                         dataInventory.get(product.getId()).getSalePrice(),
                         dataInventory.get(product.getId()).getStock(),
                         product.getDescription())).collect(Collectors.toList());
     }
 
+
     private List<ProductsFromStockDTO> prepareProductsFromStockDTO(List<InventoryResponseDTO> inventories,
                                                                    List<ProductDTO> products) {
         Map<Long, InventoryResponseDTO> inventoryMap = inventories.stream()
+
                 .collect(Collectors.toMap(InventoryResponseDTO::getIdProduct, Function.identity()));
         return products.stream()
                 .filter(product -> inventoryMap.containsKey(product.getId()))
+
                 .map(product -> new ProductsFromStockDTO(inventoryMap.get(product.getId()), product.getIdBrand(),
                         product.getIdCategory()))
                 .collect(Collectors.toList());
     }
 
     @Override
+
     public List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber) {
         return productFeignClientPort.fetchProductsFromMicroservice(page, itemsNumber);
     }

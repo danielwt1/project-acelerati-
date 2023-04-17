@@ -1,5 +1,7 @@
+
 package com.acelerati.management_service.infraestructure.exceptionhandler;
 import com.acelerati.management_service.domain.exception.ProductNotFoundException;
+
 import com.acelerati.management_service.infraestructure.exceptionhandler.response.ErrorDetails;
 
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleAllExceptions(Exception exception, WebRequest request){
+
         ErrorDetails response = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -27,8 +30,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDetails> handleAccessDeniedException(AccessDeniedException exception, WebRequest request){
         String message = String.format("%s, %s",exception.getMessage(),"the user haven't the permission necessary that realize this action");
+
         ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false));
-        return new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
+
+        return new ResponseEntity<>(res, HttpStatus.FORBIDDEN);
     }
     //Validate Array
     @ExceptionHandler(ConstraintViolationException.class)
@@ -36,6 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String message = exception.getConstraintViolations().stream()
                 .map(error -> error.getPropertyPath()+":"+error.getMessage())
                 .collect(Collectors.joining(", "));
+
         ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false));
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 
@@ -43,6 +49,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleProductNotFoundException(ProductNotFoundException exception, WebRequest request){
+
         ErrorDetails response = new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 
@@ -53,6 +60,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String message = exception.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(" "));
+
         ErrorDetails res = new ErrorDetails(LocalDateTime.now(), message, request.getDescription(false));
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 

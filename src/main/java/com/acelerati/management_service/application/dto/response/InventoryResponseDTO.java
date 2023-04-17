@@ -11,8 +11,9 @@ import java.math.BigDecimal;
 @Schema(name = "InventoryResponse",
         description = "Represents a product stored in the inventory")
 public class InventoryResponseDTO {
+
     @Schema(description = "The unique traceable identifier of the product in the inventory", example = "5")
-    private final Long id;
+    private final Long idInventory;
     @Schema(description = "The name of the product being stored in the inventory.", example = "Mother Board")
     private final String name;
     @Schema(description = "The amount of available product stored in the inventory.", example = "300")

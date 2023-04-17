@@ -7,6 +7,7 @@ import com.acelerati.management_service.application.dto.request.PaginationReques
 import com.acelerati.management_service.application.dto.response.*;
 import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.application.mapper.InventorySearchMapper;
+import com.acelerati.management_service.application.util.UtilGlobalMethods;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
 import com.acelerati.management_service.domain.exception.PageOutOfBoundsException;
 import com.acelerati.management_service.domain.model.InventoryModel;
@@ -58,6 +59,7 @@ class InventorySpringServiceImplTest {
     void whenCallSaveInventoryListThenSaveTest(){
         List<InventoryDTO> list = new ArrayList<>();
         assertDoesNotThrow(() -> inventoryImpl.addInventory(list));
+        assertEquals(0,list.size());
     }
 
     @Test
@@ -76,7 +78,7 @@ class InventorySpringServiceImplTest {
     void whenCallDataPaginatedThenReturnListPaginatedTest(){
         ProductsForSaleDTO products =mock(ProductsForSaleDTO.class);
         List<ProductsForSaleDTO> productsForSaleDTOList = Arrays.asList(products,products,products,products,products,products,products,products,products);
-        List<ProductsForSaleDTO> dataPaginated = this.inventoryImpl.dataPaginated(productsForSaleDTOList,1,5);
+        List<ProductsForSaleDTO> dataPaginated = UtilGlobalMethods.dataPaginated(productsForSaleDTOList,1,5);
         assertEquals(5,dataPaginated.size());
     }
 

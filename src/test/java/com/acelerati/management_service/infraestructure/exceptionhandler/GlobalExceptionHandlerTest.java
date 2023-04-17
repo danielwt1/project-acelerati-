@@ -1,5 +1,6 @@
 package com.acelerati.management_service.infraestructure.exceptionhandler;
 
+import com.acelerati.management_service.domain.exception.ProductNotFoundException;
 import com.acelerati.management_service.infraestructure.exceptionhandler.response.ErrorDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,14 +46,22 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void whenThrowAccessDeniedExceptionThenReturnHttpStatus401(){
+    void whenThrowAccessDeniedExceptionThenReturnHttpStatus403(){
         WebRequest webRequest = mock(WebRequest.class);
         AccessDeniedException exception = mock(AccessDeniedException.class);
-        response = new ResponseEntity<>(body,HttpStatus.UNAUTHORIZED);
+        response = new ResponseEntity<>(body,HttpStatus.FORBIDDEN);
         when(webRequest.getDescription(false)).thenReturn(("/path"));
         ResponseEntity<ErrorDetails>responseReal = this.globalExceptionHandler.handleAccessDeniedException(exception,webRequest);
-        assertEquals(HttpStatus.UNAUTHORIZED,responseReal.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN,responseReal.getStatusCode());
     }
-
+    @Test
+    void whenThrowProductNotFoundExceptionThenReturnHttStatus404(){
+        WebRequest webRequest = mock(WebRequest.class);
+        ProductNotFoundException exception = mock(ProductNotFoundException.class);
+        response = new ResponseEntity<>(body,HttpStatus.NOT_FOUND);
+        when(webRequest.getDescription(false)).thenReturn(("/path"));
+        ResponseEntity<ErrorDetails>responseReal = this.globalExceptionHandler.handleProductNotFoundException(exception,webRequest);
+        assertEquals(HttpStatus.NOT_FOUND,responseReal.getStatusCode());
+    }
 
 }

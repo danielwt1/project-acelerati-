@@ -50,9 +50,15 @@ public class InventoryController {
                             schema = @Schema(implementation = ProductsForSaleDTO[].class))),
             @ApiResponse(responseCode = "500", description = "A business logic error occurred",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class)))
+                            schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "403", description = "UNNECESSARY PERMISSIONS",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "401", description = "unauthorized",
+                    content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/sale")
+    @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
     public ResponseEntity<List<ProductsForSaleDTO>> getAllProductsForSale(@RequestHeader(value = "user") String user,
                                                                           @RequestParam(required = false, defaultValue = "", name = "name") String name,
                                                                           @RequestParam(required = false, defaultValue = "", name = "brandName") String brandName,
@@ -64,7 +70,8 @@ public class InventoryController {
     }
 
     @Operation(summary = "Add items to the inventory", responses = {
-            @ApiResponse(responseCode = "200", description = "Add items to the inventory"),
+            @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json")),
+
             @ApiResponse(responseCode = "500", description = "A business logic error occurred",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)))
