@@ -11,7 +11,7 @@ class PaginationResponseDTOTest {
 
     @BeforeAll
     static void beforeAll() {
-        paginationResponseDTO = new PaginationResponseDTO(10L, 1L, 0L, 8L, 9L, "Showing 1 to 9 of 9 results.");
+        paginationResponseDTO = new PaginationResponseDTO(1L, 10L, 9L, 0L, 8L, "Showing 1 to 9 of 9 results.");
     }
 
     @Test
