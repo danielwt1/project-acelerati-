@@ -23,6 +23,7 @@ import static com.acelerati.management_service.application.utils.ApplicationData
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class InventoryJpaAdapterTest {
@@ -65,6 +66,7 @@ class InventoryJpaAdapterTest {
     }
 
     @Test
+    void whenUpdateProductThenCallUpdateDB() {
         InventoryEntity inventoryEntityMock = mock(InventoryEntity.class);
         when(this.inventoryEntityMapper.toEntity(inventoryModel)).thenReturn(inventoryEntityMock);
         this.inventoryJpaAdapter.updateInventory(inventoryModel);
