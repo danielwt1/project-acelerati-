@@ -4,7 +4,7 @@ import com.acelerati.management_service.application.driven.ProductFeignClientPor
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
-import com.acelerati.management_service.application.dto.request.PaginationDTO;
+import com.acelerati.management_service.application.dto.request.PaginationRequestDTO;
 import com.acelerati.management_service.application.dto.response.*;
 import com.acelerati.management_service.application.dto.response.ProductDTO;
 import com.acelerati.management_service.application.dto.response.ProductsForSaleDTO;
@@ -56,7 +56,7 @@ public class InventorySpringServiceImpl implements InventorySpringService {
 
     @Override
     public FilterInventoryResponseDTO getInventoriesBy(InventorySearchCriteriaDTO searchCriteriaDTO,
-                                                       PaginationDTO paginationDTO) {
+                                                       PaginationRequestDTO paginationDTO) {
         InventorySearchCriteriaUtil criteriaUtil = inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO);
         PaginationUtil paginationUtil = paginationRequestMapper.toPaginationUtil(paginationDTO);
 

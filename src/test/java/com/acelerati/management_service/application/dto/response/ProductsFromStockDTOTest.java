@@ -19,13 +19,13 @@ class ProductsFromStockDTOTest {
 
     @Test
     void whenInventoryResponseDTOAssignedItShouldBePreserved() {
-        assertEquals(1L, productsFromStockDTO.getInventoryResponseDTO().getId());
-        assertEquals("Mother board", productsFromStockDTO.getInventoryResponseDTO().getName());
-        assertEquals(100L, productsFromStockDTO.getInventoryResponseDTO().getStock());
-        assertEquals(BigDecimal.valueOf(300_000), productsFromStockDTO.getInventoryResponseDTO().getUnitPrice());
-        assertEquals(BigDecimal.valueOf(350_000), productsFromStockDTO.getInventoryResponseDTO().getSalePrice());
-        assertEquals(1L, productsFromStockDTO.getInventoryResponseDTO().getIdProduct());
-        assertEquals(1L, productsFromStockDTO.getInventoryResponseDTO().getIdSupplier());
+        assertEquals(1L, productsFromStockDTO.getInventoryResponse().getId());
+        assertEquals("Mother board", productsFromStockDTO.getInventoryResponse().getName());
+        assertEquals(100L, productsFromStockDTO.getInventoryResponse().getStock());
+        assertEquals(BigDecimal.valueOf(300_000), productsFromStockDTO.getInventoryResponse().getUnitPrice());
+        assertEquals(BigDecimal.valueOf(350_000), productsFromStockDTO.getInventoryResponse().getSalePrice());
+        assertEquals(1L, productsFromStockDTO.getInventoryResponse().getIdProduct());
+        assertEquals(1L, productsFromStockDTO.getInventoryResponse().getIdSupplier());
     }
 
     @Test

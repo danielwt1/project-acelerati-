@@ -3,7 +3,7 @@ import com.acelerati.management_service.application.driven.ProductFeignClientPor
 import com.acelerati.management_service.application.dto.request.InventoryDTO;
 
 import com.acelerati.management_service.application.dto.request.InventorySearchCriteriaDTO;
-import com.acelerati.management_service.application.dto.request.PaginationDTO;
+import com.acelerati.management_service.application.dto.request.PaginationRequestDTO;
 import com.acelerati.management_service.application.dto.response.*;
 import com.acelerati.management_service.application.mapper.*;
 import com.acelerati.management_service.application.mapper.InventorySearchMapper;
@@ -104,7 +104,7 @@ class InventorySpringServiceImplTest {
     @Test
     void whenGetInventoriesByCalledWithNoFiltersAndDefaultPagination_thenItReturnsAllProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
+        PaginationRequestDTO paginationDTO = new PaginationRequestDTO(20L, 1L);
         InventorySearchCriteriaUtil inventorySearchCriteriaModel = new InventorySearchCriteriaUtil(null, null, null, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(inventorySearchCriteriaModel);
@@ -116,19 +116,19 @@ class InventorySpringServiceImplTest {
 
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
         Assertions.assertNotNull(filterInventoryResponse, "Applying no filter to the inventory and requesting the default pagination should not return null");
-        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponseDTOs(), "Applying no filter to the inventory should at least return an empty list ");
-        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponseDTO(), "Applying no filter to the inventory should at least return an empty pagination object");
+        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponses(), "Applying no filter to the inventory should at least return an empty list ");
+        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponse(), "Applying no filter to the inventory should at least return an empty pagination object");
 
-        Assertions.assertEquals(1L, filterInventoryResponse.getInventoryResponseDTOs().get(0).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponseDTOs().get(1).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponseDTOs().get(2).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(4L, filterInventoryResponse.getInventoryResponseDTOs().get(3).getInventoryResponseDTO().getIdProduct());
+        Assertions.assertEquals(1L, filterInventoryResponse.getInventoryResponses().get(0).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponses().get(1).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponses().get(2).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(4L, filterInventoryResponse.getInventoryResponses().get(3).getInventoryResponse().getIdProduct());
     }
 
     @Test
     void whenGetInventoriesByCalledWithPriceRangeFilter_itShouldReturnProductsWithinTheSpecifiedRange() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
+        PaginationRequestDTO paginationDTO = new PaginationRequestDTO(20L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(100_000L, 250_000L, null, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
@@ -142,18 +142,18 @@ class InventorySpringServiceImplTest {
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
 
         Assertions.assertNotNull(filterInventoryResponse, "Applying price filter to the inventory and requesting the default pagination should not return null");
-        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponseDTOs(), "Applying price filter to the inventory should at least return an empty list ");
-        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponseDTO(), "Applying price filter to the inventory should at least return an empty pagination object");
+        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponses(), "Applying price filter to the inventory should at least return an empty list ");
+        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponse(), "Applying price filter to the inventory should at least return an empty pagination object");
 
-        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponseDTOs().get(0).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponseDTOs().get(1).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(4L, filterInventoryResponse.getInventoryResponseDTOs().get(2).getInventoryResponseDTO().getIdProduct());
+        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponses().get(0).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponses().get(1).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(4L, filterInventoryResponse.getInventoryResponses().get(2).getInventoryResponse().getIdProduct());
     }
 
     @Test
     void whenGetInventoriesByCalledWithCategoryFilter_itShouldReturnCategoryMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, 1L, null);
-        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
+        PaginationRequestDTO paginationDTO = new PaginationRequestDTO(20L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, 1L, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
@@ -167,18 +167,18 @@ class InventorySpringServiceImplTest {
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
 
         Assertions.assertNotNull(filterInventoryResponse, "Applying category filter to the inventory and requesting the default pagination should not return null");
-        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponseDTOs(), "Applying category filter to the inventory should at least return an empty list ");
-        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponseDTO(), "Applying category filter to the inventory should at least return an empty pagination object");
+        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponses(), "Applying category filter to the inventory should at least return an empty list ");
+        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponse(), "Applying category filter to the inventory should at least return an empty pagination object");
 
-        Assertions.assertEquals(1L, filterInventoryResponse.getInventoryResponseDTOs().get(0).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponseDTOs().get(1).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponseDTOs().get(2).getInventoryResponseDTO().getIdProduct());
+        Assertions.assertEquals(1L, filterInventoryResponse.getInventoryResponses().get(0).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponses().get(1).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponses().get(2).getInventoryResponse().getIdProduct());
     }
 
     @Test
     void whenGetInventoriesByCalledWithBrandFilter_itShouldReturnBrandMatchingOnlyProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, 2L);
-        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
+        PaginationRequestDTO paginationDTO = new PaginationRequestDTO(20L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, 2L);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
@@ -192,17 +192,17 @@ class InventorySpringServiceImplTest {
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
 
         Assertions.assertNotNull(filterInventoryResponse, "Applying brand filter to the inventory and requesting the default pagination should not return null");
-        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponseDTOs(), "Applying brand filter to the inventory should at least return an empty list ");
-        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponseDTO(), "Applying brand filter to the inventory should at least return an empty pagination object");
+        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponses(), "Applying brand filter to the inventory should at least return an empty list ");
+        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponse(), "Applying brand filter to the inventory should at least return an empty pagination object");
 
-        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponseDTOs().get(0).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(4L, filterInventoryResponse.getInventoryResponseDTOs().get(1).getInventoryResponseDTO().getIdProduct());
+        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponses().get(0).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(4L, filterInventoryResponse.getInventoryResponses().get(1).getInventoryResponse().getIdProduct());
     }
 
     @Test
     void whenGetInventoriesByCalledWithPriceRangeAndCategory_itShouldReturnPriceAndCategoryMatchingProducts() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(100_000L, 250_000L, 1L, null);
-        PaginationDTO paginationDTO = new PaginationDTO(20L, 1L);
+        PaginationRequestDTO paginationDTO = new PaginationRequestDTO(20L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(100_000L, 250_000L, 1L, null);
         PaginationUtil paginationModel = new PaginationUtil(20L, 1L);
 
@@ -216,17 +216,17 @@ class InventorySpringServiceImplTest {
         FilterInventoryResponseDTO filterInventoryResponse = inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
 
         Assertions.assertNotNull(filterInventoryResponse, "Applying price and category filter to the inventory and requesting the default pagination should not return null");
-        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponseDTOs(), "Applying price and category filter to the inventory should at least return an empty list ");
-        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponseDTO(), "Applying price and category filter to the inventory should at least return an empty pagination object");
+        Assertions.assertNotNull(filterInventoryResponse.getInventoryResponses(), "Applying price and category filter to the inventory should at least return an empty list ");
+        Assertions.assertNotNull(filterInventoryResponse.getPaginationResponse(), "Applying price and category filter to the inventory should at least return an empty pagination object");
 
-        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponseDTOs().get(0).getInventoryResponseDTO().getIdProduct());
-        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponseDTOs().get(1).getInventoryResponseDTO().getIdProduct());
+        Assertions.assertEquals(2L, filterInventoryResponse.getInventoryResponses().get(0).getInventoryResponse().getIdProduct());
+        Assertions.assertEquals(3L, filterInventoryResponse.getInventoryResponses().get(1).getInventoryResponse().getIdProduct());
     }
 
     @Test
     void getInventoriesBy_onceTheSearchFinishedItShouldLeaveThePaginationReadyToServe() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(4L, 1L);
+        PaginationRequestDTO paginationDTO = new PaginationRequestDTO(4L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
         PaginationUtil paginationUtil = new PaginationUtil(4L, 1L);
 
@@ -248,18 +248,18 @@ class InventorySpringServiceImplTest {
     @Test
     void getInventoriesBy_whenNoResultsFoundThePaginationResponseShouldBeOnEmptyState() {
         InventorySearchCriteriaDTO searchCriteriaDTO = new InventorySearchCriteriaDTO(null, null, null, null);
-        PaginationDTO paginationDTO = new PaginationDTO(4L, 1L);
+        PaginationRequestDTO paginationRequestDTO = new PaginationRequestDTO(4L, 1L);
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
         PaginationUtil paginationUtil = new PaginationUtil(4L, 1L);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
-        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(paginationRequestMapper.toPaginationUtil(paginationRequestDTO)).thenReturn(paginationUtil);
         when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(Collections.emptyList());
         when(inventorySearchMapper.toDTOList(Collections.emptyList())).thenReturn(Collections.emptyList());
         when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationUtil)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
 
-        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
+        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationRequestDTO);
         assertEquals(NO_RECORDS_FOUND, paginationUtil.getDescription());
         assertEquals(0L, paginationUtil.getTotalResults());
         assertEquals(0L, paginationUtil.getFirstResultIndex());
@@ -273,17 +273,17 @@ class InventorySpringServiceImplTest {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
 
         final long pageSize = 2;
-        PaginationDTO paginationDTO = new PaginationDTO(pageSize, pageNumber);
+        PaginationRequestDTO paginationRequestDTO = new PaginationRequestDTO(pageSize, pageNumber);
         PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
-        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(paginationRequestMapper.toPaginationUtil(paginationRequestDTO)).thenReturn(paginationUtil);
         when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(INVENTORY_3);
         when(inventorySearchMapper.toDTOList(INVENTORY_3)).thenReturn(INVENTORY_3_RESPONSE_DTO);
         when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationUtil)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
 
-        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
+        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationRequestDTO);
         String expectedDescription = "";
         int expectedFirstIndex = 0;
         int expectedLastIndex = 0;
@@ -315,18 +315,18 @@ class InventorySpringServiceImplTest {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
 
         final long pageSize = 3;
-        PaginationDTO paginationDTO = new PaginationDTO(pageSize, pageNumber);
+        PaginationRequestDTO paginationRequestDTO = new PaginationRequestDTO(pageSize, pageNumber);
         PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
 
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
-        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(paginationRequestMapper.toPaginationUtil(paginationRequestDTO)).thenReturn(paginationUtil);
         when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(returnedInventories);
         when(inventorySearchMapper.toDTOList(returnedInventories)).thenReturn(returnedDTOS);
         when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
         when(paginationResponseMapper.toResponseDTO(paginationUtil)).thenReturn(new PaginationResponseDTO(20L, 1L, 0L, 1L, 2L, "Showing 1 to 2 of 2 results."));
 
-        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO);
+        inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationRequestDTO);
         String expectedDescription = "";
         int expectedFirstIndex = 0;
         int expectedLastIndex = 0;
@@ -365,17 +365,17 @@ class InventorySpringServiceImplTest {
         InventorySearchCriteriaUtil searchCriteria = new InventorySearchCriteriaUtil(null, null, null, null);
 
         final long pageSize = 3;
-        PaginationDTO paginationDTO = new PaginationDTO(pageSize, pageNumber);
+        PaginationRequestDTO paginationRequestDTO = new PaginationRequestDTO(pageSize, pageNumber);
         PaginationUtil paginationUtil = new PaginationUtil(pageSize, pageNumber);
 
         when(inventorySearchMapper.toCriteriaUtil(searchCriteriaDTO)).thenReturn(searchCriteria);
-        when(paginationRequestMapper.toPaginationUtil(paginationDTO)).thenReturn(paginationUtil);
+        when(paginationRequestMapper.toPaginationUtil(paginationRequestDTO)).thenReturn(paginationUtil);
         when(inventoryServicePort.getInventoriesBy(searchCriteria, paginationUtil)).thenReturn(returnedInventories);
         when(inventorySearchMapper.toDTOList(returnedInventories)).thenReturn(returnedDTOS);
         when(productFeignClientPort.fetchProductsFromMicroservice(0, 1000)).thenReturn(PRODUCT_MICROSERVICE_RESPONSE_1);
 
         PageOutOfBoundsException exception = assertThrows(PageOutOfBoundsException.class,
-                () -> inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationDTO));
+                () -> inventoryImpl.getInventoriesBy(searchCriteriaDTO, paginationRequestDTO));
         assertEquals("This record set cannot be navigated any further", exception.getMessage());
 
         tearDown();
