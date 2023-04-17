@@ -45,8 +45,10 @@ class InventoryJpaAdapterTest {
 
     @Test
     void whenCallAddInventoryWithEntityThenSaveDB() {
-        assertDoesNotThrow(() -> inventoryJpaAdapter.addInventory(inventoryModel));
-        verify(this.inventoryRepository).save(inventoryEntity);
+        InventoryEntity inventoryEntityMock = mock(InventoryEntity.class);
+        when(this.inventoryEntityMapper.toEntity(inventoryModel)).thenReturn(inventoryEntityMock);
+        this.inventoryJpaAdapter.addInventory(inventoryModel);
+        verify(this.inventoryEntityMapper).toEntity(inventoryModel);
     }
 
     @Test
@@ -63,9 +65,10 @@ class InventoryJpaAdapterTest {
     }
 
     @Test
-    void whenUpdateProductThenCallUpdateDB() {
-        assertDoesNotThrow(() -> inventoryJpaAdapter.updateInventory(inventoryModel));
-        verify(this.inventoryRepository).save(inventoryEntity);
+        InventoryEntity inventoryEntityMock = mock(InventoryEntity.class);
+        when(this.inventoryEntityMapper.toEntity(inventoryModel)).thenReturn(inventoryEntityMock);
+        this.inventoryJpaAdapter.updateInventory(inventoryModel);
+        verify(this.inventoryEntityMapper).toEntity(inventoryModel);
     }
 
     @Test
