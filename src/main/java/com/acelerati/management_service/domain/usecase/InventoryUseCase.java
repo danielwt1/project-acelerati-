@@ -8,18 +8,17 @@ import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 
 import com.acelerati.management_service.domain.util.PaginationUtil;
 
-
 import com.acelerati.management_service.domain.exception.ProductNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 public class InventoryUseCase implements InventoryServicePort {
+    public static final Logger logger = LoggerFactory.getLogger(InventoryUseCase.class);
     public static final BigDecimal INITIAL_VALUE_NEW_PRODUCT_SALE_PRICE = BigDecimal.valueOf(0);
-    public static final Long NO_STOCK = 0L;
-    public static final String INVENTORY_SEARCH_BY_PRODUCTS_WITHOUT_SALE_PRICE = "Products without sale price";
-    public static final String INVENTORY_SEARCH_BY_PRODUCTS_WITHOUT_STOCK = "Products without stock";
     private final InventoryPersistencePort inventoryPersistencePort;
 
     public InventoryUseCase(InventoryPersistencePort inventoryPersistencePort) {
@@ -42,18 +41,24 @@ public class InventoryUseCase implements InventoryServicePort {
 
 
     @Override
-    public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaUtil inventorySearchCriteriaModel,
-                                                 PaginationUtil paginationModel) throws InvalidFilterRangeException {
-        if(inventorySearchCriteriaModel.getFromUnitPrice() > inventorySearchCriteriaModel.getToUnitPrice())
+    public List<InventoryModel> getInventoriesBy(InventorySearchCriteriaUtil searchCriteria,
+                                                 PaginationUtil paginationUtil) throws InvalidFilterRangeException {
+        if (searchCriteria.getFromSalePrice() == null && searchCriteria.getToSalePrice() != null
+        || searchCriteria.getFromSalePrice() != null && searchCriteria.getToSalePrice() == null) {
+            throw new InvalidFilterRangeException("If one of either the From or To ranges is defined, the other must be defined too.");
+        }
+
+        if ((searchCriteria.getFromSalePrice() != null && searchCriteria.getToSalePrice() != null) &&
+                (searchCriteria.getFromSalePrice() > searchCriteria.getToSalePrice())) {
             throw new InvalidFilterRangeException("The From range must be greater than the To range");
+        }
 
-        if (paginationModel.getPageSize() == null)
-            paginationModel.setPageSize(PaginationUtil.DEFAULT_PAGE_SIZE);
+        if (paginationUtil.getPageSize() == null) {
+            logger.debug("Page size defaulted to {}", PaginationUtil.DEFAULT_PAGE_SIZE);
+            paginationUtil.setPageSize(PaginationUtil.DEFAULT_PAGE_SIZE);
+        }
 
-        List<InventoryModel> inventories = inventoryPersistencePort.getInventoriesBy(inventorySearchCriteriaModel, paginationModel);
-        paginationModel.updateAttributesFromListResults(inventories);
-
-        return inventories;
+        return inventoryPersistencePort.getInventoriesBy(searchCriteria, paginationUtil);
     }
 
     @Override

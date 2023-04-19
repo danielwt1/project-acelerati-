@@ -37,18 +37,19 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
-
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.14'
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-hystrix
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
 
     compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.hibernate:hibernate-jpamodelgen'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    annotationProcessor('org.hibernate:hibernate-jpamodelgen')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
@@ -71,7 +72,8 @@ jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "com/acelerati/management_service/application/mapper/*",
-                    "**/infraestructure/output/mapper/*",
+                    "**/infraestructure/output/mapper/*", // Excludes generated mapper implementations
+                    "**/infraestructure/output/entity/*", // Excludes generated metamodel entities
                     "**/infraestructure/output/repository/impl/*",
                     "**/ManagementServiceApplication.class",
                     "**/config/*"

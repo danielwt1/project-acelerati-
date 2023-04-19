@@ -10,6 +10,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface InventorySearchMapper {
-    InventorySearchCriteriaUtil toModel(InventorySearchCriteriaDTO searchCriteriaDTO);
+    InventorySearchCriteriaUtil toCriteriaUtil(InventorySearchCriteriaDTO searchCriteriaDTO);
     List<InventoryResponseDTO> toDTOList(List<InventoryModel> inventoryModels);
 }

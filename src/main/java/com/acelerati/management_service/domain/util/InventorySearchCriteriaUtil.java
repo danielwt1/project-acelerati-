@@ -1,38 +1,48 @@
 package com.acelerati.management_service.domain.util;
 
-public class InventorySearchCriteriaUtil{
+public class InventorySearchCriteriaUtil {
 
-    private Long fromUnitPrice;
-    private Long toUnitPrice;
-    private String category;
+    private Long fromSalePrice;
+    private Long toSalePrice;
+    private Long categoryId;
+    private Long brandId;
 
-    public InventorySearchCriteriaUtil(Long fromUnitPrice, Long toUnitPrice, String category) {
-        this.fromUnitPrice = fromUnitPrice;
-        this.toUnitPrice = toUnitPrice;
-        this.category = category;
+    public InventorySearchCriteriaUtil(Long fromSalePrice, Long toSalePrice, Long categoryId, Long brandId) {
+        this.fromSalePrice = fromSalePrice;
+        this.toSalePrice = toSalePrice;
+        this.categoryId = categoryId;
+        this.brandId = brandId;
     }
 
-    public Long getFromUnitPrice() {
-        return fromUnitPrice;
+    public Long getFromSalePrice() {
+        return fromSalePrice;
     }
 
-    public void setFromUnitPrice(Long fromUnitPrice) {
-        this.fromUnitPrice = fromUnitPrice;
+    public void setFromSalePrice(Long fromSalePrice) {
+        this.fromSalePrice = fromSalePrice;
     }
 
-    public Long getToUnitPrice() {
-        return toUnitPrice;
+    public Long getToSalePrice() {
+        return toSalePrice;
     }
 
-    public void setToUnitPrice(Long toUnitPrice) {
-        this.toUnitPrice = toUnitPrice;
+    public void setToSalePrice(Long toSalePrice) {
+        this.toSalePrice = toSalePrice;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
     }
 }

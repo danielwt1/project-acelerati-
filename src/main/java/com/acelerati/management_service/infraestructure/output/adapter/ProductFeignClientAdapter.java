@@ -15,7 +15,7 @@ public class ProductFeignClientAdapter implements ProductFeignClientPort {
     }
 
     @Override
-    public List<ProductDTO> fetchProductsFromMicroservice() {
-        return productRetriever.getAllProducts();
+    public List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber) {
+        return productRetriever.getAllProducts(page, itemsNumber);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 
 @SpringBootApplication
 @EnableFeignClients
-@EnableCircuitBreaker
+@EnableCircuitBreaker // Do not remove, assumed technical debt
 public class ManagementServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ManagementServiceApplication.class, args);

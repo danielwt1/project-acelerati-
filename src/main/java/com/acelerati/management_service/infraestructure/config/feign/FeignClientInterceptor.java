@@ -18,9 +18,11 @@ public class FeignClientInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        if (requestTemplate.url().startsWith(feignClientUrl)) {
+
+        if (requestTemplate.feignTarget().url().startsWith(feignClientUrl)) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String token = (String) authentication.getCredentials();
+
             requestTemplate.header(AUTHORIZATION_HEADER,TOKEN_TYPE+ token);
         }
 
