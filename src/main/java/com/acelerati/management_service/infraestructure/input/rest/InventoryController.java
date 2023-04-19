@@ -76,7 +76,7 @@ public class InventoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
-    @PostMapping("/")
+    @PostMapping
     @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
     public ResponseEntity<Void> addInventory(@RequestHeader(value = "user") String user,
                                              @RequestBody @NotEmpty(message = "The product list must not be empty") List<@Valid InventoryDTO> inventoryDTO) {
@@ -107,7 +107,7 @@ public class InventoryController {
                             description = "User identification for authentication purposes")
             }
     )
-    @GetMapping(path = {"/"})
+    @GetMapping
     @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
     public ResponseEntity<FilterInventoryResponseDTO> getInventoriesBy(@RequestHeader(value = "user") String user,
                                                                        @Valid InventorySearchCriteriaDTO searchCriteria, @Valid PaginationRequestDTO pagination) {
@@ -118,7 +118,8 @@ public class InventoryController {
     }
 
     @Operation(summary = "Update Sale Price to product")
-    @PutMapping("/")
+    @PutMapping
+    @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
     public ResponseEntity<Void> updateSalePrice(@RequestHeader(value = "user") String user,
                                                 @RequestBody @Valid InventoryUpdateRequestDTO inventoryDTO) {
         this.inventorySpringService.updateProductSalePrice(inventoryDTO);
