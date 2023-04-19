@@ -72,7 +72,8 @@ jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "com/acelerati/management_service/application/mapper/*",
-                    "**/infraestructure/output/mapper/*",
+                    "**/infraestructure/output/mapper/*", // Excludes generated mapper implementations
+                    "**/infraestructure/output/entity/*", // Excludes generated metamodel entities
                     "**/infraestructure/output/repository/impl/*",
                     "**/ManagementServiceApplication.class",
                     "**/config/*"
