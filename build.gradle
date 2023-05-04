@@ -42,6 +42,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-hystrix
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
 
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-messaging
+    implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
+
     compileOnly 'org.projectlombok:lombok'
     compileOnly 'org.hibernate:hibernate-jpamodelgen'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
