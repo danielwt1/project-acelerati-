@@ -1,7 +1,6 @@
 package com.acelerati.management_service.domain.model;
 
 import com.acelerati.management_service.infraestructure.output.entity.CartInventoryEntity;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,17 @@ public class CartModel {
     private LocalDateTime lastUpdate;
 
     private List<CartInventoryModel> products = new ArrayList<>();
+
+    public CartModel() {
+    }
+
+
+    public CartModel(Long idCart, Long idUser, LocalDateTime lastUpdate, List<CartInventoryModel> products) {
+        this.idCart = idCart;
+        this.idUser = idUser;
+        this.lastUpdate = lastUpdate;
+        this.products = products;
+    }
 
     public CartModel(Long idCart, Long idUser, LocalDateTime lastUpdate) {
         this.idCart = idCart;
@@ -54,3 +64,4 @@ public class CartModel {
         this.products = products;
     }
 }
+

@@ -10,6 +10,10 @@ public class CartInventoryModel {
 
     private Long amount;
 
+
+    public CartInventoryModel() {
+    }
+
     public CartInventoryModel(Long id, CartModel cartModel, InventoryModel inventory, Long amount) {
         this.id = id;
         this.cartModel = cartModel;
@@ -29,7 +33,7 @@ public class CartInventoryModel {
         return cartModel;
     }
 
-    public void setCartInventoryModel(CartModel cartModel) {
+    public void setCartModel(CartModel cartModel) {
         this.cartModel = cartModel;
     }
 
@@ -49,3 +53,4 @@ public class CartInventoryModel {
         this.amount = amount;
     }
 }
+

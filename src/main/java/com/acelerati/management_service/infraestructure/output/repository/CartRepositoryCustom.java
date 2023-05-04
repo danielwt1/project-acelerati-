@@ -2,7 +2,10 @@ package com.acelerati.management_service.infraestructure.output.repository;
 
 import com.acelerati.management_service.infraestructure.output.entity.CartEntity;
 
-public interface CartRepositoryCustom {
+import java.util.Optional;
 
+
+public interface CartRepositoryCustom {
+    Optional<CartEntity> getCart(Long idUser);
     void persistData(CartEntity cartEntity);
 }

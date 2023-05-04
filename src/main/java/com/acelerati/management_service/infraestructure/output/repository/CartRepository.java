@@ -3,6 +3,6 @@ package com.acelerati.management_service.infraestructure.output.repository;
 import com.acelerati.management_service.infraestructure.output.entity.CartEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CartRepository extends JpaRepository<CartEntity, Long>, CartRepositoryCustom {
+public interface CartRepository extends JpaRepository<CartEntity, Long> , CartRepositoryCustom {
 
 }
