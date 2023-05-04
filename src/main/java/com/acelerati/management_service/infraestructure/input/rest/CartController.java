@@ -1,11 +1,9 @@
 package com.acelerati.management_service.infraestructure.input.rest;
 
 import com.acelerati.management_service.application.dto.response.CartDTO;
-import com.acelerati.management_service.application.dto.response.PurchaseRequestResponseDTO;
 import com.acelerati.management_service.application.handler.CartSpringService;
 import com.acelerati.management_service.infraestructure.exceptionhandler.response.ErrorDetails;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -64,16 +62,5 @@ public class CartController {
             ,@RequestParam(name = "elementPerPage")Integer elementPerPage){
         CartDTO response = this.cartSpringService.getCartByIdUser(page,elementPerPage);
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @Operation(summary = "Submits a purchase request, validates the stocks and notifies the user if the purchase can be done or not.",
-    parameters = {
-            @Parameter(name = "user", schema = @Schema(type = "integer"),
-                    description = "User identification for authentication purposes")
-    })
-    @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
-    @DeleteMapping("/purchase")
-    public ResponseEntity<PurchaseRequestResponseDTO> makePurchaseRequest(@RequestHeader(name = "user") String user) {
-        return null;
     }
 }
