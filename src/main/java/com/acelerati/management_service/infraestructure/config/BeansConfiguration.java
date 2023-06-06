@@ -34,6 +34,8 @@ public class BeansConfiguration {
     private final CartEntityMapper cartEntityMapper;
      private final CartRepository cartRepository;
 
+
+
     public BeansConfiguration(CartInventoryRepository cartInventoryRepository, CartInventoryEntityMapper cartInventoryEntityMapper, InventoryRepository inventoryRepository, InventoryEntityMapper inventoryEntityMapper, ProductRetriever productRetriever, CartEntityMapper cartEntityMapper, CartRepository cartRepository) {
         this.cartInventoryRepository = cartInventoryRepository;
         this.cartInventoryEntityMapper = cartInventoryEntityMapper;
@@ -73,6 +75,7 @@ public class BeansConfiguration {
     public CartServicePort cartServicePort(){
         return new CartUseCase(cartPersistencePort());
     }
+
 
 
 

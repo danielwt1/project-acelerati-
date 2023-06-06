@@ -1,5 +1,7 @@
 package com.acelerati.management_service.infraestructure.config.aws;
 
+import com.acelerati.management_service.domain.spi.NotificationPort;
+import com.acelerati.management_service.infraestructure.output.adapter.NotificationSnsAwsAdapter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +34,11 @@ public class AwsBeansConfiguration {
     @Bean
     public SnsTopicCreator getSnsTopicCreator() {
         return new SnsTopicCreator(snsClient());
+    }
+    @Bean
+    public NotificationPort getNotificatrion(){
+        return new NotificationSnsAwsAdapter(snsClient(),getSnsTopicCreator() );
+
     }
 
 }
