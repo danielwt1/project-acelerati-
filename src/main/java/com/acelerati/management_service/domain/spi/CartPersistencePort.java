@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface CartPersistencePort {
     Optional<CartModel> getCart(Long idUser);
+    void deleteCartByIdUser(Long idUser);
 }

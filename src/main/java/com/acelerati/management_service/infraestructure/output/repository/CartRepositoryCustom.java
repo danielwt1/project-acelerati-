@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface CartRepositoryCustom {
     Optional<CartEntity> getCart(Long idUser);
+    void deleteCartByIdUser(Long idUser);
 }

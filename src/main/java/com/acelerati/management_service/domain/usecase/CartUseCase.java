@@ -15,4 +15,9 @@ public class CartUseCase implements CartServicePort {
     public CartModel getCartByUserId(Long idUser) {
         return this.cartPersistencePort.getCart(idUser).orElseGet(CartModel::new);
     }
+
+    @Override
+    public void deleteCartByIdUser(Long idUser) {
+        this.cartPersistencePort.deleteCartByIdUser(idUser);
+    }
 }

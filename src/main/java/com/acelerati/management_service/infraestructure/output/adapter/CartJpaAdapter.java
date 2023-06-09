@@ -21,4 +21,9 @@ public class CartJpaAdapter implements CartPersistencePort {
     public Optional<CartModel> getCart(Long idUser) {
         return this.cartRepo.getCart(idUser).map(this.cartEntityMapper::toModel);
     }
+
+    @Override
+    public void deleteCartByIdUser(Long idUser) {
+        cartRepo.deleteCartByIdUser(idUser);
+    }
 }

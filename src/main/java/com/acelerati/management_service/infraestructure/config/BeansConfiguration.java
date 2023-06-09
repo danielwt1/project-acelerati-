@@ -1,27 +1,27 @@
 package com.acelerati.management_service.infraestructure.config;
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
+import com.acelerati.management_service.application.driven.QueueClientPort;
 import com.acelerati.management_service.domain.api.CartInventoryServicePort;
 import com.acelerati.management_service.domain.api.CartServicePort;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
-import com.acelerati.management_service.domain.spi.CartInventoryPersistencePort;
-import com.acelerati.management_service.domain.spi.CartPersistencePort;
-import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
+import com.acelerati.management_service.domain.api.SaleServicePort;
+import com.acelerati.management_service.domain.spi.*;
 import com.acelerati.management_service.domain.usecase.CartInventoryUseCase;
 import com.acelerati.management_service.domain.usecase.CartUseCase;
 import com.acelerati.management_service.domain.usecase.InventoryUseCase;
-import com.acelerati.management_service.infraestructure.output.adapter.CartInventoryJpaAdapter;
-import com.acelerati.management_service.infraestructure.output.adapter.CartJpaAdapter;
-import com.acelerati.management_service.infraestructure.output.adapter.ProductFeignClientAdapter;
-import com.acelerati.management_service.infraestructure.output.adapter.InventoryJpaAdapter;
-import com.acelerati.management_service.infraestructure.output.mapper.CartEntityMapper;
-import com.acelerati.management_service.infraestructure.output.mapper.CartInventoryEntityMapper;
-import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
-import com.acelerati.management_service.infraestructure.output.repository.CartInventoryRepository;
-import com.acelerati.management_service.infraestructure.output.repository.CartRepository;
-import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
+import com.acelerati.management_service.domain.usecase.SaleUseCase;
+import com.acelerati.management_service.infraestructure.aws.SQSClient;
+import com.acelerati.management_service.infraestructure.output.adapter.*;
+import com.acelerati.management_service.infraestructure.output.mapper.*;
+import com.acelerati.management_service.infraestructure.output.repository.*;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 @Configuration
 public class BeansConfiguration {
@@ -30,11 +30,23 @@ public class BeansConfiguration {
     private final InventoryRepository inventoryRepository;
     private final InventoryEntityMapper inventoryEntityMapper;
     private final ProductRetriever productRetriever;
-
     private final CartEntityMapper cartEntityMapper;
-     private final CartRepository cartRepository;
+    private final CartRepository cartRepository;
+    private final SaleRepository saleRepository;
+    private final SaleEntityMapper saleEntityMapper;
+    private final SaleInventoryRepository saleInventoryRepository;
+    private final SaleInventoryEntityMapper2 saleInventoryEntityMapper;
+    @Value("${spring.cloud.aws.region.static}")
+    private String awsRegion;
 
-    public BeansConfiguration(CartInventoryRepository cartInventoryRepository, CartInventoryEntityMapper cartInventoryEntityMapper, InventoryRepository inventoryRepository, InventoryEntityMapper inventoryEntityMapper, ProductRetriever productRetriever, CartEntityMapper cartEntityMapper, CartRepository cartRepository) {
+    public BeansConfiguration(CartInventoryRepository cartInventoryRepository,
+                              CartInventoryEntityMapper cartInventoryEntityMapper,
+                              InventoryRepository inventoryRepository,
+                              InventoryEntityMapper inventoryEntityMapper, ProductRetriever productRetriever,
+                              CartEntityMapper cartEntityMapper, CartRepository cartRepository,
+                              SaleRepository saleRepository,
+                              SaleEntityMapper saleEntityMapper, SaleInventoryRepository saleInventoryRepository,
+                              SaleInventoryEntityMapper2 saleInventoryEntityMapper) {
         this.cartInventoryRepository = cartInventoryRepository;
         this.cartInventoryEntityMapper = cartInventoryEntityMapper;
         this.inventoryRepository = inventoryRepository;
@@ -42,6 +54,10 @@ public class BeansConfiguration {
         this.productRetriever = productRetriever;
         this.cartEntityMapper = cartEntityMapper;
         this.cartRepository = cartRepository;
+        this.saleRepository = saleRepository;
+        this.saleEntityMapper = saleEntityMapper;
+        this.saleInventoryRepository = saleInventoryRepository;
+        this.saleInventoryEntityMapper = saleInventoryEntityMapper;
     }
     @Bean
     public InventoryPersistencePort inventoryPersistencePPort() {
@@ -74,6 +90,18 @@ public class BeansConfiguration {
         return new CartUseCase(cartPersistencePort());
     }
 
+    @Bean
+    public SalePersistencePort salePersistencePort() {
+        return new SaleJpaAdapter(saleRepository, saleEntityMapper, saleInventoryEntityMapper);
+    }
 
+    @Bean
+    public SaleInventoryPersistencePort saleInventoryPersistencePort() {
+        return new SaleInventoryJpaAdapter(saleInventoryRepository, saleInventoryEntityMapper);
+    }
 
+    @Bean
+    public SaleServicePort saleServicePort() {
+        return new SaleUseCase(salePersistencePort(), saleInventoryPersistencePort());
+    }
 }
