@@ -14,8 +14,10 @@ public class SaleModel {
     private LocalDate saleDate;
     private String status;
     private Long idShipping;
+    private List<SaleInventoryModel> purchasedItems = new ArrayList<>();
 
-    private List<SaleInventoryModel> purchasedItems;
+    public SaleModel() {
+    }
 
     public SaleModel(Long idSale, Long idUser, LocalDate saleDate, String status, Long idShipping,
                      List<SaleInventoryModel> purchasedItems) {
@@ -24,7 +26,7 @@ public class SaleModel {
         this.saleDate = saleDate == null ? LocalDate.now() : saleDate;
         this.status = status == null ? STATUS_PENDING : status;
         this.idShipping = idShipping;
-        this.purchasedItems = purchasedItems == null ? new ArrayList<>() : purchasedItems;
+        this.purchasedItems = purchasedItems;
     }
 
     public Long getIdSale() {
@@ -73,5 +75,10 @@ public class SaleModel {
 
     public void setPurchasedItems(List<SaleInventoryModel> purchasedItems) {
         this.purchasedItems = purchasedItems;
+    }
+
+    public void addPurchasedItem(SaleInventoryModel saleInventoryModel) {
+        purchasedItems.add(saleInventoryModel);
+        saleInventoryModel.setSaleModel(this);
     }
 }

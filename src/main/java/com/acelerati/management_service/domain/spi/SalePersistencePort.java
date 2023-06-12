@@ -6,5 +6,10 @@ public interface SalePersistencePort {
 
     SaleModel createSale(SaleModel saleModel);
 
+    void updateSale(SaleModel saleModel);
+
     SaleModel findSaleById(Long idSale);
+    void rejectSale(Long idSale);
+
+    void approveSale(Long idSale);
 }

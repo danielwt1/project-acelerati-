@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,7 +21,7 @@ public class SaleEntity {
     private Long idShipping;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<SaleInventoryEntity> purchasedItems;
+    private List<SaleInventoryEntity> purchasedItems = new ArrayList<>();
 
     public SaleEntity() {
     }
@@ -81,5 +82,10 @@ public class SaleEntity {
 
     public void setPurchasedItems(List<SaleInventoryEntity> purchasedItems) {
         this.purchasedItems = purchasedItems;
+    }
+
+    public void addPurchasedItem(SaleInventoryEntity saleInventoryEntity) {
+        purchasedItems.add(saleInventoryEntity);
+        saleInventoryEntity.setSale(this);
     }
 }

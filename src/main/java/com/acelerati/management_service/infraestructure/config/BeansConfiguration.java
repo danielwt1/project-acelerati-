@@ -1,6 +1,5 @@
 package com.acelerati.management_service.infraestructure.config;
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
-import com.acelerati.management_service.application.driven.QueueClientPort;
 import com.acelerati.management_service.domain.api.CartInventoryServicePort;
 import com.acelerati.management_service.domain.api.CartServicePort;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
@@ -10,18 +9,12 @@ import com.acelerati.management_service.domain.usecase.CartInventoryUseCase;
 import com.acelerati.management_service.domain.usecase.CartUseCase;
 import com.acelerati.management_service.domain.usecase.InventoryUseCase;
 import com.acelerati.management_service.domain.usecase.SaleUseCase;
-import com.acelerati.management_service.infraestructure.aws.SQSClient;
 import com.acelerati.management_service.infraestructure.output.adapter.*;
 import com.acelerati.management_service.infraestructure.output.mapper.*;
 import com.acelerati.management_service.infraestructure.output.repository.*;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 @Configuration
 public class BeansConfiguration {
@@ -35,9 +28,7 @@ public class BeansConfiguration {
     private final SaleRepository saleRepository;
     private final SaleEntityMapper saleEntityMapper;
     private final SaleInventoryRepository saleInventoryRepository;
-    private final SaleInventoryEntityMapper2 saleInventoryEntityMapper;
-    @Value("${spring.cloud.aws.region.static}")
-    private String awsRegion;
+    private final SaleInventoryEntityMapper saleInventoryEntityMapper;
 
     public BeansConfiguration(CartInventoryRepository cartInventoryRepository,
                               CartInventoryEntityMapper cartInventoryEntityMapper,
@@ -46,7 +37,7 @@ public class BeansConfiguration {
                               CartEntityMapper cartEntityMapper, CartRepository cartRepository,
                               SaleRepository saleRepository,
                               SaleEntityMapper saleEntityMapper, SaleInventoryRepository saleInventoryRepository,
-                              SaleInventoryEntityMapper2 saleInventoryEntityMapper) {
+                              SaleInventoryEntityMapper saleInventoryEntityMapper) {
         this.cartInventoryRepository = cartInventoryRepository;
         this.cartInventoryEntityMapper = cartInventoryEntityMapper;
         this.inventoryRepository = inventoryRepository;
@@ -102,6 +93,6 @@ public class BeansConfiguration {
 
     @Bean
     public SaleServicePort saleServicePort() {
-        return new SaleUseCase(salePersistencePort(), saleInventoryPersistencePort());
+        return new SaleUseCase(salePersistencePort(), saleInventoryPersistencePort(), inventoryPersistencePPort());
     }
 }

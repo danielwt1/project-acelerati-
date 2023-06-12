@@ -5,7 +5,6 @@ import com.acelerati.management_service.domain.model.SaleModel;
 import com.acelerati.management_service.domain.spi.SalePersistencePort;
 import com.acelerati.management_service.infraestructure.output.entity.SaleEntity;
 import com.acelerati.management_service.infraestructure.output.mapper.SaleEntityMapper;
-import com.acelerati.management_service.infraestructure.output.mapper.SaleInventoryEntityMapper2;
 import com.acelerati.management_service.infraestructure.output.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +13,6 @@ public class SaleJpaAdapter implements SalePersistencePort {
 
     private final SaleRepository saleRepository;
     private final SaleEntityMapper saleEntityMapper;
-    private final SaleInventoryEntityMapper2 saleInventoryEntityMapper;
 
     @Override
     public SaleModel createSale(SaleModel saleModel) {
@@ -23,12 +21,30 @@ public class SaleJpaAdapter implements SalePersistencePort {
     }
 
     @Override
+    public void updateSale(SaleModel saleModel) {
+        saleRepository.save(saleEntityMapper.toEntity(saleModel));
+    }
+
+    @Override
     public SaleModel findSaleById(Long idSale) {
         SaleEntity foundSaleEntity = saleRepository.findById(idSale).orElseThrow(
                 () -> new SaleNotFoundException(String.format("Sale with ID %d not found", idSale)));
-        SaleModel toReturn = saleEntityMapper.toModel(foundSaleEntity);
-        toReturn.setPurchasedItems(
-                saleInventoryEntityMapper.toSaleInventoryModelList(foundSaleEntity.getPurchasedItems()));
-        return toReturn;
+        return saleEntityMapper.toModel(foundSaleEntity);
+    }
+
+    @Override
+    public void rejectSale(Long idSale) {
+        SaleEntity saleToReject = saleRepository.findById(idSale).orElseThrow(
+                () -> new SaleNotFoundException(String.format("Sale with ID %d not found", idSale)));
+        saleToReject.setStatus(SaleModel.STATUS_REJECTED);
+        saleRepository.save(saleToReject);
+    }
+
+    @Override
+    public void approveSale(Long idSale) {
+        SaleEntity saleToApprove = saleRepository.findById(idSale).orElseThrow(
+                () -> new SaleNotFoundException(String.format("Sale with ID %d not found", idSale)));
+        saleToApprove.setStatus(SaleModel.STATUS_APPROVED);
+        saleRepository.save(saleToApprove);
     }
 }

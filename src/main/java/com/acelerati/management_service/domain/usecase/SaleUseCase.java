@@ -3,10 +3,8 @@ package com.acelerati.management_service.domain.usecase;
 import com.acelerati.management_service.domain.api.SaleServicePort;
 import com.acelerati.management_service.domain.exception.CartEmptyException;
 import com.acelerati.management_service.domain.exception.CartNotFoundException;
-import com.acelerati.management_service.domain.model.CartInventoryModel;
-import com.acelerati.management_service.domain.model.CartModel;
-import com.acelerati.management_service.domain.model.SaleInventoryModel;
-import com.acelerati.management_service.domain.model.SaleModel;
+import com.acelerati.management_service.domain.model.*;
+import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
 import com.acelerati.management_service.domain.spi.SaleInventoryPersistencePort;
 import com.acelerati.management_service.domain.spi.SalePersistencePort;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,7 @@ import java.util.stream.Collectors;
 public class SaleUseCase implements SaleServicePort {
 
     private final SalePersistencePort salePersistencePort;
-    private final SaleInventoryPersistencePort saleInventoryPersistencePort;
+    private final InventoryPersistencePort inventoryPersistencePort;
 
     @Override
     public Long createSale(Long idUser, CartModel cart) {
@@ -33,24 +31,42 @@ public class SaleUseCase implements SaleServicePort {
         }
         SaleModel newSale = new SaleModel(null, idUser, LocalDate.now(), SaleModel.STATUS_PENDING,
                 null, null);
-        newSale = salePersistencePort.createSale(newSale);
-        log.debug("Sale has been created with ID: {}", newSale.getIdSale());
-        createSaleItems(newSale, cart.getProducts());
-        log.debug("Transaction for saving items of the sale has been finished");
-        return newSale.getIdSale();
-    }
-
-    private void createSaleItems(SaleModel newSale, List<CartInventoryModel> products) {
-        List<SaleInventoryModel> purchasedItems = products.stream()
+        List<SaleInventoryModel> purchasedItems = cart.getProducts().stream()
                 .map(cartInventoryModel -> new SaleInventoryModel(null, cartInventoryModel.getAmount(),
-                        null, newSale, cartInventoryModel.getInventory()))
+                        null, null, cartInventoryModel.getInventory()))
                 .collect(Collectors.toList());
         log.debug("{} items are going to be attached to the current sale", purchasedItems.size());
-        saleInventoryPersistencePort.saveAllSaleInventories(purchasedItems);
+        newSale.setPurchasedItems(purchasedItems);
+        newSale = salePersistencePort.createSale(newSale);
+        log.debug("Sale has been created with ID: {} with all its items", newSale.getIdSale());
+        return newSale.getIdSale();
     }
 
     @Override
     public SaleModel findSaleById(String idSale) {
         return salePersistencePort.findSaleById(Long.parseLong(idSale));
     }
+
+    @Override
+    public void decreaseStock(SaleModel saleModel) {
+        log.debug("Decreasing stock...");
+        saleModel.getPurchasedItems().forEach(purchasedItem -> {
+            InventoryModel inventoryToUpdate = purchasedItem.getInventory();
+            inventoryToUpdate.setStock(inventoryToUpdate.getStock() - purchasedItem.getAmount());
+            inventoryPersistencePort.updateInventory(inventoryToUpdate);
+            purchasedItem.setExitPrice(purchasedItem.getInventory().getSalePrice());
+        });
+        salePersistencePort.updateSale(saleModel);
+    }
+
+    @Override
+    public void rejectSale(Long idSale) {
+        salePersistencePort.rejectSale(idSale);
+    }
+
+    @Override
+    public void approveSale(Long idSale) {
+        salePersistencePort.approveSale(idSale);
+    }
+
 }

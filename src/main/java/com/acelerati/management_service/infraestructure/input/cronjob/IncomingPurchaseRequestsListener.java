@@ -1,33 +1,32 @@
 package com.acelerati.management_service.infraestructure.input.cronjob;
 
 import com.acelerati.management_service.application.handler.PurchaseSpringService;
+import com.acelerati.management_service.infraestructure.aws.SQSClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import software.amazon.awssdk.services.sqs.SqsAsyncClient;
-import software.amazon.awssdk.services.sqs.model.Message;
-import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
+import software.amazon.awssdk.services.sqs.model.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class IncomingPurchaseRequestsListener {
-    @Value("${spring.cloud.aws.sqs.endpoint}")
-    private String sqsEndpointUrl;
-    private final SqsAsyncClient sqsAsyncClient;
-    private PurchaseSpringService purchaseSpringService;
+    private final PurchaseSpringService purchaseSpringService;
+    private final SQSClient sqsClient;
 
     @Scheduled(fixedDelay = 20_000, initialDelay = 25_000)
     public void pullPurchaseRequests() {
-        ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
-                .queueUrl(sqsEndpointUrl)
-                .waitTimeSeconds(20)
-                .build();
-        List<Message> receivedMessages = sqsAsyncClient.receiveMessage(receiveMessageRequest).join().messages();
+        List<Message> receivedMessages = sqsClient.pullMessages();
         log.debug("Messages received from the AWS queue: {}", receivedMessages.size());
+        List<String> saleIds = receivedMessages.stream()
+                .map(Message::body)
+                .collect(Collectors.toList());
+        sqsClient.deleteMessages(receivedMessages);
+        purchaseSpringService.performSales(saleIds);
     }
+
 }
