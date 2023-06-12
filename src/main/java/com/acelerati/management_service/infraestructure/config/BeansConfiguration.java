@@ -1,5 +1,6 @@
 package com.acelerati.management_service.infraestructure.config;
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
+import com.acelerati.management_service.application.driven.UserFeignClientPort;
 import com.acelerati.management_service.domain.api.CartInventoryServicePort;
 import com.acelerati.management_service.domain.api.CartServicePort;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
@@ -13,6 +14,7 @@ import com.acelerati.management_service.infraestructure.output.adapter.*;
 import com.acelerati.management_service.infraestructure.output.mapper.*;
 import com.acelerati.management_service.infraestructure.output.repository.*;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
+import com.acelerati.management_service.infraestructure.output.retriever.UserAuthenticationRetriever;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +25,7 @@ public class BeansConfiguration {
     private final InventoryRepository inventoryRepository;
     private final InventoryEntityMapper inventoryEntityMapper;
     private final ProductRetriever productRetriever;
+    private final UserAuthenticationRetriever userAuthenticationRetriever;
     private final CartEntityMapper cartEntityMapper;
     private final CartRepository cartRepository;
     private final SaleRepository saleRepository;
@@ -34,6 +37,7 @@ public class BeansConfiguration {
                               CartInventoryEntityMapper cartInventoryEntityMapper,
                               InventoryRepository inventoryRepository,
                               InventoryEntityMapper inventoryEntityMapper, ProductRetriever productRetriever,
+                              UserAuthenticationRetriever userAuthenticationRetriever,
                               CartEntityMapper cartEntityMapper, CartRepository cartRepository,
                               SaleRepository saleRepository,
                               SaleEntityMapper saleEntityMapper, SaleInventoryRepository saleInventoryRepository,
@@ -43,6 +47,7 @@ public class BeansConfiguration {
         this.inventoryRepository = inventoryRepository;
         this.inventoryEntityMapper = inventoryEntityMapper;
         this.productRetriever = productRetriever;
+        this.userAuthenticationRetriever = userAuthenticationRetriever;
         this.cartEntityMapper = cartEntityMapper;
         this.cartRepository = cartRepository;
         this.saleRepository = saleRepository;
@@ -65,6 +70,11 @@ public class BeansConfiguration {
     }
 
     @Bean
+    public UserFeignClientPort userFeignClientPort() {
+        return new UserFeignClientAdapter(userAuthenticationRetriever);
+    }
+
+    @Bean
     public CartInventoryPersistencePort cartInventoryPersistencePort(){
         return new CartInventoryJpaAdapter(cartInventoryRepository,cartInventoryEntityMapper);
     }
@@ -83,16 +93,12 @@ public class BeansConfiguration {
 
     @Bean
     public SalePersistencePort salePersistencePort() {
-        return new SaleJpaAdapter(saleRepository, saleEntityMapper, saleInventoryEntityMapper);
+        return new SaleJpaAdapter(saleRepository, saleEntityMapper);
     }
 
-    @Bean
-    public SaleInventoryPersistencePort saleInventoryPersistencePort() {
-        return new SaleInventoryJpaAdapter(saleInventoryRepository, saleInventoryEntityMapper);
-    }
 
     @Bean
     public SaleServicePort saleServicePort() {
-        return new SaleUseCase(salePersistencePort(), saleInventoryPersistencePort(), inventoryPersistencePPort());
+        return new SaleUseCase(salePersistencePort(), inventoryPersistencePPort());
     }
 }

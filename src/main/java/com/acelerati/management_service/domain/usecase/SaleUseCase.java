@@ -5,7 +5,6 @@ import com.acelerati.management_service.domain.exception.CartEmptyException;
 import com.acelerati.management_service.domain.exception.CartNotFoundException;
 import com.acelerati.management_service.domain.model.*;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
-import com.acelerati.management_service.domain.spi.SaleInventoryPersistencePort;
 import com.acelerati.management_service.domain.spi.SalePersistencePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

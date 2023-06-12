@@ -2,6 +2,7 @@ package com.acelerati.management_service.application.handler.impl;
 
 import com.acelerati.management_service.application.driven.ProductFeignClientPort;
 import com.acelerati.management_service.application.driven.QueueClientPort;
+import com.acelerati.management_service.application.driven.UserFeignClientPort;
 import com.acelerati.management_service.application.dto.response.ProductDTO;
 import com.acelerati.management_service.application.handler.PurchaseSpringService;
 import com.acelerati.management_service.domain.api.CartServicePort;
@@ -14,6 +15,9 @@ import com.acelerati.management_service.domain.model.SaleInventoryModel;
 import com.acelerati.management_service.domain.model.SaleModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +30,7 @@ public class PurchaseSpringServiceImpl implements PurchaseSpringService {
     private final SaleServicePort saleServicePort;
     private final QueueClientPort queueClientPort;
     private final ProductFeignClientPort productFeignClientPort;
+    private final UserFeignClientPort userFeignClientPort;
 
     @Override
     public String createPurchaseRequest(Long idUser) {
@@ -44,9 +49,8 @@ public class PurchaseSpringServiceImpl implements PurchaseSpringService {
                 SaleModel foundSale = saleServicePort.findSaleById(saleId);
                 log.debug("Sale recovered with {} items.", foundSale.getPurchasedItems().size());
 
-                // TODO Implement microservice validation
-                // log.debug("Validating all the selected products to be registered in the Products database...");
-                // validateAllProductsRegistered(foundSale.getPurchasedItems());
+                log.debug("Validating all the selected products to be registered in the Products database...");
+                validateAllProductsRegistered(foundSale.getPurchasedItems());
 
                 log.debug("Validating stock availability for each product...");
                 validateStockAvailability(foundSale.getPurchasedItems());
@@ -95,9 +99,8 @@ public class PurchaseSpringServiceImpl implements PurchaseSpringService {
         saleServicePort.decreaseStock(saleModel);
     }
 
-    // TODO Implement microservice validation
     private void validateAllProductsRegistered(List<SaleInventoryModel> productsToSale) {
-       List<ProductDTO> productsFromMicroservice = fetchProductsFromMicroservice(1, 1_000);
+       List<ProductDTO> productsFromMicroservice = fetchProductsFromMicroservice(0, 1_000);
        productsToSale.forEach(productToSale -> {
            boolean productExist = productsFromMicroservice.stream()
                    .anyMatch(productFromMicroservice ->
@@ -121,6 +124,9 @@ public class PurchaseSpringServiceImpl implements PurchaseSpringService {
 
     @Override
     public List<ProductDTO> fetchProductsFromMicroservice(Integer page, Integer itemsNumber) {
+        String token = userFeignClientPort.doManualAuthentication();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(null, token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return productFeignClientPort.fetchProductsFromMicroservice(page, itemsNumber);
     }
 }
