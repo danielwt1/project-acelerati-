@@ -36,7 +36,7 @@ public class CartUseCase implements CartServicePort {
         InventoryModel inventoryModel = inventoryPersistencePort.getElementById(idProduct)
                 .orElseThrow(()->new ProductNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
 
-        Optional<CartModel> cartModel = cartPersistencePort.getCartByIdUser(idUser);
+        Optional<CartModel> cartModel = cartPersistencePort.getCart(idUser);
         CartModel cart;
 
         if(cartModel.isEmpty()) {

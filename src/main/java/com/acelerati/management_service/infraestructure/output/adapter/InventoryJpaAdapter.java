@@ -33,7 +33,6 @@ public class InventoryJpaAdapter implements InventoryPersistencePort {
             return Optional.of(this.inventoryEntityMapper.toModel(inventoryEntity.get()));
         }
         return Optional.empty();
-
     }
 
     @Override

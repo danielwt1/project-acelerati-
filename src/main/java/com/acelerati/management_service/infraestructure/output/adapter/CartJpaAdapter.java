@@ -36,8 +36,4 @@ public class CartJpaAdapter implements CartPersistencePort {
         cartRepository.save(cartEntityMapper.toEntity(cart));
     }
 
-    @Override
-    public Optional<CartModel> getCartByIdUser(Long idUser) {
-        return Optional.empty();
-    }
 }

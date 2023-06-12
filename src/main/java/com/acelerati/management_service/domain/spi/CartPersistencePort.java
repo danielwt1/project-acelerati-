@@ -10,5 +10,4 @@ public interface CartPersistencePort {
 
     void updateCart(CartModel cart);
 
-    Optional<CartModel> getCartByIdUser(Long idUser);
 }

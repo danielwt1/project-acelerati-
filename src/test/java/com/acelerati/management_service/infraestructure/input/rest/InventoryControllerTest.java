@@ -99,6 +99,7 @@ class InventoryControllerTest {
                 ()->verify(this.inventorySpringService).getAllProductForSale("producto1","Pp112","cat1",1,20)
         );
     }
+    @Test
     void updateSalePrice_shouldReturnOkStatus() {
         // Given
         InventoryUpdateRequestDTO inventoryDTO = new InventoryUpdateRequestDTO("producto",5000L, BigDecimal.valueOf(5000), BigDecimal.valueOf(6000), 1L,1L);
@@ -107,5 +108,10 @@ class InventoryControllerTest {
         // Then
         verify(inventorySpringService).updateProductSalePrice(inventoryDTO);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void healthCheckResponds() {
+        assertEquals(inventoryRestController.getHealthStatus(), ResponseEntity.ok("Hello from Excalibur!"));
     }
 }

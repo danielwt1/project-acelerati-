@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,8 +57,6 @@ public class CartController {
                             schema = @Schema(implementation = ErrorDetails.class))),
             @ApiResponse(responseCode = "401", description = "unauthorized",
                     content = @Content(mediaType = "application/json"))
-
-
     })
 
     @GetMapping("/")
@@ -80,6 +79,27 @@ public class CartController {
         return null;
     }
 
+    @Operation(summary = "Add a product to the cart")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product added to the cart",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseEntity.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Error.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Error.class))
+            )
+    })
     @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
     @PostMapping("/")
     public ResponseEntity<Void> addProductToCart(@RequestBody AddProductToCartDTO addProductToCartDTO){
