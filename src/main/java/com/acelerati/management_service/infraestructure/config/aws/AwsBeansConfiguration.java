@@ -16,7 +16,10 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.SystemPropertyCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.WebIdentityTokenFileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.sns.SnsClient;
+
+import java.net.URI;
 
 @Configuration
 public class AwsBeansConfiguration {
@@ -39,6 +42,15 @@ public class AwsBeansConfiguration {
     public NotificationPort getNotificatrion(){
         return new NotificationSnsAwsAdapter(snsClient(),getSnsTopicCreator() );
 
+    }
+
+    @Bean
+    public DynamoDbClient  getdynamoDbClient(){
+        return DynamoDbClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(this.getProviderChain())
+                .endpointOverride(URI.create("http://localhost:8000"))  // Establece el endpoint de tu DynamoDB local
+                .build();
     }
     private AwsCredentialsProviderChain getProviderChain() {
         return AwsCredentialsProviderChain.builder()

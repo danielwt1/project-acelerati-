@@ -3,22 +3,32 @@ import com.acelerati.management_service.application.driven.ProductFeignClientPor
 import com.acelerati.management_service.domain.api.CartInventoryServicePort;
 import com.acelerati.management_service.domain.api.CartServicePort;
 import com.acelerati.management_service.domain.api.InventoryServicePort;
+import com.acelerati.management_service.domain.api.ReportServicePort;
 import com.acelerati.management_service.domain.spi.CartInventoryPersistencePort;
 import com.acelerati.management_service.domain.spi.CartPersistencePort;
 import com.acelerati.management_service.domain.spi.InventoryPersistencePort;
+import com.acelerati.management_service.domain.spi.JasperReportPort;
+import com.acelerati.management_service.domain.spi.ReportDynamoDBPort;
+import com.acelerati.management_service.domain.spi.ReportPersistencePort;
 import com.acelerati.management_service.domain.usecase.CartInventoryUseCase;
 import com.acelerati.management_service.domain.usecase.CartUseCase;
+import com.acelerati.management_service.domain.usecase.CreateReportUseCase;
 import com.acelerati.management_service.domain.usecase.InventoryUseCase;
 import com.acelerati.management_service.infraestructure.output.adapter.CartInventoryJpaAdapter;
 import com.acelerati.management_service.infraestructure.output.adapter.CartJpaAdapter;
+import com.acelerati.management_service.infraestructure.output.adapter.JasperReportAdapter;
 import com.acelerati.management_service.infraestructure.output.adapter.ProductFeignClientAdapter;
 import com.acelerati.management_service.infraestructure.output.adapter.InventoryJpaAdapter;
+import com.acelerati.management_service.infraestructure.output.adapter.ReportDynamoAdapter;
+import com.acelerati.management_service.infraestructure.output.adapter.ReportPersistenceAdapter;
 import com.acelerati.management_service.infraestructure.output.mapper.CartEntityMapper;
 import com.acelerati.management_service.infraestructure.output.mapper.CartInventoryEntityMapper;
 import com.acelerati.management_service.infraestructure.output.mapper.InventoryEntityMapper;
 import com.acelerati.management_service.infraestructure.output.repository.CartInventoryRepository;
 import com.acelerati.management_service.infraestructure.output.repository.CartRepository;
 import com.acelerati.management_service.infraestructure.output.repository.InventoryRepository;
+import com.acelerati.management_service.infraestructure.output.repository.ReportRepository;
+import com.acelerati.management_service.infraestructure.output.repository.SaleRepository;
 import com.acelerati.management_service.infraestructure.output.retriever.ProductRetriever;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,10 +43,10 @@ public class BeansConfiguration {
 
     private final CartEntityMapper cartEntityMapper;
      private final CartRepository cartRepository;
+     private final ReportRepository reportRepository;
+     private final SaleRepository saleRepository;
 
-
-
-    public BeansConfiguration(CartInventoryRepository cartInventoryRepository, CartInventoryEntityMapper cartInventoryEntityMapper, InventoryRepository inventoryRepository, InventoryEntityMapper inventoryEntityMapper, ProductRetriever productRetriever, CartEntityMapper cartEntityMapper, CartRepository cartRepository) {
+    public BeansConfiguration(CartInventoryRepository cartInventoryRepository, CartInventoryEntityMapper cartInventoryEntityMapper, InventoryRepository inventoryRepository, InventoryEntityMapper inventoryEntityMapper, ProductRetriever productRetriever, CartEntityMapper cartEntityMapper, CartRepository cartRepository, ReportRepository reportRepository, SaleRepository saleRepository) {
         this.cartInventoryRepository = cartInventoryRepository;
         this.cartInventoryEntityMapper = cartInventoryEntityMapper;
         this.inventoryRepository = inventoryRepository;
@@ -44,7 +54,10 @@ public class BeansConfiguration {
         this.productRetriever = productRetriever;
         this.cartEntityMapper = cartEntityMapper;
         this.cartRepository = cartRepository;
+        this.reportRepository = reportRepository;
+        this.saleRepository = saleRepository;
     }
+
     @Bean
     public InventoryPersistencePort inventoryPersistencePPort() {
         return new InventoryJpaAdapter(inventoryRepository, inventoryEntityMapper);
@@ -75,6 +88,25 @@ public class BeansConfiguration {
     public CartServicePort cartServicePort(){
         return new CartUseCase(cartPersistencePort());
     }
+    @Bean
+    public ReportDynamoDBPort reportDynamoDBPort(){
+        return new ReportDynamoAdapter(reportRepository);
+    }
+    @Bean
+    public ReportPersistencePort reportPersistencePort(){
+        return new ReportPersistenceAdapter(saleRepository);
+    }
+
+    @Bean
+    public JasperReportPort jasperReportPort(){
+        return new JasperReportAdapter();
+    }
+    @Bean
+    public ReportServicePort reportServicePort(){
+        return new CreateReportUseCase(reportDynamoDBPort(),reportPersistencePort(),jasperReportPort());
+    }
+
+
 
 
 

@@ -17,6 +17,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://jaspersoft.jfrog.io/jaspersoft/jaspersoft-repo"
+    }
 }
 
 ext {
@@ -26,6 +29,11 @@ ext {
 dependencies {
     implementation platform('software.amazon.awssdk:bom:2.20.61')
     implementation 'software.amazon.awssdk:sns'
+    implementation 'software.amazon.awssdk:dynamodb'
+
+
+    // https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports
+    implementation group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.20.5'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
