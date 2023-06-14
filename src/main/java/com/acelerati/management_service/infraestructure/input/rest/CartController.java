@@ -82,28 +82,26 @@ public class CartController {
     @Operation(summary = "Add a product to the cart")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Product added to the cart",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ResponseEntity.class))
+                    responseCode = "204",
+                    description = "Product added to the cart"
             ),
             @ApiResponse(
                     responseCode = "403",
                     description = "Forbidden",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Error.class))
+                            schema = @Schema(implementation = ErrorDetails.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal Server Error",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Error.class))
+                            schema = @Schema(implementation = ErrorDetails.class))
             )
     })
     @PreAuthorize("@authService.checkClientRole(@authService.rolesContext)")
     @PostMapping("/")
     public ResponseEntity<Void> addProductToCart(@RequestBody AddProductToCartDTO addProductToCartDTO){
         cartSpringService.addProductToCart(addProductToCartDTO);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 }
