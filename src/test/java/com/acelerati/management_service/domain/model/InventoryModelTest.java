@@ -16,15 +16,15 @@ class InventoryModelTest {
 
     @Test
     void getId() {
-        assertEquals(1L,inventoryModel.getId());
+        assertEquals(1L,inventoryModel.getIdInventory());
     }
 
     @Test
     void setId() {
         InventoryModel model = new InventoryModel();
-        model.setId(2L);
-        assertNotNull(model.getId());
-        assertEquals(2L,model.getId());
+        model.setIdInventory(2L);
+        assertNotNull(model.getIdInventory());
+        assertEquals(2L,model.getIdInventory());
     }
 
     @Test

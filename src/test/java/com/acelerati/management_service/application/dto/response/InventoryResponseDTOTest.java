@@ -18,7 +18,7 @@ class InventoryResponseDTOTest {
     }
     @Test
     void getId() {
-        assertEquals(1L,inventory.getId());
+        assertEquals(1L,inventory.getIdInventory());
     }
 
     @Test
