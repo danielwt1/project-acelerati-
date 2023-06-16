@@ -24,7 +24,7 @@ public class ReportDynamoAdapter implements ReportDynamoDBPort {
     public void insertReport(List<ReportModel> reportList) {
         Map<String, List<ReportModel>> groupByDate = reportList.stream().collect(
                 Collectors.groupingBy(ReportModel::getSale_date));
-        groupByDate.forEach((key, value) -> reportRepository.putItemInTable("report", "date", key.toString(), "sales", convertSalesToJson(value)));
+        groupByDate.forEach((key, value) -> reportRepository.putItemInTable("report", "date", key, "sales", convertSalesToJson(value)));
     }
 
     private String convertSalesToJson(List<ReportModel> object) {
