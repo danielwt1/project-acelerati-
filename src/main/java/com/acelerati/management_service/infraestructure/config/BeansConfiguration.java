@@ -30,8 +30,6 @@ public class BeansConfiguration {
     private final CartRepository cartRepository;
     private final SaleRepository saleRepository;
     private final SaleEntityMapper saleEntityMapper;
-    private final SaleInventoryRepository saleInventoryRepository;
-    private final SaleInventoryEntityMapper saleInventoryEntityMapper;
 
     public BeansConfiguration(CartInventoryRepository cartInventoryRepository,
                               CartInventoryEntityMapper cartInventoryEntityMapper,
@@ -40,8 +38,7 @@ public class BeansConfiguration {
                               UserAuthenticationRetriever userAuthenticationRetriever,
                               CartEntityMapper cartEntityMapper, CartRepository cartRepository,
                               SaleRepository saleRepository,
-                              SaleEntityMapper saleEntityMapper, SaleInventoryRepository saleInventoryRepository,
-                              SaleInventoryEntityMapper saleInventoryEntityMapper) {
+                              SaleEntityMapper saleEntityMapper) {
         this.cartInventoryRepository = cartInventoryRepository;
         this.cartInventoryEntityMapper = cartInventoryEntityMapper;
         this.inventoryRepository = inventoryRepository;
@@ -52,8 +49,6 @@ public class BeansConfiguration {
         this.cartRepository = cartRepository;
         this.saleRepository = saleRepository;
         this.saleEntityMapper = saleEntityMapper;
-        this.saleInventoryRepository = saleInventoryRepository;
-        this.saleInventoryEntityMapper = saleInventoryEntityMapper;
     }
     @Bean
     public InventoryPersistencePort inventoryPersistencePPort() {
