@@ -1,0 +1,90 @@
+// author: kaylee paez - kaylee.paez@pragma.com.co
+pipeline {
+
+    agent { label 'workers'}
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    environment {
+        PROJECT_NAME = "management_service"
+        SERVICE_NAME = "ati-ms-inventory-excalibur"
+        TASK_FAMILY= "ati-task-inventory-excalibur"
+        IMAGE_NAME = "acelerati-ecr-repo"
+        GRADLE_IMAGE = "gradle:jdk17"
+        PORT = 8099
+        IMAGE_VERSION = "ms-inventory-excalibur"
+        CPU_CONTAINER = 256
+        MEMORY_CONTAINER = 512
+    }
+
+    stages {
+
+        stage('Source') {
+            steps {
+                echo "[EXEC] - Obtener codigo fuente desde repositorio Git"
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            agent {
+                docker {
+                    image "${GRADLE_IMAGE}"
+                    reuseNode true
+                }
+            }
+            steps {
+                echo "[EXEC] - Compilacion de codigo fuente."
+                script {
+                    sh 'gradle clean build -x test'
+                }
+            }
+        }
+
+        stage('Build/Publish Image') {
+            steps {
+                echo "[EXEC] - Build and publish application"
+                script {
+                    env.IMAGE_TAG = "${IMAGE_NAME}:${IMAGE_VERSION}"
+                    def buildResult
+                    docker.withRegistry("https://${AWS_REGISTRY_ACELERATI}", "ecr:${AWS_REGION}:${AWS_CREDENTIALS_ACELERATI}") {
+                        echo "Connect to registry at ${AWS_REGISTRY_ACELERATI}"
+                        echo "Build ${IMAGE_TAG}"
+                        buildResult = docker.build("${IMAGE_TAG}","--build-arg PROJECT_NAME=${PROJECT_NAME} --build-arg PORT=${PORT} -f ./pipeline/Dockerfile --no-cache .")
+                        echo "Register ${IMAGE_NAME} at ${AWS_REGISTRY_ACELERATI}"
+                        buildResult.push()
+                        echo "Disconnect from registry at ${AWS_REGISTRY_ACELERATI}"
+                        sh "docker logout ${AWS_REGISTRY_ACELERATI}"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Service') {
+            steps {
+                echo "[EXEC] - Deploy application"
+                script {
+                    withCredentials([
+                      [
+                          $class: 'AmazonWebServicesCredentialsBinding',
+                          credentialsId: "${AWS_CREDENTIALS_ACELERATI}",
+                          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                      ]
+                    ]) {
+                        sh "./pipeline/deploy-ecs.sh"
+                    }
+
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            deleteDir()
+        }
+    }
+}
