@@ -37,6 +37,22 @@
         {
           "name": "KEYSECRET_SECURITY",
           "valueFrom": "arn:aws:ssm:us-east-1:%AWS_ACCOUNT_ID%:parameter/config/keysecret"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID",
+          "valueFrom": "arn:aws:ssm:us-east-1:%AWS_ACCOUNT_ID%:parameter/db/accesskey"
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "valueFrom": "arn:aws:ssm:us-east-1:%AWS_ACCOUNT_ID%:parameter/db/secretaccesskey"
+        },
+        {
+          "name": "AWS_DEFAULT_REGION",
+          "valueFrom": "arn:aws:ssm:us-east-1:%AWS_ACCOUNT_ID%:parameter/db/defaultregion"
+        },
+        {
+          "name": "AWS_SNS_TOPIC_NAME",
+          "valueFrom": "arn:aws:ssm:us-east-1:%AWS_ACCOUNT_ID%:parameter/db/snstopic"
         }
       ],
       "mountPoints": [],
