@@ -38,8 +38,7 @@ public class BeansConfiguration {
                               UserAuthenticationRetriever userAuthenticationRetriever,
                               CartEntityMapper cartEntityMapper, CartRepository cartRepository,
                               SaleRepository saleRepository,
-                              SaleEntityMapper saleEntityMapper) {
-        this.cartInventoryRepository = cartInventoryRepository;
+                              SaleEntityMapper saleEntityMapper) {        this.cartInventoryRepository = cartInventoryRepository;
         this.cartInventoryEntityMapper = cartInventoryEntityMapper;
         this.inventoryRepository = inventoryRepository;
         this.inventoryEntityMapper = inventoryEntityMapper;
@@ -95,5 +94,4 @@ public class BeansConfiguration {
     @Bean
     public SaleServicePort saleServicePort() {
         return new SaleUseCase(salePersistencePort(), inventoryPersistencePPort());
-    }
-}
+    }}

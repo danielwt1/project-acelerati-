@@ -2,11 +2,13 @@ package com.acelerati.management_service.infraestructure.input.rest;
 
 import com.acelerati.management_service.application.dto.response.CartDTO;
 import com.acelerati.management_service.application.handler.CartSpringService;
+import com.acelerati.management_service.domain.spi.NotificationPort;
 import com.acelerati.management_service.infraestructure.exceptionhandler.response.ErrorDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/cart")
 public class CartController {
     private final CartSpringService cartSpringService;
+
+    @Autowired
+    private NotificationPort notificationPort;
 
     public CartController(CartSpringService cartSpringService) {
         this.cartSpringService = cartSpringService;
@@ -62,5 +67,11 @@ public class CartController {
             ,@RequestParam(name = "elementPerPage")Integer elementPerPage){
         CartDTO response = this.cartSpringService.getCartByIdUser(page,elementPerPage);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<Void> test(@RequestHeader(name = "user") String user) {
+        notificationPort.sendNotification("Hello world!!");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
