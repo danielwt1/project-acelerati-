@@ -22,7 +22,7 @@ public class SQSConfiguration {
 
     @Bean
     public QueueClientPort queueClientPort() {
-        return new SqsQueueClientAdapter(new SQSClient(sqsAsyncClient()));
+        return new SqsQueueClientAdapter(sqsClient());
     }
 
     @Bean
@@ -32,5 +32,10 @@ public class SQSConfiguration {
                 .credentialsProvider(StaticCredentialsProvider
                         .create(AwsBasicCredentials.create(accessKey, secretKey)))
                 .build();
+    }
+
+    @Bean
+    public SQSClient sqsClient() {
+        return new SQSClient(sqsAsyncClient());
     }
 }

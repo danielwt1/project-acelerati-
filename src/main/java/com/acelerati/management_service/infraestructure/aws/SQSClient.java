@@ -1,21 +1,21 @@
 package com.acelerati.management_service.infraestructure.aws;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 import software.amazon.awssdk.services.sqs.model.*;
 
 import java.util.List;
 
-@Component
-@RequiredArgsConstructor
 @Slf4j
 public class SQSClient {
-    //@Value("${spring.cloud.aws.sqs.endpoint}")
-    private static final String sqsEndpointUrl = "https://sqs.us-east-2.amazonaws.com/724240023474/DispatchPurchaseRequest.fifo";
+    @Value("${spring.cloud.aws.sqs.endpoint}")
+    private String sqsEndpointUrl;
     private final SqsAsyncClient sqsAsyncClient;
+
+    public SQSClient(SqsAsyncClient sqsAsyncClient) {
+        this.sqsAsyncClient = sqsAsyncClient;
+    }
 
     public void sendMessage(String message) {
         SendMessageRequest sendMessageRequest = SendMessageRequest.builder()

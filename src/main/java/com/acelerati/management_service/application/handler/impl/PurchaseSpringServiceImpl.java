@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.sqs.model.SqsException;
 
 import java.util.List;
 
@@ -38,8 +39,14 @@ public class PurchaseSpringServiceImpl implements PurchaseSpringService {
         log.debug("Extracted cart: {}", cartModel);
         Long saleID = saleServicePort.createSale(idUser, cartModel);
         cartServicePort.deleteCartByIdUser(idUser);
-        queueClientPort.submitPurchaseRequest(saleID);
-        return "The purchase request was sent successfully. A confirmation e-mail will be delivered soon.";
+        try {
+            queueClientPort.submitPurchaseRequest(saleID);
+            return "The purchase request was sent successfully. A confirmation e-mail will be delivered soon.";
+        } catch (SqsException e) {
+            log.error("Could not send the purchase request to AWS SQS", e);
+            rejectSale(saleID.toString());
+            return "The purchase request failed, could not push purchase to the waiting queue.";
+        }
     }
 
     @Override
