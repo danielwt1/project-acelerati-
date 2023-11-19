@@ -76,6 +76,9 @@ public class InventoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)))
     })
+
+
+
     @PostMapping
     @PreAuthorize("@authService.checkEmployeeRole(@authService.rolesContext)")
     public ResponseEntity<Void> addInventory(@RequestHeader(value = "user") String user,

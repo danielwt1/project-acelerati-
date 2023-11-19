@@ -35,10 +35,6 @@ public class AwsBeansConfiguration {
     public SnsTopicCreator getSnsTopicCreator() {
         return new SnsTopicCreator(snsClient());
     }
-    @Bean
-    public NotificationPort getNotificatrion(){
-        return new NotificationSnsAwsAdapter(snsClient(),getSnsTopicCreator() );
 
-    }
 
 }
